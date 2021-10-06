@@ -16,10 +16,10 @@ namespace DTNL.LL.Logic
 
         public GaService(IConfiguration config)
         {
-            var apiTags = new GAApiTagsOptions();
-            config.GetSection(GAApiTagsOptions.GAApiTags).Bind(apiTags);
-            _gaProperties = apiTags.GAProperties;
-            _gaActiveUsers = apiTags.GAActiveUsers;
+            var apiTags = new GaApiTagsOptions();
+            config.GetSection(GaApiTagsOptions.GaApiTags).Bind(apiTags);
+            _gaProperties = apiTags.GaProperties;
+            _gaActiveUsers = apiTags.GaActiveUsers;
             _gaClient = BetaAnalyticsDataClient.Create();
         }
 
