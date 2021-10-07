@@ -67,5 +67,10 @@ namespace DTNL.LL.Logic
         {
             return GetSpecifiedProjects(p => p.ProjectName.Contains(projectName));
         }
+
+        public async Task<IEnumerable<Project>> GetActiveProjects()
+        {
+            return await _unitOfWork.Projects.GetActiveProjects();
+        }
     }
 }

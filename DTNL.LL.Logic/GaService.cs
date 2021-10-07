@@ -39,7 +39,7 @@ namespace DTNL.LL.Logic
             };
         }
 
-        public async Task<AnalyticsReport> GetAnalyticsTrafficReport(string propertyId, int timeRangeInMinutes)
+        public async Task<AnalyticsReport> GetAnalyticsTrafficReport(string propertyId, int timeRangeInMinutes, int projectId)
         {
             var request = CreateRealtimeReportRequest(propertyId, timeRangeInMinutes);
             var response = await _gaClient.RunRealtimeReportAsync(request);
@@ -47,7 +47,8 @@ namespace DTNL.LL.Logic
 
            return new AnalyticsReport()
             {
-                ActiveUsers = int.Parse(activeUsers)
+                ActiveUsers = int.Parse(activeUsers),
+                ProjectId = projectId
             };
 
         }

@@ -5,6 +5,7 @@ using DTNL.LL.DAL;
 using DTNL.LL.Logic;
 using DTNL.LL.Logic.Helper;
 using DTNL.LL.Logic.Options;
+using DTNL.LL.Logic.Workers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -36,6 +37,8 @@ namespace DTNL.LL.Website
             services.AddScoped<ProjectService>();
             services.AddScoped<LampService>();
             services.AddScoped<AuthService>();
+
+            services.AddHostedService<LiveLightWorker>();
 
 
             var gAuth = new GAuthOptions();
