@@ -26,10 +26,5 @@
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
       }
     }
-  },
-
-  "GaApiTags": {
-    "GaProperties": "properties/",
-    "GaActiveUsers": "activeUsers"
   }
 }

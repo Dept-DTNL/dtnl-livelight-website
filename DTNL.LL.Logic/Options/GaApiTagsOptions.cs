@@ -6,5 +6,7 @@
 
         public string GaProperties { get; set; }
         public string GaActiveUsers { get; set; }
+
+        public string Ga3ActiveUsers { get; set; }
     }
 }

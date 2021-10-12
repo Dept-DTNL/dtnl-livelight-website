@@ -1,8 +1,10 @@
 using System;
 using System.Net;
 using System.Security.Policy;
+using System.Text.Json;
 using DTNL.LL.DAL;
 using DTNL.LL.Logic;
+using DTNL.LL.Logic.Analytics;
 using DTNL.LL.Logic.Helper;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Logic.Workers;
@@ -38,6 +40,10 @@ namespace DTNL.LL.Website
             services.AddScoped<LampService>();
             services.AddScoped<AuthService>();
 
+            services.AddSingleton<GaService>();
+            services.AddSingleton<GoogleCredentialProviderService>();
+            services.AddSingleton<V3Analytics>();
+            services.AddSingleton<V4Analytics>();
             services.AddHostedService<LiveLightWorker>();
 
 
