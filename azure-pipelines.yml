@@ -43,7 +43,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'DTNL.LL.Website/DTNL.LL.Website.csproj'
-    arguments: '--configuration 'Release' --output $(build.artifactstagingdirectory)'
+    arguments: '--configuration Release --output $(build.artifactstagingdirectory)'
     modifyOutputPath: false
 
 - task: SonarCloudAnalyze@1
