@@ -1,0 +1,55 @@
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+pr:
+  branches:
+    include:
+    - '*' 
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- checkout: self
+  clean: true
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Sonarcloud'
+    organization: 'dept'
+    scannerMode: 'MSBuild'
+    projectKey: 'dtnl-livelight-website'
+    projectName: 'dtnl-livelight-website'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: 'DTNL.LL.Website/DTNL.LL.Website.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'DTNL.LL.Website/DTNL.LL.Website.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'DTNL.LL.Website/DTNL.LL.Website.csproj'
+    arguments: '--configuration 'Release' --output $(build.artifactstagingdirectory)'
+    modifyOutputPath: false
+
+- task: SonarCloudAnalyze@1
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'backend'
+    publishLocation: 'Container'
