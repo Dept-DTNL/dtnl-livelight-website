@@ -16,11 +16,13 @@ steps:
   clean: true
 
 - task: UseDotNet@2
+  displayName: Set .NET SDK to 5.x
   inputs:
     packageType: 'sdk'
     version: '5.x'
 
 - task: SonarCloudPrepare@1
+  displayName: Prepare Sonarcloud
   inputs:
     SonarCloud: 'Sonarcloud'
     organization: 'dept'
@@ -29,16 +31,19 @@ steps:
     projectName: 'dtnl-livelight-website'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Dotnet: Restore'
   inputs:
     command: 'restore'
     projects: 'DTNL.LL.Website/DTNL.LL.Website.csproj'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Dotnet: Build'
   inputs:
     command: 'build'
     projects: 'DTNL.LL.Website/DTNL.LL.Website.csproj'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Dotnet: Publish'
   inputs:
     command: 'publish'
     publishWebProjects: false
@@ -47,8 +52,10 @@ steps:
     modifyOutputPath: false
 
 - task: SonarCloudAnalyze@1
+  displayName: Run Sonarcloud analyzer
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish artifacts
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'backend'
