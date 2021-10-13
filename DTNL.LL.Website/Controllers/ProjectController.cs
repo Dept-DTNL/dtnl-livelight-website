@@ -31,7 +31,13 @@ namespace DTNL.LL.Website.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new ProjectDTO()
+            {
+                Active = true,
+                HasTimeRange = true,
+                TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
+                TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0)
+            });
         }
 
         // POST: Project/Create
@@ -43,19 +49,15 @@ namespace DTNL.LL.Website.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _projectService.AddProjectAsync(new Project()
-                    {
-                        ProjectName = project.ProjectName,
-                        CustomerName = project.CustomerName,
-                        Active = project.Active
-                    }) ;
+
+                    await _projectService.AddProjectAsync(TurnProjectDTOToProject(project)) ;
 
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch
+            catch(Exception e)
             {
-                ViewBag.ErrorMessage = "Something went wrong when creating your project";
+                ViewBag.ErrorMessage = e.Message + "Something went wrong when creating your project";
                 return View();
             }
 
@@ -128,13 +130,36 @@ namespace DTNL.LL.Website.Controllers
         // Turns Project to a ProjectDTO
         private ProjectDTO TurnProjectToProjectDTO(Project project)
         {
-            return new ProjectDTO()
+
+            ProjectDTO dto =  new ProjectDTO()
             {
                 ProjectName = project.ProjectName,
                 Active = project.Active,
                 CustomerName = project.CustomerName,
-                Id = project.Id
+                Id = project.Id,
+                HasTimeRange = project.HasTimeRange,
+                TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Value.Hours, project.TimeRangeStart.Value.Minutes, project.TimeRangeStart.Value.Seconds) : new DateTime(),
+                TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Value.Hours, project.TimeRangeEnd.Value.Minutes, project.TimeRangeEnd.Value.Seconds) : new DateTime()
             };
+
+            return dto;
+        }
+
+        // Turns Project to a ProjectDTO
+        private Project TurnProjectDTOToProject(ProjectDTO dto)
+        {
+            Project project = new Project()
+            {
+                ProjectName = dto.ProjectName,
+                Active = dto.Active,
+                CustomerName = dto.CustomerName,
+                Id = dto.Id,
+                HasTimeRange = dto.HasTimeRange,
+                TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
+                TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
+            };
+
+            return project;
         }
 
         // GET: Project/Edit/{id}
@@ -180,13 +205,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            await _projectService.UpdateAsync(id.Value, new Project()
-            {
-                Id = id.Value,
-                Active = newValues.Active,
-                ProjectName = newValues.ProjectName,
-                CustomerName = newValues.CustomerName
-            });
+            await _projectService.UpdateAsync(id.Value, TurnProjectDTOToProject(newValues));
 
             ViewBag.ShowDialog = true;
             return RedirectToAction("Search", "Project");
