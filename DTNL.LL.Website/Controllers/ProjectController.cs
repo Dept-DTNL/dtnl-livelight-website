@@ -19,11 +19,46 @@ namespace DTNL.LL.Website.Controllers
         }
 
         // GET: Project
-        // Shows view of index
+        // Shows view of index with search functionality and overview of all projects
         [HttpGet]
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            return View(GetAllProjectDTOs());
+        }
+
+        // POST: Project
+        // Filtered list of project list
+        [HttpPost]
+        public IActionResult Index(string editFilter, string searchString)
+        {
+            List<Project> projects = new List<Project>();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                switch (editFilter)
+                {
+                    case "projectName":
+                        projects = _projectService.GetProjectsWithSpecificCustomerName(searchString).ToList();
+                        break;
+                    case "customerName":
+                        projects = _projectService.GetProjectsWithSpecificProjectName(searchString).ToList();
+                        break;
+                    case "id":
+                        if (int.TryParse(searchString, out var id))
+                            projects.Add(_projectService.FindProjectByIdAsync(id).Result);
+
+                        break;
+                }
+            }
+
+            if (projects.Count == 0)
+            {
+                return View(GetAllProjectDTOs());
+            }
+
+            List<ProjectDTO> projectViewModels = TurnProjectsToProjectDTOs(projects);
+
+            return View(projectViewModels);
         }
 
         // GET: Project/Create
@@ -64,50 +99,6 @@ namespace DTNL.LL.Website.Controllers
             return View();
         }
 
-        
-        // GET: Project/Search
-        // View of Search, with a filled project list
-        [HttpGet]
-        public IActionResult Search()
-        {
-            return View(GetAllProjectDTOs());
-        }
-
-        // POST: Project/Search
-        // Filtered list of project list
-        [HttpPost]
-        public IActionResult Search(string editFilter, string searchString)
-        {
-            List<Project> projects = new List<Project>();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                switch (editFilter)
-                {
-                    case "projectName":
-                        projects = _projectService.GetProjectsWithSpecificCustomerName(searchString).ToList();
-                        break;
-                    case "customerName":
-                        projects = _projectService.GetProjectsWithSpecificProjectName(searchString).ToList();
-                        break;
-                    case "id":
-                        if (int.TryParse(searchString, out var id))
-                            projects.Add(_projectService.FindProjectByIdAsync(id).Result);
-                        
-                        break;
-                }
-            }
-
-            if (projects.Count == 0)
-            {
-                return View(GetAllProjectDTOs());
-            }
-
-            List<ProjectDTO> projectViewModels = TurnProjectsToProjectDTOs(projects);
-
-            return View(projectViewModels);
-        }
-        
         // Getting ProjectViewModel list of all projects
         private List<ProjectDTO> GetAllProjectDTOs()
         {
@@ -208,7 +199,7 @@ namespace DTNL.LL.Website.Controllers
             await _projectService.UpdateAsync(id.Value, TurnProjectDTOToProject(newValues));
 
             ViewBag.ShowDialog = true;
-            return RedirectToAction("Search", "Project");
+            return RedirectToAction("Index", "Project");
         }
     }
 }
