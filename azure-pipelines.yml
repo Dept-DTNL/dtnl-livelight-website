@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+pr:
+  branches:
+    include:
+    - '*' 
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+  clean: true
+
+- task: SonarCloudPrepare@1
+  displayName: Prepare Sonarcloud
+  inputs:
+    SonarCloud: 'Sonarcloud'
+    organization: '$(SONARCLOUD_ORG)'
+    scannerMode: 'MSBuild'
+    projectKey: '$(SONARCLOUD_PROJECT)'
+    projectName: '$(SONARCLOUD_PROJECT)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet: Publish'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration Release --output $(build.artifactstagingdirectory)'
+
+- task: SonarCloudAnalyze@1
+  displayName: Run Sonarcloud analyzer
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish artifacts
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'backend'
