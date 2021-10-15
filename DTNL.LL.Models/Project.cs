@@ -20,5 +20,10 @@ namespace DTNL.LL.Models
         public bool Active { get; set; } = true;
 
         public virtual ICollection<Lamp> Lamps { get; set; } = new List<Lamp>();
+
+        public string GATag { get; set; }
+        public GAVersion GAVersion { get; set; }
+        public ICollection<string> GAGoals { get; set; } = new List<string>();
+        public string ApiKey { get; set; }
     }
 }
