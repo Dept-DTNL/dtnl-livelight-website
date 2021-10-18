@@ -29,7 +29,7 @@ namespace DTNL.LL.DAL.Builders
                 .WithOne()
                 .IsRequired();
 
-            builder.Property(m => m.HasTimeRange)
+            builder.Property(m => m.TimeRangeEnabled)
                 .IsRequired();
 
             builder.Property(m => m.TimeRangeStart)

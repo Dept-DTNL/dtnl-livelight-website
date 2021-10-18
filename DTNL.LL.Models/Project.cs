@@ -21,7 +21,7 @@ namespace DTNL.LL.Models
         public bool Active { get; set; } = true;
         public virtual ICollection<Lamp> Lamps { get; set; } = new List<Lamp>();
 
-        public bool HasTimeRange { get; set; } = true;
+        public bool TimeRangeEnabled { get; set; } = true;
         public TimeSpan? TimeRangeStart { get; set; }
         public TimeSpan? TimeRangeEnd { get; set; }
     }

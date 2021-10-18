@@ -128,7 +128,7 @@ namespace DTNL.LL.Website.Controllers
                 Active = project.Active,
                 CustomerName = project.CustomerName,
                 Id = project.Id,
-                HasTimeRange = project.HasTimeRange,
+                HasTimeRange = project.TimeRangeEnabled,
                 TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Value.Hours, project.TimeRangeStart.Value.Minutes, project.TimeRangeStart.Value.Seconds) : new DateTime(),
                 TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Value.Hours, project.TimeRangeEnd.Value.Minutes, project.TimeRangeEnd.Value.Seconds) : new DateTime()
             };
@@ -145,7 +145,7 @@ namespace DTNL.LL.Website.Controllers
                 Active = dto.Active,
                 CustomerName = dto.CustomerName,
                 Id = dto.Id,
-                HasTimeRange = dto.HasTimeRange,
+                TimeRangeEnabled = dto.HasTimeRange,
                 TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
                 TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
             };
@@ -189,6 +189,7 @@ namespace DTNL.LL.Website.Controllers
                 ViewBag.ErrorMessage = "No id given";
                 return View();
             }
+
 
             if (newValues is null)
             {
