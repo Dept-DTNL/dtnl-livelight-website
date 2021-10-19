@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DTNL.LL.DAL.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly DbContext _context;
+
         public Repository(DbContext context)
         {
             _context = context;

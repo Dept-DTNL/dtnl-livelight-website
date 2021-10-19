@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
@@ -7,7 +6,6 @@ using DTNL.LL.Models;
 using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
 using Google.Apis.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic.Analytics
@@ -30,11 +28,11 @@ namespace DTNL.LL.Logic.Analytics
             });
         }
 
-        public async Task<AnalyticsReport> GetAnalytics(Project project, int tickTimeInMinutes)
+        public async Task<AnalyticsReport> GetAnalytics(Project project)
         {
             var activeUsersRequest = _analyticsService.Data.Realtime.Get(project.GaProperty, _options.Ga3ActiveUsers);
             var conversionRequests = GetConversionRequests(project);
-            
+
             var activeUserResponseTask = activeUsersRequest.ExecuteAsync();
             var conversionTasks = new List<Task<RealtimeData>>(conversionRequests.Count);
             conversionRequests.ForEach(r => conversionTasks.Add(r.ExecuteAsync()));
@@ -43,12 +41,12 @@ namespace DTNL.LL.Logic.Analytics
             var conversionResponses = await Task.WhenAll(conversionTasks);
             await activeUserResponseTask;
 
-            return new AnalyticsReport()
+            return new AnalyticsReport
             {
+                ProjectId = project.Id,
                 ActiveUsers = GetActiveUserCount(activeUserResponseTask.Result),
-                Conversions = GetAmountOfConversions(conversionResponses, tickTimeInMinutes)
+                Conversions = GetAmountOfConversions(conversionResponses, project.PollingTimeInMinutes)
             };
-
         }
 
         private List<DataResource.RealtimeResource.GetRequest> GetConversionRequests(Project project)
@@ -60,7 +58,6 @@ namespace DTNL.LL.Logic.Analytics
 
             foreach (var conversionTag in project.ConversionTags)
             {
-                
                 var conversionRequest = _analyticsService.Data.Realtime.Get(project.GaProperty, conversionTag);
                 conversionRequest.Dimensions = _options.Ga3MinutesAgo;
                 conversionRequests.Add(conversionRequest);
@@ -69,9 +66,12 @@ namespace DTNL.LL.Logic.Analytics
             return conversionRequests;
         }
 
-        private int GetActiveUserCount(RealtimeData data) => int.Parse(data.Rows?.ElementAtOrDefault(0)?[0] ?? "0");
+        private int GetActiveUserCount(RealtimeData data)
+        {
+            return int.Parse(data.Rows?.ElementAtOrDefault(0)?[0] ?? "0");
+        }
 
-        private int GetAmountOfConversions(RealtimeData[] responses, int tickTImeInMinutes)
+        private int GetAmountOfConversions(RealtimeData[] responses, int pollingTimeInMinutes)
         {
             var converts = 0;
 
@@ -79,27 +79,28 @@ namespace DTNL.LL.Logic.Analytics
                 return converts;
 
             foreach (var response in responses)
-                converts += ParseConvertRows(response.Rows, tickTImeInMinutes);
+                converts += ParseConvertRows(response.Rows, pollingTimeInMinutes);
 
             return converts;
         }
 
-        private int ParseConvertRows(IList<IList<string>> rows, int tickTImeInMinutes)
+        private int ParseConvertRows(IList<IList<string>> rows, int pollingTimeInMinutes)
         {
             if (rows is null)
                 return 0;
 
             var responseTotalConverts = 0;
+
             foreach (var row in rows)
             {
                 //Data structure in rows: 2d array. 1st dimension: Grouped by minutes ago, second dimension sorted [0] minutes ago, [1] conversions
                 var goalTriggeredMinutesAgo = int.Parse(row[ResponseMinutesAgoArrayPos]);
-                if (goalTriggeredMinutesAgo >= tickTImeInMinutes)
+                if (goalTriggeredMinutesAgo >= pollingTimeInMinutes)
                     continue;
                 responseTotalConverts += int.Parse(row[ConvertsArrayPos]);
             }
 
             return responseTotalConverts;
-        } 
+        }
     }
 }

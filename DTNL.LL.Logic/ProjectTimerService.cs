@@ -6,15 +6,18 @@ using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic
 {
+    /// <summary>
+    /// This class should be registered as singleton so the secondsPassed are updated properly.
+    /// </summary>
     public class ProjectTimerService
     {
 
-        private int _secondsPassed = 0;
+        private int _secondsPassed;
         private readonly int _tickTime;
 
         private const int SecondsPerMinute = 60;
 
-        private List<int> _sleepingProjectIds = new();
+        private readonly HashSet<int> _sleepingProjectIds = new();
 
         public ProjectTimerService(IOptions<ServiceWorkerOptions> options)
         {
@@ -31,23 +34,30 @@ namespace DTNL.LL.Logic
             var newSleepingProjects = new List<Project>();
             foreach (var project in projects)
             {
-                //Todo: Set bool if project is awake
-                var awake = false;
-
-                if (!awake && !_sleepingProjectIds.Contains(project.Id))
+                if (!project.TimeRangeEnabled)
                 {
-                    newSleepingProjects.Add(project);
-                    _sleepingProjectIds.Add(project.Id);
-                }
-                if(!awake)
+                    // In case a setting has changed, make sure project is not in the disabled list.
+                    if (_sleepingProjectIds.Contains(project.Id))
+                        _sleepingProjectIds.Remove(project.Id);
                     continue;
+                }
+
+                var awake = IsTimeOfDayBetween(DateTime.Now, project.TimeRangeStart!.Value, project.TimeRangeEnd!.Value);
+
+                if (!awake)
+                {
+                    if (!_sleepingProjectIds.Contains(project.Id))
+                        newSleepingProjects.Add(project);
+
+                    _sleepingProjectIds.Add(project.Id);
+                    continue;
+                }
 
                 if(_sleepingProjectIds.Contains(project.Id))
                     _sleepingProjectIds.Remove(project.Id);
             }
 
             return newSleepingProjects;
-
         }
 
         /// <summary>
@@ -55,10 +65,13 @@ namespace DTNL.LL.Logic
         /// Each time this method is called the internal timer will be raised with set amount of seconds in the ServiceWorker options.
         /// </summary>
         /// <param name="projects"></param>
-        /// <returns></returns>
+        /// <returns>Returns a list of project whose light and analytics should updated.</returns>
         public List<Project> GetTickedProjects(IEnumerable<Project> projects)
         {
             _secondsPassed += _tickTime;
+
+            // Make sure an overflow does not happen.
+            _secondsPassed = Math.Max(0, _secondsPassed);
             var tickedProjects = new List<Project>();
 
             foreach (var project in projects)
@@ -66,12 +79,24 @@ namespace DTNL.LL.Logic
                 var pollingTimeInSeconds = project.PollingTimeInMinutes * SecondsPerMinute;
                 if(_secondsPassed % pollingTimeInSeconds != 0)
                     continue;
+
                 tickedProjects.Add(project);
             }
 
             return tickedProjects;
         }
 
+        public static bool IsTimeOfDayBetween(DateTime time,
+            TimeSpan startTime, TimeSpan endTime)
+        {
+            if (endTime == startTime)
+                return true;
+
+            if (endTime < startTime)
+                return time.TimeOfDay <= endTime || time.TimeOfDay >= startTime;
+
+            return time.TimeOfDay >= startTime && time.TimeOfDay <= endTime;
+        }
 
     }
 }

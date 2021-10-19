@@ -10,6 +10,5 @@ namespace DTNL.LL.DAL.Repositories
         }
 
         private DatabaseContext DatabaseContext => _context as DatabaseContext;
-
     }
 }

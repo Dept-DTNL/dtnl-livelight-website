@@ -5,6 +5,6 @@ namespace DTNL.LL.Logic.Analytics
 {
     public interface IAnalyticsProvider
     {
-        public Task<AnalyticsReport> GetAnalytics(Project project, int tickTimeInMinutes);
+        public Task<AnalyticsReport> GetAnalytics(Project project);
     }
 }

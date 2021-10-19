@@ -14,21 +14,27 @@ namespace DTNL.LL.Logic
         private readonly ILogger<LiveLightService> _logger;
         private readonly GaService _gaService;
         private readonly ProjectService _projectService;
+        private readonly ProjectTimerService _projectTimerService;
 
-        public LiveLightService(ILogger<LiveLightService> logger, IOptions<ServiceWorkerOptions> options, GaService gaService, ProjectService projectService)
+        public LiveLightService(ILogger<LiveLightService> logger, IOptions<ServiceWorkerOptions> options, GaService gaService, ProjectService projectService, ProjectTimerService projectTimerService)
         {
             _logger = logger;
             _gaService = gaService;
             _projectService = projectService;
+            _projectTimerService = projectTimerService;
             _scanDelayTimeInSeconds = options.Value.TickTimeInSeconds;
         }
 
         public async Task ProcessLiveLights()
         {
-            //Todo: Check if project is not off due to lockout. E.g. 5pm - 9am
             var projects = await _projectService.GetActiveProjects();
-            var analyticsReportTasks = projects.Select(
-                project => _gaService.GetAnalyticsReport(project, _scanDelayTimeInSeconds));
+
+            var enumerable = projects.ToList();
+            _projectTimerService.UpdateSleepingProjectList(enumerable);
+            var tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
+
+            var analyticsReportTasks = tickedProjects.Select(
+                project => _gaService.GetAnalyticsReport(project));
 
             var analyticsReports = await Task.WhenAll(analyticsReportTasks.ToArray());
             // Todo Create a LightService and parse AnalyticsReports

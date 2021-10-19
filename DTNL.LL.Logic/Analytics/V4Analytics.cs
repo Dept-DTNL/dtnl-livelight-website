@@ -41,45 +41,46 @@ namespace DTNL.LL.Logic.Analytics
         /// 
         /// </summary>
         /// <param name="propertyId">The analytics property Id</param>
-        /// <param name="timeRangeInMinutes">The time in minutes how long the request should look back for active users</param>
+        /// <param name="pollingTimeInMinutes">The time in minutes how long the request should look back for active users</param>
         /// <param name="metrics">GA Metric: https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema</param>
         /// <param name="dimensions">GA Dimension. Can be null</param>
         /// <returns></returns>
-        private RunRealtimeReportRequest CreateRealtimeReportRequest(Metric[] metrics, Dimension[] dimensions, string propertyId, int timeRangeInMinutes)
+        private RunRealtimeReportRequest CreateRealtimeReportRequest(Metric[] metrics, Dimension[] dimensions, string propertyId, int pollingTimeInMinutes)
         {
             var request = new RunRealtimeReportRequest()
             {
                 Property = _gaProperties + propertyId,
                 Metrics = { metrics },
-                MinuteRanges = { new MinuteRange { StartMinutesAgo = timeRangeInMinutes, EndMinutesAgo = 0 } }
+                MinuteRanges = { new MinuteRange { StartMinutesAgo = pollingTimeInMinutes, EndMinutesAgo = 0 } }
             };
             if(dimensions is not null)
                 request.Dimensions.AddRange(dimensions);
             return request;
         }
 
-        private RunRealtimeReportRequest CreateActiveUsersRequest(string propertyId, int timeRangeInMinutes)
+        private RunRealtimeReportRequest CreateActiveUsersRequest(string propertyId, int pollingTimeInMinutes)
         {
             return CreateRealtimeReportRequest(new[] {new Metric {Name = _gaActiveUsers}}, null, propertyId,
-                timeRangeInMinutes);
+                pollingTimeInMinutes);
         }
 
-        private RunRealtimeReportRequest CreateConversionsRequest(string propertyId, int timeRangeInMinutes)
+        private RunRealtimeReportRequest CreateConversionsRequest(string propertyId, int pollingTimeInMinutes)
         {
             return CreateRealtimeReportRequest(new[] {new Metric {Name = _gaConversions}},
-                new[] {new Dimension {Name = _gaEventName}}, propertyId, timeRangeInMinutes);
+                new[] {new Dimension {Name = _gaEventName}}, propertyId, pollingTimeInMinutes);
         }
 
-        public async Task<AnalyticsReport> GetAnalytics(Project project, int tickTimeInMinutes)
+        public async Task<AnalyticsReport> GetAnalytics(Project project)
         {
-            var activeUsersResponse = _gaClient.RunRealtimeReportAsync(CreateActiveUsersRequest(project.GaProperty, tickTimeInMinutes));
+            var activeUsersResponse = _gaClient.RunRealtimeReportAsync(CreateActiveUsersRequest(project.GaProperty, project.PollingTimeInMinutes));
             var conversionsResponse =
-                _gaClient.RunRealtimeReportAsync(CreateConversionsRequest(project.GaProperty, tickTimeInMinutes));
+                _gaClient.RunRealtimeReportAsync(CreateConversionsRequest(project.GaProperty, project.PollingTimeInMinutes));
 
             await Task.WhenAll(activeUsersResponse, conversionsResponse);
 
             return new AnalyticsReport()
             {
+                ProjectId = project.Id,
                 ActiveUsers = GetActiveUsers(activeUsersResponse.Result),
                 Conversions = GetConversions(conversionsResponse.Result, project.ConversionTags)
             };

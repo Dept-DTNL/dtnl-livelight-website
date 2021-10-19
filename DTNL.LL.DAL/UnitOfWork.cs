@@ -4,10 +4,9 @@ namespace DTNL.LL.DAL.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-
         private readonly DatabaseContext _context;
-        private ProjectRepository _projectRepository;
         private LampRepository _lampRepository;
+        private ProjectRepository _projectRepository;
 
         public UnitOfWork(DatabaseContext context)
         {

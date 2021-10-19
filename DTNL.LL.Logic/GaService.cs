@@ -17,17 +17,14 @@ namespace DTNL.LL.Logic
             _v4Analytics = v4Analytics;
         }
 
-        public async Task<AnalyticsReport> GetAnalyticsReport(Project project, int timeSinceLastTick)
+        public async Task<AnalyticsReport> GetAnalyticsReport(Project project)
         {
-            switch(project.AnalyticsVersion)
+            return project.AnalyticsVersion switch
             {
-                case AnalyticsVersion.V3:
-                    return await _v3Analytics.GetAnalytics(project, timeSinceLastTick);
-                case AnalyticsVersion.V4:
-                    return await _v4Analytics.GetAnalytics(project, timeSinceLastTick);
-                default:
-                    throw new NotImplementedException();
-            }
+                AnalyticsVersion.V3 => await _v3Analytics.GetAnalytics(project),
+                AnalyticsVersion.V4 => await _v4Analytics.GetAnalytics(project),
+                _ => throw new NotImplementedException(),
+            };
         }
     }
 }

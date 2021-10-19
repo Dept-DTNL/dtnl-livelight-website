@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DTNL.LL.DAL.Builders
 {
-    class LampConfiguration : IEntityTypeConfiguration<Lamp>
+    internal class LampConfiguration : IEntityTypeConfiguration<Lamp>
     {
         public void Configure(EntityTypeBuilder<Lamp> builder)
         {
