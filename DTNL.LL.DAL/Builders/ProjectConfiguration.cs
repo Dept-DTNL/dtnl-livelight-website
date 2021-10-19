@@ -29,6 +29,15 @@ namespace DTNL.LL.DAL.Builders
                 .WithOne()
                 .IsRequired();
 
+            builder.Property(m => m.TimeRangeEnabled)
+                .IsRequired();
+
+            builder.Property(m => m.TimeRangeStart)
+                .IsRequired(false);
+
+            builder.Property(m => m.TimeRangeEnd)
+                .IsRequired(false);
+
             builder.ToTable("Projects");
         }
     }

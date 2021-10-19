@@ -19,62 +19,17 @@ namespace DTNL.LL.Website.Controllers
         }
 
         // GET: Project
-        // Shows view of index
+        // Shows view of index with search functionality and overview of all projects
         [HttpGet]
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: Project/Create
-        // Shows view of create project
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Project/Create
-        // Runs when create button is presses
-        [HttpPost]
-        public async Task<ActionResult> Create([FromForm]ProjectDTO project)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    await _projectService.AddProjectAsync(new Project()
-                    {
-                        ProjectName = project.ProjectName,
-                        CustomerName = project.CustomerName,
-                        Active = project.Active
-                    }) ;
-
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch
-            {
-                ViewBag.ErrorMessage = "Something went wrong when creating your project";
-                return View();
-            }
-
-            return View();
-        }
-
-        
-        // GET: Project/Search
-        // View of Search, with a filled project list
-        [HttpGet]
-        public IActionResult Search()
+        public IActionResult Index()
         {
             return View(GetAllProjectDTOs());
         }
 
-        // POST: Project/Search
+        // POST: Project
         // Filtered list of project list
         [HttpPost]
-        public IActionResult Search(string editFilter, string searchString)
+        public IActionResult Index(string editFilter, string searchString)
         {
             List<Project> projects = new List<Project>();
 
@@ -91,7 +46,7 @@ namespace DTNL.LL.Website.Controllers
                     case "id":
                         if (int.TryParse(searchString, out var id))
                             projects.Add(_projectService.FindProjectByIdAsync(id).Result);
-                        
+
                         break;
                 }
             }
@@ -105,7 +60,45 @@ namespace DTNL.LL.Website.Controllers
 
             return View(projectViewModels);
         }
-        
+
+        // GET: Project/Create
+        // Shows view of create project
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new ProjectDTO()
+            {
+                Active = true,
+                HasTimeRange = true,
+                TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
+                TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0)
+            });
+        }
+
+        // POST: Project/Create
+        // Runs when create button is presses
+        [HttpPost]
+        public async Task<ActionResult> Create([FromForm]ProjectDTO project)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    await _projectService.AddProjectAsync(TurnProjectDTOToProject(project)) ;
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch(Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message + "Something went wrong when creating your project";
+                return View();
+            }
+
+            return View();
+        }
+
         // Getting ProjectViewModel list of all projects
         private List<ProjectDTO> GetAllProjectDTOs()
         {
@@ -128,13 +121,36 @@ namespace DTNL.LL.Website.Controllers
         // Turns Project to a ProjectDTO
         private ProjectDTO TurnProjectToProjectDTO(Project project)
         {
-            return new ProjectDTO()
+
+            ProjectDTO dto =  new ProjectDTO()
             {
                 ProjectName = project.ProjectName,
                 Active = project.Active,
                 CustomerName = project.CustomerName,
-                Id = project.Id
+                Id = project.Id,
+                HasTimeRange = project.TimeRangeEnabled,
+                TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Value.Hours, project.TimeRangeStart.Value.Minutes, project.TimeRangeStart.Value.Seconds) : new DateTime(),
+                TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Value.Hours, project.TimeRangeEnd.Value.Minutes, project.TimeRangeEnd.Value.Seconds) : new DateTime()
             };
+
+            return dto;
+        }
+
+        // Turns Project to a ProjectDTO
+        private Project TurnProjectDTOToProject(ProjectDTO dto)
+        {
+            Project project = new Project()
+            {
+                ProjectName = dto.ProjectName,
+                Active = dto.Active,
+                CustomerName = dto.CustomerName,
+                Id = dto.Id,
+                TimeRangeEnabled = dto.HasTimeRange,
+                TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
+                TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
+            };
+
+            return project;
         }
 
         // GET: Project/Edit/{id}
@@ -174,22 +190,17 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
+
             if (newValues is null)
             {
                 ViewBag.ErrorMessage = "No project given";
                 return View();
             }
 
-            await _projectService.UpdateAsync(id.Value, new Project()
-            {
-                Id = id.Value,
-                Active = newValues.Active,
-                ProjectName = newValues.ProjectName,
-                CustomerName = newValues.CustomerName
-            });
+            await _projectService.UpdateAsync(id.Value, TurnProjectDTOToProject(newValues));
 
             ViewBag.ShowDialog = true;
-            return RedirectToAction("Search", "Project");
+            return RedirectToAction("Index", "Project");
         }
     }
 }
