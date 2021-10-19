@@ -39,6 +39,15 @@ namespace DTNL.LL.DAL.Builders
                 .WithOne()
                 .IsRequired();
 
+            builder.Property(m => m.TimeRangeEnabled)
+                .IsRequired();
+
+            builder.Property(m => m.TimeRangeStart)
+                .IsRequired(false);
+
+            builder.Property(m => m.TimeRangeEnd)
+                .IsRequired(false);
+
             var conversionValueComparer = new ValueComparer<List<string>>(
                 (c1, c2) => c1.SequenceEqual(c2),
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
