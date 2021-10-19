@@ -37,6 +37,31 @@
             @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
         </div>
     </div>
+    
+    
+    <div class="form-group">
+        Have time range?
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.HasTimeRange, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.HasTimeRange, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        Time range start
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TimeRangeStart, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TimeRangeStart, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        Time range end
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TimeRangeEnd, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TimeRangeEnd )
+        </div>
+    </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
