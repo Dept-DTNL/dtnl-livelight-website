@@ -17,7 +17,13 @@ namespace DTNL.LL.Models
         [Range(typeof(bool), "false", "true")]
         public bool Active { get; set; } = true;
 
-        public string GAProperty { get; set; }
+        public string GaProperty { get; set; }
+
+        public int PollingTimeInMinutes { get; set; }
+
+        public AnalyticsVersion AnalyticsVersion { get; set; }
+
+        public List<string> ConversionTags { get; set; }
 
         public virtual ICollection<Lamp> Lamps { get; set; } = new List<Lamp>();
     }

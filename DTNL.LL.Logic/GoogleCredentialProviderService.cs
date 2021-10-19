@@ -1,23 +1,22 @@
 ﻿using DTNL.LL.Logic.Options;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic
 {
     public class GoogleCredentialProviderService
     {
-        private readonly IConfiguration _configuration;
+        private readonly GAuthOptions _gAuthOptions;
 
-        public GoogleCredentialProviderService(IConfiguration configuration)
+        public GoogleCredentialProviderService(IOptions<GAuthOptions> config)
         {
-            _configuration = configuration;
+            _gAuthOptions = config.Value;
         }
 
         public GoogleCredential GetGoogleCredentials()
         {
-            var gAuth = new GAuthOptions();
-            _configuration.GetSection(GAuthOptions.GAuth).Bind(gAuth);
-            return GoogleCredential.FromFile(gAuth.Analytics);
+            return GoogleCredential.FromFile(_gAuthOptions.Analytics);
         }
     }
 }

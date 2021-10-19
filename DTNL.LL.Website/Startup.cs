@@ -1,20 +1,10 @@
-using System;
-using System.Net;
-using System.Security.Policy;
-using System.Text.Json;
-using DTNL.LL.DAL;
 using DTNL.LL.Logic;
 using DTNL.LL.Logic.Analytics;
 using DTNL.LL.Logic.Helper;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Logic.Workers;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,10 +30,17 @@ namespace DTNL.LL.Website
             services.AddScoped<LampService>();
             services.AddScoped<AuthService>();
 
+            services.AddSingleton<LiveLightService>();
             services.AddSingleton<GaService>();
+            services.AddSingleton<ProjectTimerService>();
             services.AddSingleton<GoogleCredentialProviderService>();
             services.AddSingleton<V3Analytics>();
             services.AddSingleton<V4Analytics>();
+
+            services.Configure<GAuthOptions>(Configuration.GetSection(GAuthOptions.GAuth));
+            services.Configure<GaApiTagsOptions>(Configuration.GetSection(GaApiTagsOptions.GaApiTags));
+            services.Configure<ServiceWorkerOptions>(Configuration.GetSection(ServiceWorkerOptions.ServiceWorker));
+
             services.AddHostedService<LiveLightWorker>();
 
 

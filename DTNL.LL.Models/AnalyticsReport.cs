@@ -10,7 +10,7 @@ namespace DTNL.LL.Models
     {
         public int ActiveUsers { get; set; } = 0;
 
-        public int Converts { get; set; } = 0;
+        public int Conversions { get; set; } = 0;
 
         public int ProjectId { get; set; }
     }

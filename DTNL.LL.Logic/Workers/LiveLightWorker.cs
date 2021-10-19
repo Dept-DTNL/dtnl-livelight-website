@@ -9,59 +9,48 @@ using Microsoft.Extensions.Logging;
 
 namespace DTNL.LL.Logic.Workers
 {
-    public class LiveLightWorker : BackgroundService
+    public class LiveLightWorker : IHostedService, IDisposable
     {
         //Todo: Make config value
-        public const int ScanDelayTimeInSeconds = 60;
-        public const int MilliSecondsInASecond = 1000;
-        public const int SecondsInAMinute = 60;
+        public const int TickDelayInSeconds = 60;
+
+
+        private Timer _timer;
 
         private readonly ILogger<LiveLightWorker> _logger;
-        private readonly GaService _gaService;
         private readonly IServiceScopeFactory _scopeFactory;
-
-        public LiveLightWorker(ILogger<LiveLightWorker> logger, GaService gaService, IServiceScopeFactory scopeFactory, V3Analytics v3)
+        
+        public LiveLightWorker(ILogger<LiveLightWorker> logger, IServiceScopeFactory scopeFactory, V3Analytics v3, V4Analytics v4)
         {
             _logger = logger;
-            _gaService = gaService;
             _scopeFactory = scopeFactory;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var startTime = DateTime.Now;
-                try
-                {
-                    await ProcessLiveLightProjects();
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, "Error Processing Projects.");
-                }
-
-                var endTime = DateTime.Now;
-
-                var timeDif = endTime.Subtract(startTime);
-                var timeUntilNextScan = ScanDelayTimeInSeconds - timeDif.TotalSeconds;
-                await Task.Delay((int)(timeUntilNextScan * MilliSecondsInASecond), cancellationToken);
-            }
-        }
-
-        private async Task ProcessLiveLightProjects()
+        private async void ProcessLiveLights(object _)
         {
             using var scope = _scopeFactory.CreateScope();
-            var projectService = scope.ServiceProvider.GetRequiredService<ProjectService>();
-            var projects = await projectService.GetActiveProjects();
-            var analyticsReports = projects.Select(
-                project => _gaService.GetAnalyticsTrafficReport(project.GAProperty, ScanDelayTimeInSeconds * SecondsInAMinute, project.Id));
+            var liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
+            await liveLightService.ProcessLiveLights();
 
-            await Task.WhenAll(analyticsReports.ToArray());
-            foreach (var analyticsReport in analyticsReports)
-            {
-                //Handle Lamp manipulation
-            }
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(TickDelayInSeconds));
+
+            return Task.CompletedTask;
+        }
+        
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _timer.Change(Timeout.Infinite, 0);
+
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _timer?.Dispose();
         }
     }
 }
