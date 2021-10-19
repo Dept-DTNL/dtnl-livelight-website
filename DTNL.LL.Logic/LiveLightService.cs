@@ -9,7 +9,6 @@ namespace DTNL.LL.Logic
 {
     public class LiveLightService
     {
-        private readonly int _scanDelayTimeInSeconds;
 
         private readonly ILogger<LiveLightService> _logger;
         private readonly GaService _gaService;
@@ -22,7 +21,6 @@ namespace DTNL.LL.Logic
             _gaService = gaService;
             _projectService = projectService;
             _projectTimerService = projectTimerService;
-            _scanDelayTimeInSeconds = options.Value.TickTimeInSeconds;
         }
 
         public async Task ProcessLiveLights()
