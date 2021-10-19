@@ -38,6 +38,10 @@ namespace DTNL.LL.Logic
             if (newValues.CustomerName is not null) project.CustomerName = newValues.CustomerName;
             if (newValues.ProjectName is not null) project.ProjectName = newValues.ProjectName;
 
+            project.TimeRangeEnabled = newValues.TimeRangeEnabled;
+            if (newValues.TimeRangeStart is not null) project.TimeRangeStart = newValues.TimeRangeStart;
+            if (newValues.TimeRangeEnd is not null) project.TimeRangeEnd = newValues.TimeRangeEnd;
+
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();
         }
