@@ -8,7 +8,6 @@
         public string Ga4ActiveUsers { get; set; }
         public string Ga4Conversions { get; set; }
         public string Ga4EventName { get; set; }
-
         public string Ga3ActiveUsers { get; set; }
         public string Ga3MinutesAgo { get; set; }
     }

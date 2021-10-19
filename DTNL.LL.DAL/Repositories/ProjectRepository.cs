@@ -13,6 +13,7 @@ namespace DTNL.LL.DAL.Repositories
         }
 
         private DatabaseContext DatabaseContext => _context as DatabaseContext;
+
         public async Task<List<Project>> GetActiveProjects()
         {
             return await _context.Set<Project>().Where(e => e.Active).ToListAsync();

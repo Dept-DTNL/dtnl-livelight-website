@@ -30,7 +30,6 @@ namespace DTNL.LL.Models
         public AnalyticsVersion AnalyticsVersion { get; set; }
 
         public List<string> ConversionTags { get; set; }
-
-        public virtual ICollection<Lamp> Lamps { get; set; } = new List<Lamp>();
+        
     }
 }

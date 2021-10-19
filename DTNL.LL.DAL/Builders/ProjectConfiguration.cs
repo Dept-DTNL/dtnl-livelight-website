@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DTNL.LL.DAL.Builders
 {
-    class ProjectConfiguration : IEntityTypeConfiguration<Project>
+    internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {
@@ -34,7 +34,7 @@ namespace DTNL.LL.DAL.Builders
 
             builder.Property(m => m.Active)
                 .IsRequired();
-            
+
             builder.HasMany(m => m.Lamps)
                 .WithOne()
                 .IsRequired();

@@ -31,8 +31,8 @@ namespace DTNL.LL.Website
             services.AddScoped<AuthService>();
 
             services.AddSingleton<LiveLightService>();
-            services.AddSingleton<GaService>();
             services.AddSingleton<ProjectTimerService>();
+            services.AddSingleton<GaService>();
             services.AddSingleton<GoogleCredentialProviderService>();
             services.AddSingleton<V3Analytics>();
             services.AddSingleton<V4Analytics>();
