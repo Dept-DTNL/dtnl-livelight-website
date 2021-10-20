@@ -24,10 +24,6 @@ namespace DTNL.LL.DAL.Builders
 
             builder.Property(m => m.Active)
                 .IsRequired();
-            
-            builder.HasMany(m => m.Lamps)
-                .WithOne()
-                .IsRequired();
 
             builder.Property(m => m.TimeRangeEnabled)
                 .IsRequired();
@@ -37,10 +33,6 @@ namespace DTNL.LL.DAL.Builders
 
             builder.Property(m => m.TimeRangeEnd)
                 .IsRequired();
-
-            builder.Property(m => m.GATag);
-
-            builder.Property(m => m.GAVersion);
 
             builder.ToTable("Projects");
         }

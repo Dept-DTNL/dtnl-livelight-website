@@ -3,12 +3,7 @@ using DTNL.LL.DAL;
 using DTNL.LL.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq.Expressions;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Http;
 
 namespace DTNL.LL.Logic
 {
@@ -50,31 +45,6 @@ namespace DTNL.LL.Logic
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();
         }
-
-        public async Task UpdateAccountTokenAsync(int projectId, string token)
-        {
-            string statusCode;
-
-            using (var client = new HttpClient())
-            {
-                var url = "https://api.lifx.com/v1/lights/all";
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                var response = await client.GetAsync(url);
-                statusCode = response.StatusCode.ToString();
-            }
-
-            if (statusCode is not "OK")
-            {
-                throw new Exception("Key given is wrong: " + statusCode);
-            }
-
-            Project project = await FindProjectByIdAsync(projectId);
-            project.ApiKey = token;
-
-            _unitOfWork.Projects.Update(project);
-            await _unitOfWork.CommitAsync();
-        }
-
 
         public async Task<IEnumerable<Project>> GetAllAsync()
         {
