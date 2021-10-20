@@ -25,6 +25,10 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.Active)
                 .IsRequired();
 
+            builder.Property(m => m.LifxApiKey)
+                .IsRequired(false);
+
+            // Time Range
             builder.Property(m => m.TimeRangeEnabled)
                 .IsRequired();
 
@@ -33,6 +37,47 @@ namespace DTNL.LL.DAL.Builders
 
             builder.Property(m => m.TimeRangeEnd)
                 .IsRequired();
+
+            // Light settings
+            builder.Property(m => m.LowTrafficColor)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("red");
+
+            builder.Property(m => m.LowTrafficBrightness)
+                .IsRequired()
+                .HasDefaultValue(0.5);
+
+            builder.Property(m => m.MediumTrafficColor)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("orange");
+
+            builder.Property(m => m.MediumTrafficBrightness)
+                .IsRequired()
+                .HasDefaultValue(0.5);
+
+            builder.Property(m => m.HighTrafficColor)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("green");
+
+            builder.Property(m => m.HighTrafficBrightness)
+                .IsRequired()
+                .HasDefaultValue(0.5);
+
+            builder.Property(m => m.ConversionColor)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("blue");
+
+            builder.Property(m => m.ConversionCycle)
+                .IsRequired()
+                .HasDefaultValue(0.5);
+
+            builder.Property(m => m.ConversionPeriod)
+                .IsRequired()
+                .HasDefaultValue(20);
 
             builder.ToTable("Projects");
         }

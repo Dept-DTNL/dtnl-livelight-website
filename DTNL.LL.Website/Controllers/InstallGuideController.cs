@@ -8,12 +8,10 @@ namespace DTNL.LL.Website.Controllers
 {
     public class InstallGuideController : Controller
     {
-        private readonly LampService _lampService;
         private readonly ProjectService _projectService;
 
-        public InstallGuideController(LampService lampService, ProjectService projectService)
+        public InstallGuideController(ProjectService projectService)
         {
-            _lampService = lampService;
             _projectService = projectService;
         }
 
@@ -67,7 +65,7 @@ namespace DTNL.LL.Website.Controllers
             
             try
             {
-                await _projectService.UpdateAccountTokenAsync(projectId.Value, key);
+                //await _projectService.UpdateAccountTokenAsync(projectId.Value, key);
             }
             catch (Exception e)
             {
@@ -112,15 +110,7 @@ namespace DTNL.LL.Website.Controllers
 
             // Check if all values have been inserted
             // TODO: Remove initialization of values like following. This is here now as a placeholder
-            Lamp lamp = new Lamp()
-            {
-                AccessToken = key,
-                ExpiresAt = DateTime.MinValue,
-                RefreshToken = "RefreshToken",
-                TokenType = "TokenType"
-            };
 
-            await _lampService.AddLampsAsync(lamp, projectId.Value);
              
             return RedirectToAction("ThankYou", "InstallGuide", new { projectId = projectId });
         }

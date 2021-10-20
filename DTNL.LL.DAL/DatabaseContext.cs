@@ -21,7 +21,6 @@ namespace DTNL.LL.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new ProjectConfiguration());
-            builder.ApplyConfiguration(new LampConfiguration());
         }
 
 

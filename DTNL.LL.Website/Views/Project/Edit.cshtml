@@ -8,20 +8,25 @@
 <h1>Edit a project</h1>
 <h3>@ViewBag.ErrorMessage</h3>
 
+<div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'Basic')">Basic</button>
+    <button class="tablinks" onclick="openTab(event, 'LightSettings')">Light Settings</button>
+</div>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
+<div>
+    <div class="form-horizontal tabcontent" id="Basic">
         <hr />
         <div class="form-group">
             Project name
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
             </div>
         </div>
-        
+
         <div class="form-group">
             Customer name
             <div class="col-md-10">
@@ -37,7 +42,7 @@
                 @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
             </div>
         </div>
-        
+
         <div class="form-group">
             Have time range?
             <div class="col-md-10">
@@ -53,19 +58,103 @@
                 @Html.ValidationMessageFor(model => model.TimeRangeStart, "", new { @class = "text-danger" })
             </div>
         </div>
-    
+
         <div class="form-group">
             Time range end
             <div class="col-md-10">
                 @Html.EditorFor(model => model.TimeRangeEnd, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TimeRangeEnd )
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Edit" class="btn btn-default" />
+                @Html.ValidationMessageFor(model => model.TimeRangeEnd)
             </div>
         </div>
     </div>
+    
+    <div id="LightSettings" class="form-horizontal tabcontent" style="display: none">
+        <div class="form-group">
+            Low Traffic Color
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LowTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LowTrafficColor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            Low Traffic Brightness
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LowTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LowTrafficBrightness, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            Medium Traffic Color
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MediumTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MediumTrafficColor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            Medium Traffic Brightness
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MediumTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MediumTrafficBrightness, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            High Traffic Color
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HighTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HighTrafficColor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            High Traffic Brightness
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HighTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HighTrafficBrightness, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            Conversion Color
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ConversionColor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConversionColor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            Conversion Cycle
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ConversionCycle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConversionCycle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            Conversion Period
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ConversionPeriod, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConversionPeriod, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Edit" class="btn btn-default" />
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+
+</div>
 }

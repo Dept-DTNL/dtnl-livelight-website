@@ -71,7 +71,16 @@ namespace DTNL.LL.Website.Controllers
                 Active = true,
                 HasTimeRange = true,
                 TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
-                TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0)
+                TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0),
+                LowTrafficColor = "red",
+                LowTrafficBrightness = 0.5,
+                MediumTrafficColor = "orange",
+                MediumTrafficBrightness = 0.5,
+                HighTrafficColor = "green",
+                HighTrafficBrightness = 0.5,
+                ConversionColor = "blue",
+                ConversionPeriod = 0.5,
+                ConversionCycle = 20
             });
         }
 
@@ -85,7 +94,7 @@ namespace DTNL.LL.Website.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    await _projectService.AddProjectAsync(TurnProjectDTOToProject(project)) ;
+                    await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project)) ;
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -97,60 +106,6 @@ namespace DTNL.LL.Website.Controllers
             }
 
             return View();
-        }
-
-        // Getting ProjectViewModel list of all projects
-        private List<ProjectDTO> GetAllProjectDTOs()
-        {
-            List<Project> projects = _projectService.GetAllAsync().Result.ToList();
-            return TurnProjectsToProjectDTOs(projects);
-        }
-
-        // Turning Project List into ProjectViewModel List
-        private List<ProjectDTO> TurnProjectsToProjectDTOs(List<Project> projects)
-        {
-            List<ProjectDTO> projectViewModels = new List<ProjectDTO>();
-            foreach (Project project in projects)
-            {
-                projectViewModels.Add(TurnProjectToProjectDTO(project));
-            }
-
-            return projectViewModels;
-        }
-
-        // Turns Project to a ProjectDTO
-        private ProjectDTO TurnProjectToProjectDTO(Project project)
-        {
-
-            ProjectDTO dto =  new ProjectDTO()
-            {
-                ProjectName = project.ProjectName,
-                Active = project.Active,
-                CustomerName = project.CustomerName,
-                Id = project.Id,
-                HasTimeRange = project.TimeRangeEnabled,
-                TimeRangeStart =  new DateTime(1, 1, 1, project.TimeRangeStart.Hours, project.TimeRangeStart.Minutes, project.TimeRangeStart.Seconds),
-                TimeRangeEnd = new DateTime(1, 1, 1, project.TimeRangeEnd.Hours, project.TimeRangeEnd.Minutes, project.TimeRangeEnd.Seconds)
-            };
-
-            return dto;
-        }
-
-        // Turns Project to a ProjectDTO
-        private Project TurnProjectDTOToProject(ProjectDTO dto)
-        {
-            Project project = new Project()
-            {
-                ProjectName = dto.ProjectName,
-                Active = dto.Active,
-                CustomerName = dto.CustomerName,
-                Id = dto.Id,
-                TimeRangeEnabled = dto.HasTimeRange,
-                TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
-                TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
-            };
-
-            return project;
         }
 
         // GET: Project/Edit/{id}
@@ -173,7 +128,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            return View(TurnProjectToProjectDTO(projectToUpdate));
+            return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
 
         }
 
@@ -197,10 +152,29 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            await _projectService.UpdateAsync(id.Value, TurnProjectDTOToProject(newValues));
+            await _projectService.UpdateAsync(id.Value, ProjectDTO.TurnProjectDTOToProject(newValues));
 
             ViewBag.ShowDialog = true;
             return RedirectToAction("Index", "Project");
+        }
+
+        // Getting ProjectViewModel list of all projects
+        private List<ProjectDTO> GetAllProjectDTOs()
+        {
+            List<Project> projects = _projectService.GetAllAsync().Result.ToList();
+            return TurnProjectsToProjectDTOs(projects);
+        }
+
+        // Turning Project List into ProjectViewModel List
+        private List<ProjectDTO> TurnProjectsToProjectDTOs(List<Project> projects)
+        {
+            List<ProjectDTO> projectViewModels = new List<ProjectDTO>();
+            foreach (Project project in projects)
+            {
+                projectViewModels.Add(ProjectDTO.TurnProjectToProjectDTO(project));
+            }
+
+            return projectViewModels;
         }
     }
 }
