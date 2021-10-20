@@ -12,6 +12,6 @@ namespace DTNL.LL.Models
 
         public int Conversions { get; set; } = 0;
 
-        public int ProjectId { get; set; }
+        public Project Project { get; set; }
     }
 }

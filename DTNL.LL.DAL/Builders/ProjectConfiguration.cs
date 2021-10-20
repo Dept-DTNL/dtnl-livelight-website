@@ -35,8 +35,10 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.Active)
                 .IsRequired();
 
-            builder.HasMany(m => m.Lamps)
-                .WithOne()
+            builder.Property(m => m.LifxApiKey)
+                .IsRequired(false);
+
+            builder.Property(m => m.LightGroupName)
                 .IsRequired();
 
             builder.Property(m => m.TimeRangeEnabled)

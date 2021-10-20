@@ -80,7 +80,7 @@ namespace DTNL.LL.Logic.Analytics
 
             return new AnalyticsReport()
             {
-                ProjectId = project.Id,
+                Project = project,
                 ActiveUsers = GetActiveUsers(activeUsersResponse.Result),
                 Conversions = GetConversions(conversionsResponse.Result, project.ConversionTags)
             };

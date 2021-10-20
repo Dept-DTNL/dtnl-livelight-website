@@ -18,6 +18,7 @@ namespace DTNL.LL.Logic.Workers
 
         private Timer _timer;
 
+        //Todo: Add Logging in case request errors
         private readonly ILogger<LiveLightWorker> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
         

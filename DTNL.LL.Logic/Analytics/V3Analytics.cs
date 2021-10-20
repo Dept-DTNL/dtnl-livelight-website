@@ -43,7 +43,7 @@ namespace DTNL.LL.Logic.Analytics
 
             return new AnalyticsReport
             {
-                ProjectId = project.Id,
+                Project = project,
                 ActiveUsers = GetActiveUserCount(activeUserResponseTask.Result),
                 Conversions = GetAmountOfConversions(conversionResponses, project.PollingTimeInMinutes)
             };

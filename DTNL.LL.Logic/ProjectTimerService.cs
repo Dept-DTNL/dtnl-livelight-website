@@ -42,7 +42,7 @@ namespace DTNL.LL.Logic
                     continue;
                 }
 
-                var awake = IsTimeOfDayBetween(DateTime.Now, project.TimeRangeStart!.Value, project.TimeRangeEnd!.Value);
+                var awake = IsTimeOfDayBetween(DateTime.Now, project.TimeRangeStart, project.TimeRangeEnd);
 
                 if (!awake)
                 {
