@@ -33,10 +33,14 @@ namespace DTNL.LL.DAL.Builders
                 .IsRequired();
 
             builder.Property(m => m.TimeRangeStart)
-                .IsRequired(false);
+                .IsRequired();
 
             builder.Property(m => m.TimeRangeEnd)
-                .IsRequired(false);
+                .IsRequired();
+
+            builder.Property(m => m.GATag);
+
+            builder.Property(m => m.GAVersion);
 
             builder.ToTable("Projects");
         }

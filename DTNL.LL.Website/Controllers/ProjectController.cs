@@ -129,8 +129,8 @@ namespace DTNL.LL.Website.Controllers
                 CustomerName = project.CustomerName,
                 Id = project.Id,
                 HasTimeRange = project.TimeRangeEnabled,
-                TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Value.Hours, project.TimeRangeStart.Value.Minutes, project.TimeRangeStart.Value.Seconds) : new DateTime(),
-                TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Value.Hours, project.TimeRangeEnd.Value.Minutes, project.TimeRangeEnd.Value.Seconds) : new DateTime()
+                TimeRangeStart =  new DateTime(1, 1, 1, project.TimeRangeStart.Hours, project.TimeRangeStart.Minutes, project.TimeRangeStart.Seconds),
+                TimeRangeEnd = new DateTime(1, 1, 1, project.TimeRangeEnd.Hours, project.TimeRangeEnd.Minutes, project.TimeRangeEnd.Seconds)
             };
 
             return dto;

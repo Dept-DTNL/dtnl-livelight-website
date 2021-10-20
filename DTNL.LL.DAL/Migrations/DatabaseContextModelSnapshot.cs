@@ -68,10 +68,19 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("GATag")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GAVersion")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProjectName")
                         .IsRequired()
@@ -81,10 +90,10 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<bool>("TimeRangeEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<TimeSpan?>("TimeRangeEnd")
+                    b.Property<TimeSpan>("TimeRangeEnd")
                         .HasColumnType("time");
 
-                    b.Property<TimeSpan?>("TimeRangeStart")
+                    b.Property<TimeSpan>("TimeRangeStart")
                         .HasColumnType("time");
 
                     b.HasKey("Id");

@@ -22,12 +22,12 @@ namespace DTNL.LL.Models
         public virtual ICollection<Lamp> Lamps { get; set; } = new List<Lamp>();
 
         public bool TimeRangeEnabled { get; set; } = true;
-        public TimeSpan? TimeRangeStart { get; set; }
-        public TimeSpan? TimeRangeEnd { get; set; }
+        public TimeSpan TimeRangeStart { get; set; }
+        public TimeSpan TimeRangeEnd { get; set; }
         
         public string GATag { get; set; }
         public GAVersion GAVersion { get; set; }
-        public ICollection<string> GAGoals { get; set; } = new List<string>();
+        //public ICollection<string> GAGoals { get; set; } = new List<string>();
         public string ApiKey { get; set; }
     }
 }
