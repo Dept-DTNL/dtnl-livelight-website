@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DTNL.LL.Models
@@ -27,17 +26,21 @@ namespace DTNL.LL.Models
 
         // Lamp connection
         public string LifxApiKey { get; set; }
+        public string LightGroupName { get; set; }
+        public Guid Uuid { get;  set; } 
+        public bool GuideEnabled { get; set; }
 
         // Lamp light setting
         public string LowTrafficColor { get; set; }
-        public double LowTrafficBrightness{ get; set; }
+        public double LowTrafficBrightness { get; set; }
         public string MediumTrafficColor { get; set; }
         public double MediumTrafficBrightness { get; set; }
+        public int MediumTrafficAmount { get; set; }
         public string HighTrafficColor { get; set; }
         public double HighTrafficBrightness { get; set; }
+        public int HighTrafficAmount { get; set; }
         public int ConversionCycle { get; set; }
         public double ConversionPeriod { get; set; }
         public string ConversionColor { get; set; }
-
     }
 }

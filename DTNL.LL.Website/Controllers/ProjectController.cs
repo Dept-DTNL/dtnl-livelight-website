@@ -72,6 +72,8 @@ namespace DTNL.LL.Website.Controllers
                 HasTimeRange = true,
                 TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
                 TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0),
+                MediumTrafficAmount = 5,
+                HighTrafficAmount = 50,
                 LowTrafficColor = "red",
                 LowTrafficBrightness = 0.5,
                 MediumTrafficColor = "orange",
@@ -93,7 +95,6 @@ namespace DTNL.LL.Website.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
                     await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project)) ;
 
                     return RedirectToAction(nameof(Index));

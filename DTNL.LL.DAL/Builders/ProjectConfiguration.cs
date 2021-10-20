@@ -25,8 +25,18 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.Active)
                 .IsRequired();
 
+            // Lamp connection
             builder.Property(m => m.LifxApiKey)
                 .IsRequired(false);
+
+            builder.Property(m => m.LightGroupName)
+                .IsRequired();
+
+            builder.Property(m => m.Uuid)
+                .IsRequired();
+
+            builder.Property(m => m.GuideEnabled)
+                .IsRequired();
 
             // Time Range
             builder.Property(m => m.TimeRangeEnabled)
@@ -48,6 +58,10 @@ namespace DTNL.LL.DAL.Builders
                 .IsRequired()
                 .HasDefaultValue(0.5);
 
+            builder.Property(m => m.MediumTrafficAmount)
+                .IsRequired()
+                .HasDefaultValue(5);
+
             builder.Property(m => m.MediumTrafficColor)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -65,6 +79,10 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.HighTrafficBrightness)
                 .IsRequired()
                 .HasDefaultValue(0.5);
+
+            builder.Property(m => m.HighTrafficAmount)
+                .IsRequired()
+                .HasDefaultValue(50);
 
             builder.Property(m => m.ConversionColor)
                 .IsRequired()

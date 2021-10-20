@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Edit a project";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Edit a project</h1>
@@ -10,6 +9,7 @@
 
 <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Basic')">Basic</button>
+    <button class="tablinks" onclick="openTab(event, 'LampSetUp')">Lamp Set-Up</button>
     <button class="tablinks" onclick="openTab(event, 'LightSettings')">Light Settings</button>
 </div>
 
@@ -67,79 +67,110 @@
             </div>
         </div>
     </div>
-    
+
+    <div id="LampSetUp" class="form-horizontal tabcontent" style="display: none">
+        <div class="form-group">
+            Guide is enabled?
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GuideEnabled, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GuideEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            Group name
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LightGroupName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LightGroupName)
+            </div>
+        </div>
+    </div>
+
     <div id="LightSettings" class="form-horizontal tabcontent" style="display: none">
+        <div class="form-group">
+            Medium Traffic Amount 
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MediumTrafficAmount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MediumTrafficAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            High Traffic Amount 
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HighTrafficAmount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HighTrafficAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="form-group">
             Low Traffic Color
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LowTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LowTrafficColor, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.LowTrafficColor, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.LowTrafficColor, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             Low Traffic Brightness
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LowTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LowTrafficBrightness, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.LowTrafficBrightness, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.LowTrafficBrightness, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             Medium Traffic Color
             <div class="col-md-10">
-                @Html.EditorFor(model => model.MediumTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MediumTrafficColor, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.MediumTrafficColor, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.MediumTrafficColor, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             Medium Traffic Brightness
             <div class="col-md-10">
-                @Html.EditorFor(model => model.MediumTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MediumTrafficBrightness, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.MediumTrafficBrightness, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.MediumTrafficBrightness, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             High Traffic Color
             <div class="col-md-10">
-                @Html.EditorFor(model => model.HighTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.HighTrafficColor, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.HighTrafficColor, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.HighTrafficColor, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             High Traffic Brightness
             <div class="col-md-10">
-                @Html.EditorFor(model => model.HighTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.HighTrafficBrightness, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.HighTrafficBrightness, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.HighTrafficBrightness, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             Conversion Color
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ConversionColor, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ConversionColor, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ConversionColor, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ConversionColor, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             Conversion Cycle
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ConversionCycle, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ConversionCycle, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ConversionCycle, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ConversionCycle, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
             Conversion Period
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ConversionPeriod, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ConversionPeriod, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ConversionPeriod, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ConversionPeriod, "", new {@class = "text-danger"})
             </div>
         </div>
     </div>
-    
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Edit" class="btn btn-default" />
         </div>
     </div>
-    
+
     <script>
         function openTab(evt, cityName) {
             var i, tabcontent, tablinks;
