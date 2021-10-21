@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
 using Google.Analytics.Data.V1Beta;
+using Google.Apis.Auth.OAuth2;
 using Google.Protobuf.Collections;
 using Grpc.Auth;
 using Microsoft.Extensions.Configuration;
@@ -23,12 +24,12 @@ namespace DTNL.LL.Logic.Analytics
 
         public V4Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider)
         {
-            var apiTags = config.Value;
+            GaApiTagsOptions apiTags = config.Value;
             _gaProperties = apiTags.Ga4Properties;
             _gaActiveUsers = apiTags.Ga4ActiveUsers;
             _gaEventName = apiTags.Ga4EventName;
             _gaConversions = apiTags.Ga4Conversions;
-            var credentials = googleCredentialProvider.GetGoogleCredentials();
+            GoogleCredential credentials = googleCredentialProvider.GetGoogleCredentials();
             var builder = new BetaAnalyticsDataClientBuilder
             {
                 ChannelCredentials = credentials.ToChannelCredentials()
@@ -72,8 +73,8 @@ namespace DTNL.LL.Logic.Analytics
 
         public async Task<AnalyticsReport> GetAnalytics(Project project)
         {
-            var activeUsersResponse = _gaClient.RunRealtimeReportAsync(CreateActiveUsersRequest(project.GaProperty, project.PollingTimeInMinutes));
-            var conversionsResponse =
+            Task<RunRealtimeReportResponse> activeUsersResponse = _gaClient.RunRealtimeReportAsync(CreateActiveUsersRequest(project.GaProperty, project.PollingTimeInMinutes));
+            Task<RunRealtimeReportResponse> conversionsResponse =
                 _gaClient.RunRealtimeReportAsync(CreateConversionsRequest(project.GaProperty, project.PollingTimeInMinutes));
 
             await Task.WhenAll(activeUsersResponse, conversionsResponse);
@@ -90,15 +91,15 @@ namespace DTNL.LL.Logic.Analytics
 
         public int GetConversions(RunRealtimeReportResponse response, List<string> conversionTags)
         {
-            var conversions = 0;
+            int conversions = 0;
             if (response.RowCount is 0)
                 return 0;
-            foreach (var row in response.Rows)
+            foreach (Row row in response.Rows)
             {
-                var dimensionValue = row.DimensionValues[0].Value;
+                string dimensionValue = row.DimensionValues[0].Value;
                 if(!conversionTags.Contains(dimensionValue))
                     continue;
-                var metricsAmount = int.Parse(row.MetricValues[0].Value);
+                int metricsAmount = int.Parse(row.MetricValues[0].Value);
                 conversions += metricsAmount;
             }
             return conversions;

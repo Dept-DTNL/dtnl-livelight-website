@@ -8,12 +8,6 @@ namespace DTNL.LL.Website.Controllers
 {
     public class InstallGuideController : Controller
     {
-        private readonly LampService _lampService;
-
-        public InstallGuideController(LampService lampService)
-        {
-            _lampService = lampService;
-        }
 
         [HttpGet]
         [Route("projects/{projectId}/add-lamp")]
@@ -79,8 +73,7 @@ namespace DTNL.LL.Website.Controllers
                 RefreshToken = "RefreshToken",
                 TokenType = "TokenType"
             };
-
-            await _lampService.AddLampsAsync(lamp, projectId.Value);
+            
              
             return RedirectToAction("ThankYou", "InstallGuide", new { projectId = projectId });
         }

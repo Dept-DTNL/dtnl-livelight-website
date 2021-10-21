@@ -30,15 +30,15 @@ namespace DTNL.LL.Logic.Analytics
 
         public async Task<AnalyticsReport> GetAnalytics(Project project)
         {
-            var activeUsersRequest = _analyticsService.Data.Realtime.Get(project.GaProperty, _options.Ga3ActiveUsers);
-            var conversionRequests = GetConversionRequests(project);
+            DataResource.RealtimeResource.GetRequest activeUsersRequest = _analyticsService.Data.Realtime.Get(project.GaProperty, _options.Ga3ActiveUsers);
+            List<DataResource.RealtimeResource.GetRequest> conversionRequests = GetConversionRequests(project);
 
-            var activeUserResponseTask = activeUsersRequest.ExecuteAsync();
+            Task<RealtimeData> activeUserResponseTask = activeUsersRequest.ExecuteAsync();
             var conversionTasks = new List<Task<RealtimeData>>(conversionRequests.Count);
             conversionRequests.ForEach(r => conversionTasks.Add(r.ExecuteAsync()));
 
             // Wait until both tasks are finished so we can process them.
-            var conversionResponses = await Task.WhenAll(conversionTasks);
+            RealtimeData[] conversionResponses = await Task.WhenAll(conversionTasks);
             await activeUserResponseTask;
 
             return new AnalyticsReport
@@ -56,9 +56,9 @@ namespace DTNL.LL.Logic.Analytics
             if (project.ConversionTags is null)
                 return conversionRequests;
 
-            foreach (var conversionTag in project.ConversionTags)
+            foreach (string conversionTag in project.ConversionTags)
             {
-                var conversionRequest = _analyticsService.Data.Realtime.Get(project.GaProperty, conversionTag);
+                DataResource.RealtimeResource.GetRequest conversionRequest = _analyticsService.Data.Realtime.Get(project.GaProperty, conversionTag);
                 conversionRequest.Dimensions = _options.Ga3MinutesAgo;
                 conversionRequests.Add(conversionRequest);
             }
@@ -73,12 +73,12 @@ namespace DTNL.LL.Logic.Analytics
 
         private int GetAmountOfConversions(RealtimeData[] responses, int pollingTimeInMinutes)
         {
-            var converts = 0;
+            int converts = 0;
 
             if (responses.Length == 0)
                 return converts;
 
-            foreach (var response in responses)
+            foreach (RealtimeData response in responses)
                 converts += ParseConvertRows(response.Rows, pollingTimeInMinutes);
 
             return converts;
@@ -89,12 +89,12 @@ namespace DTNL.LL.Logic.Analytics
             if (rows is null)
                 return 0;
 
-            var responseTotalConverts = 0;
+            int responseTotalConverts = 0;
 
-            foreach (var row in rows)
+            foreach (IList<string> row in rows)
             {
                 //Data structure in rows: 2d array. 1st dimension: Grouped by minutes ago, second dimension sorted [0] minutes ago, [1] conversions
-                var goalTriggeredMinutesAgo = int.Parse(row[ResponseMinutesAgoArrayPos]);
+                int goalTriggeredMinutesAgo = int.Parse(row[ResponseMinutesAgoArrayPos]);
                 if (goalTriggeredMinutesAgo >= pollingTimeInMinutes)
                     continue;
                 responseTotalConverts += int.Parse(row[ConvertsArrayPos]);

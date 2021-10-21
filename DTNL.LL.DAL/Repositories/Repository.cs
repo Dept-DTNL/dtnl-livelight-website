@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DTNL.LL.DAL.Repositories
 {
@@ -16,14 +17,14 @@ namespace DTNL.LL.DAL.Repositories
             _context = context;
         }
 
-        public async ValueTask<T> GetByIdAsync(int id)
+        public ValueTask<T> GetByIdAsync(int id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return _context.Set<T>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public Task<List<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return _context.Set<T>().ToListAsync();
         }
 
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)
@@ -36,14 +37,14 @@ namespace DTNL.LL.DAL.Repositories
             return _context.Set<T>().SingleOrDefaultAsync(expression);
         }
 
-        public async Task AddAsync(T entity)
+        public ValueTask<EntityEntry<T>> AddAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            return _context.Set<T>().AddAsync(entity);
         }
 
-        public async Task AddRangeAsync(IEnumerable<T> entities)
+        public Task AddRangeAsync(IEnumerable<T> entities)
         {
-            await _context.Set<T>().AddRangeAsync(entities);
+            return _context.Set<T>().AddRangeAsync(entities);
         }
 
         public void Remove(T entity)
