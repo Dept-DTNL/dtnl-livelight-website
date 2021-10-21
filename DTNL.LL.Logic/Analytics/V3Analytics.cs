@@ -34,7 +34,7 @@ namespace DTNL.LL.Logic.Analytics
             List<DataResource.RealtimeResource.GetRequest> conversionRequests = GetConversionRequests(project);
 
             Task<RealtimeData> activeUserResponseTask = activeUsersRequest.ExecuteAsync();
-            var conversionTasks = new List<Task<RealtimeData>>(conversionRequests.Count);
+            List<Task<RealtimeData>> conversionTasks = new List<Task<RealtimeData>>(conversionRequests.Count);
             conversionRequests.ForEach(r => conversionTasks.Add(r.ExecuteAsync()));
 
             // Wait until both tasks are finished so we can process them.
@@ -51,7 +51,7 @@ namespace DTNL.LL.Logic.Analytics
 
         private List<DataResource.RealtimeResource.GetRequest> GetConversionRequests(Project project)
         {
-            var conversionRequests = new List<DataResource.RealtimeResource.GetRequest>();
+            List<DataResource.RealtimeResource.GetRequest> conversionRequests = new List<DataResource.RealtimeResource.GetRequest>();
 
             if (project.ConversionTags is null)
                 return conversionRequests;
