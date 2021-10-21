@@ -3,9 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
+using Google;
 using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
 using Google.Apis.Services;
+using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic.Analytics
@@ -16,12 +19,13 @@ namespace DTNL.LL.Logic.Analytics
         private const int ConvertsArrayPos = 1;
 
         private readonly AnalyticsService _analyticsService;
-
         private readonly GaApiTagsOptions _options;
+        private readonly ILogger _logger;
 
-        public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider)
+        public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider, ILogger<V3Analytics> logger)
         {
             _options = config.Value;
+            _logger = logger;
             _analyticsService = new AnalyticsService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credentialProvider.GetGoogleCredentials()

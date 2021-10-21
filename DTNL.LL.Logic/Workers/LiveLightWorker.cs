@@ -17,8 +17,7 @@ namespace DTNL.LL.Logic.Workers
 
 
         private Timer _timer;
-
-        //Todo: Add Logging in case request errors
+        
         private readonly ILogger<LiveLightWorker> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
         
@@ -39,6 +38,7 @@ namespace DTNL.LL.Logic.Workers
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Starting LiveLight Worker with a polling time of {0} seconds.", _tickDelayInSeconds);
             _timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
 
             return Task.CompletedTask;

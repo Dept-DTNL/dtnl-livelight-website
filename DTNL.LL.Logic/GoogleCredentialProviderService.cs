@@ -16,7 +16,7 @@ namespace DTNL.LL.Logic
 
         public GoogleCredential GetGoogleCredentials()
         {
-            return GoogleCredential.FromFile(_gAuthOptions.Analytics);
+            return GoogleCredential.FromJson(_gAuthOptions.Analytics);
         }
     }
 }

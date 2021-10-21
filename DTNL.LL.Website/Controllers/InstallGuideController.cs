@@ -66,14 +66,6 @@ namespace DTNL.LL.Website.Controllers
 
             // Check if all values have been inserted
             // TODO: Remove initialization of values like following. This is here now as a placeholder
-            Lamp lamp = new Lamp()
-            {
-                AccessToken = key,
-                ExpiresAt = DateTime.MinValue,
-                RefreshToken = "RefreshToken",
-                TokenType = "TokenType"
-            };
-            
              
             return RedirectToAction("ThankYou", "InstallGuide", new { projectId = projectId });
         }

@@ -45,10 +45,10 @@ namespace DTNL.LL.DAL.Builders
                 .IsRequired();
 
             builder.Property(m => m.TimeRangeStart)
-                .IsRequired(false);
+                .IsRequired();
 
             builder.Property(m => m.TimeRangeEnd)
-                .IsRequired(false);
+                .IsRequired();
 
             var conversionValueComparer = new ValueComparer<List<string>>(
                 (c1, c2) => c1.SequenceEqual(c2),

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
 using Google.Apis.Logging;
+using LifxCloud.NET.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -32,23 +33,42 @@ namespace DTNL.LL.Logic
         {
             IEnumerable<Project> projects = await _projectService.GetActiveProjects();
 
-            var enumerable = projects.ToList();
-            var newSleepingProjects = _projectTimerService.UpdateSleepingProjectList(enumerable);
+            List<Project> enumerable = projects.ToList();
+            List<Project> newSleepingProjects = _projectTimerService.UpdateSleepingProjectList(enumerable);
 
             await TurnOffLights(newSleepingProjects);
 
-            var tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
+            List<Project> tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
 
             IEnumerable<Task<AnalyticsReport>> analyticsReportTasks = tickedProjects.Select(
-                project => _gaService.GetAnalyticsReport(project));
+                GetAnalyticsReport);
 
-            var analyticsReports = await Task.WhenAll(analyticsReportTasks.ToArray());
+            AnalyticsReport[] analyticsReports = await Task.WhenAll(analyticsReportTasks.ToArray());
             await UpdateLights(analyticsReports);
+        }
+
+        private Task<AnalyticsReport> GetAnalyticsReport(Project project)
+        {
+            try
+            {
+                return _gaService.GetAnalyticsReport(project);
+            }
+            catch (Exception exception)
+            {
+                //Make sure the worker keeps running thee other projects.
+                _logger.LogError(exception, "Could not retrieve Analytics for project {0}:{1}.", project.Id, project.ProjectName);
+                return Task.FromResult(new AnalyticsReport()
+                {
+                    Project = project,
+                    ActiveUsers = 0,
+                    Conversions = 0
+                });
+            }
         }
 
         private async Task TurnOffLights(List<Project> projects)
         {
-            var tasks = new List<Task>(projects.Count);
+            List<Task> tasks = new List<Task>(projects.Count);
             tasks.AddRange(projects.Select(LifxService.DisableLightsAsync));
             await Task.WhenAll(tasks);
         }
@@ -89,7 +109,7 @@ namespace DTNL.LL.Logic
 
         private async Task UpdateLightColors(AnalyticsReport[] reports)
         {
-            var tasks = new List<Task>(reports.Length);
+            var tasks = new List<Task<ApiResponse>>(reports.Length);
             foreach (var report in reports)
             {
                 var color = GetActivityColor(report);
@@ -112,6 +132,8 @@ namespace DTNL.LL.Logic
                 // Makes sure the lamp doesn't flash more than the time it takes for the next polling.
                 var maxAmountOfCycles = (project.PollingTimeInMinutes * SecondsInAMinute) / project.ConversionPeriod;
                 var maxAmountOfCyclesRounded = Convert.ToInt32(maxAmountOfCycles);
+
+                //Todo add a division property to project so when can scale down the cycles of a project.
                 var cycles = Math.Min(report.Conversions, maxAmountOfCyclesRounded);
 
                 tasks.Add(LifxService.BreatheLightsAsync(project, project.ConversionColor, cycles, project.ConversionPeriod));

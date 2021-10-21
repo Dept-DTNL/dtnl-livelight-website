@@ -56,27 +56,5 @@ namespace DTNL.LL.Logic
             return await client.BreathEffect(CreateLabel(project), BreatheEffect(color, cycles, period));
         }
 
-        //---------------------------------------------------------------------------------------------\\
-        private const string apikey = "cfcd89c1b94fe18c1dbb15f11904182dc39e7a707b923223932ae105a5adc772";
-        public static async Task TestEnableLight()
-        {
-            var client = await CreateClientAsync(apikey);
-            if(true)
-                await client.SetState(new Selector.GroupLabel("LL"), new SetStateRequest()
-                    {
-                        Power = PowerState.Off,
-                        Brightness = 0.25,
-                        Color = "green",
-                        Fast = true
-                    });
-            // await client.BreathEffect(new Selector.GroupLabel("LL"), new BreatheEffectRequest()
-            //     {
-            //         Color = "white saturation:0.0 brightness:0.5",
-            //         Cycles = 10,
-            //         Peak = 0.5,
-            //         Period = 1,
-            //         PowerOn = true
-            // });
-        }
     }
 }
