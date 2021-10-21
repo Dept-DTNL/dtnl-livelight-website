@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
+using DTNL.LL.Models;
 using Google.Apis.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -25,16 +27,16 @@ namespace DTNL.LL.Logic
 
         public async Task ProcessLiveLights()
         {
-            var projects = await _projectService.GetActiveProjects();
+            IEnumerable<Project> projects = await _projectService.GetActiveProjects();
 
-            var enumerable = projects.ToList();
+            List<Project> enumerable = projects.ToList();
             _projectTimerService.UpdateSleepingProjectList(enumerable);
-            var tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
+            List<Project> tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
 
-            var analyticsReportTasks = tickedProjects.Select(
+            IEnumerable<Task<AnalyticsReport>> analyticsReportTasks = tickedProjects.Select(
                 project => _gaService.GetAnalyticsReport(project));
 
-            var analyticsReports = await Task.WhenAll(analyticsReportTasks.ToArray());
+            AnalyticsReport[] analyticsReports = await Task.WhenAll(analyticsReportTasks.ToArray());
             // Todo Create a LightService and parse AnalyticsReports
         }
         

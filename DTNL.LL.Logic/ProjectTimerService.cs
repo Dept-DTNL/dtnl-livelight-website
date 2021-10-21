@@ -32,7 +32,7 @@ namespace DTNL.LL.Logic
         public List<Project> UpdateSleepingProjectList(IEnumerable<Project> projects)
         {
             var newSleepingProjects = new List<Project>();
-            foreach (var project in projects)
+            foreach (Project project in projects)
             {
                 if (!project.TimeRangeEnabled)
                 {
@@ -42,7 +42,7 @@ namespace DTNL.LL.Logic
                     continue;
                 }
 
-                var awake = IsTimeOfDayBetween(DateTime.Now, project.TimeRangeStart!.Value, project.TimeRangeEnd!.Value);
+                bool awake = IsTimeOfDayBetween(DateTime.Now, project.TimeRangeStart, project.TimeRangeEnd);
 
                 if (!awake)
                 {
@@ -74,9 +74,9 @@ namespace DTNL.LL.Logic
             _secondsPassed = Math.Max(0, _secondsPassed);
             var tickedProjects = new List<Project>();
 
-            foreach (var project in projects)
+            foreach (Project project in projects)
             {
-                var pollingTimeInSeconds = project.PollingTimeInMinutes * SecondsPerMinute;
+                int pollingTimeInSeconds = project.PollingTimeInMinutes * SecondsPerMinute;
                 if(_secondsPassed % pollingTimeInSeconds != 0)
                     continue;
 

@@ -27,7 +27,6 @@ namespace DTNL.LL.Website
             services.RegisterDatabase(Configuration["database"]);
             services.AddControllersWithViews();
             services.AddScoped<ProjectService>();
-            services.AddScoped<LampService>();
             services.AddScoped<AuthService>();
             services.AddScoped<LiveLightService>();
 

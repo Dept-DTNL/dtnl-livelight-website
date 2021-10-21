@@ -44,7 +44,7 @@ namespace DTNL.LL.Website.Controllers
                         projects = _projectService.GetProjectsWithSpecificProjectName(searchString).ToList();
                         break;
                     case "id":
-                        if (int.TryParse(searchString, out var id))
+                        if (int.TryParse(searchString, out int id))
                             projects.Add(_projectService.FindProjectByIdAsync(id).Result);
 
                         break;
@@ -129,8 +129,8 @@ namespace DTNL.LL.Website.Controllers
                 CustomerName = project.CustomerName,
                 Id = project.Id,
                 HasTimeRange = project.TimeRangeEnabled,
-                TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Value.Hours, project.TimeRangeStart.Value.Minutes, project.TimeRangeStart.Value.Seconds) : new DateTime(),
-                TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Value.Hours, project.TimeRangeEnd.Value.Minutes, project.TimeRangeEnd.Value.Seconds) : new DateTime()
+                TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Hours, project.TimeRangeStart.Minutes, project.TimeRangeStart.Seconds) : new DateTime(),
+                TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Hours, project.TimeRangeEnd.Minutes, project.TimeRangeEnd.Seconds) : new DateTime()
             };
 
             return dto;
@@ -165,7 +165,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            var projectToUpdate = await _projectService.FindProjectByIdAsync(id.Value);
+            Project projectToUpdate = await _projectService.FindProjectByIdAsync(id.Value);
 
             if (projectToUpdate is null)
             {
