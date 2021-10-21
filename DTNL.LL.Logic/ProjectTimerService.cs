@@ -31,7 +31,7 @@ namespace DTNL.LL.Logic
         /// <returns>A list of all projects that will go to sleep mode this tick. Lamps in this list should be turned off.</returns>
         public List<Project> UpdateSleepingProjectList(IEnumerable<Project> projects)
         {
-            var newSleepingProjects = new List<Project>();
+            List<Project> newSleepingProjects = new List<Project>();
             foreach (Project project in projects)
             {
                 if (!project.TimeRangeEnabled)
@@ -72,7 +72,7 @@ namespace DTNL.LL.Logic
 
             // Make sure an overflow does not happen.
             _secondsPassed = Math.Max(0, _secondsPassed);
-            var tickedProjects = new List<Project>();
+            List<Project> tickedProjects = new List<Project>();
 
             foreach (Project project in projects)
             {
