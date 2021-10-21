@@ -43,7 +43,7 @@ namespace DTNL.LL.Website
             services.AddHostedService<LiveLightWorker>();
 
 
-            var gAuth = new GAuthOptions();
+            GAuthOptions gAuth = new GAuthOptions();
             Configuration.GetSection(GAuthOptions.GAuth).Bind(gAuth);
 
             services.AddAuthentication(options =>

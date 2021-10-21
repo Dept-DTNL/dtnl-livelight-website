@@ -48,7 +48,7 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.TimeRangeEnd)
                 .IsRequired(false);
 
-            var conversionValueComparer = new ValueComparer<List<string>>(
+            ValueComparer<List<string>> conversionValueComparer = new ValueComparer<List<string>>(
                 (c1, c2) => c1.SequenceEqual(c2),
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                 c => c.ToList());
