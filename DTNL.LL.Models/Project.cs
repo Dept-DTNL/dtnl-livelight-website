@@ -20,8 +20,8 @@ namespace DTNL.LL.Models
         public virtual ICollection<Lamp> Lamps { get; set; } = new List<Lamp>();
 
         public bool TimeRangeEnabled { get; set; } = true;
-        public TimeSpan? TimeRangeStart { get; set; }
-        public TimeSpan? TimeRangeEnd { get; set; }
+        public TimeSpan TimeRangeStart { get; set; }
+        public TimeSpan TimeRangeEnd { get; set; }
         
         public string GaProperty { get; set; }
 

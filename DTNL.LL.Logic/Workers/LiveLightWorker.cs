@@ -30,8 +30,8 @@ namespace DTNL.LL.Logic.Workers
 
         private async void ProcessLiveLights(object _)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
+            using IServiceScope scope = _scopeFactory.CreateScope();
+            LiveLightService liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
 
             await liveLightService.ProcessLiveLights();
         }

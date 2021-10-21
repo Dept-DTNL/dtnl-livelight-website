@@ -17,12 +17,12 @@ namespace DTNL.LL.Logic
             _v4Analytics = v4Analytics;
         }
 
-        public async Task<AnalyticsReport> GetAnalyticsReport(Project project)
+        public Task<AnalyticsReport> GetAnalyticsReport(Project project)
         {
             return project.AnalyticsVersion switch
             {
-                AnalyticsVersion.V3 => await _v3Analytics.GetAnalytics(project),
-                AnalyticsVersion.V4 => await _v4Analytics.GetAnalytics(project),
+                AnalyticsVersion.V3 => _v3Analytics.GetAnalytics(project),
+                AnalyticsVersion.V4 => _v4Analytics.GetAnalytics(project),
                 _ => throw new NotImplementedException(),
             };
         }

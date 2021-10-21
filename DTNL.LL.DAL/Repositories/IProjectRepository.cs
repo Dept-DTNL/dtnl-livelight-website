@@ -6,6 +6,6 @@ namespace DTNL.LL.DAL.Repositories
 {
     public interface IProjectRepository : IRepository<Project>
     {
-        public Task<List<Project>> GetActiveProjects();
+        public Task<List<Project>> GetActiveProjectsAsync();
     }
 }

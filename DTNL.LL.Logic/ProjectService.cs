@@ -16,18 +16,15 @@ namespace DTNL.LL.Logic
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProjectAsync(Project project)
+        public Task AddProjectAsync(Project project)
         {
-            await _unitOfWork.Projects.AddAsync(project);
-            await _unitOfWork.CommitAsync();
+            _unitOfWork.Projects.AddAsync(project);
+            return _unitOfWork.CommitAsync();
         }
 
-        public async Task<Project> FindProjectByIdAsync(int id)
+        public ValueTask<Project> FindProjectByIdAsync(int id)
         {
-            var project = await _unitOfWork.Projects.GetByIdAsync(id);
-            await _unitOfWork.CommitAsync();
-
-            return project;
+            return _unitOfWork.Projects.GetByIdAsync(id);
         }
 
         public async Task UpdateAsync(int oldProjectId, Project newValues)
@@ -39,27 +36,21 @@ namespace DTNL.LL.Logic
             if (newValues.ProjectName is not null) project.ProjectName = newValues.ProjectName;
 
             project.TimeRangeEnabled = newValues.TimeRangeEnabled;
-            if (newValues.TimeRangeStart is not null) project.TimeRangeStart = newValues.TimeRangeStart;
-            if (newValues.TimeRangeEnd is not null) project.TimeRangeEnd = newValues.TimeRangeEnd;
+            project.TimeRangeStart = newValues.TimeRangeStart;
+            project.TimeRangeEnd = newValues.TimeRangeEnd;
 
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<IEnumerable<Project>> GetAllAsync()
+        public Task<List<Project>> GetAllAsync()
         {
-            var projects = await _unitOfWork.Projects.GetAllAsync();
-            await _unitOfWork.CommitAsync();
-
-            return projects;
+            return _unitOfWork.Projects.GetAllAsync();
         }
 
         public IEnumerable<Project> GetSpecifiedProjects(Expression<Func<Project, bool>> expression)
         {
-            var projects =  _unitOfWork.Projects.Find(expression);
-            _unitOfWork.CommitAsync();
-
-            return projects;
+            return _unitOfWork.Projects.Find(expression);
         }
 
         public IEnumerable<Project> GetProjectsWithSpecificCustomerName(string customerName)
@@ -74,7 +65,7 @@ namespace DTNL.LL.Logic
 
         public async Task<IEnumerable<Project>> GetActiveProjects()
         {
-            return await _unitOfWork.Projects.GetActiveProjects();
+            return await _unitOfWork.Projects.GetActiveProjectsAsync();
         }
     }
 }
