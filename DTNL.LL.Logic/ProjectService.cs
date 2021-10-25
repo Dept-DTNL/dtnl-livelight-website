@@ -53,6 +53,8 @@ namespace DTNL.LL.Logic
             project.HighTrafficBrightness = newValues.HighTrafficBrightness;
 
             project.GuideEnabled = newValues.GuideEnabled;
+            project.AnalyticsVersion = newValues.AnalyticsVersion;
+            if (newValues.PollingTimeInMinutes > 0) project.PollingTimeInMinutes = newValues.PollingTimeInMinutes;
 
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();

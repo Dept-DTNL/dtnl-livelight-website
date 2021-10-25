@@ -24,6 +24,7 @@ namespace DTNL.LL.Website
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
+            //services.RegisterDatabase(Configuration.GetConnectionString("DbDSN"));
             services.RegisterDatabase(Configuration["database"]);
             services.AddControllersWithViews();
             services.AddScoped<ProjectService>();

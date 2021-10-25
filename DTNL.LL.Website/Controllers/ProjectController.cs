@@ -84,7 +84,9 @@ namespace DTNL.LL.Website.Controllers
                 HighTrafficBrightness = 0.5,
                 ConversionColor = "blue",
                 ConversionPeriod = 0.5,
-                ConversionCycle = 20
+                ConversionCycle = 20,
+                PollingTimeInMinutes = 1,
+                AnalyticsVersion = AnalyticsVersion.V4
             });
         }
 

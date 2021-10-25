@@ -30,7 +30,8 @@ namespace DTNL.LL.DAL.Builders
                 .IsRequired();
 
             builder.Property(m => m.PollingTimeInMinutes)
-                .IsRequired();
+                .IsRequired()
+                .HasDefaultValue(1);
 
             builder.Property(m => m.Active)
                 .IsRequired();

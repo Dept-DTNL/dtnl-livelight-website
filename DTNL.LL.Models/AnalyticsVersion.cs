@@ -2,6 +2,6 @@
 {
     public enum AnalyticsVersion
     {
-        V3, V4
+        V3 = 3, V4 = 4
     }
 }

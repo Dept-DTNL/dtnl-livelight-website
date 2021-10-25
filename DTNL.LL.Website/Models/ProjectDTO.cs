@@ -1,9 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Text.RegularExpressions;
 using DTNL.LL.Models;
-using Microsoft.JSInterop.Infrastructure;
 
 namespace DTNL.LL.Website.Models
 {
@@ -28,6 +25,10 @@ namespace DTNL.LL.Website.Models
         // Lamp connection
         public string LightGroupName { get; set; }
         public bool GuideEnabled { get; set; }
+
+        [Range(1, int.MaxValue)]
+        public int PollingTimeInMinutes { get; set; }
+        public AnalyticsVersion AnalyticsVersion { get; set; }
 
         // Lamp light setting
         [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
@@ -73,7 +74,9 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = project.HighTrafficAmount,
                 ConversionColor = project.ConversionColor,
                 ConversionCycle = project.ConversionCycle,
-                ConversionPeriod = project.ConversionPeriod
+                ConversionPeriod = project.ConversionPeriod,
+                PollingTimeInMinutes = project.PollingTimeInMinutes,
+                AnalyticsVersion = project.AnalyticsVersion
             };
 
             return dto;
@@ -103,7 +106,10 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = dto.HighTrafficAmount,
                 ConversionColor = dto.ConversionColor,
                 ConversionCycle = dto.ConversionCycle,
-                ConversionPeriod = dto.ConversionPeriod
+                ConversionPeriod = dto.ConversionPeriod,
+                PollingTimeInMinutes = dto.PollingTimeInMinutes,
+                AnalyticsVersion = dto.AnalyticsVersion
+
             };
 
             return project;
