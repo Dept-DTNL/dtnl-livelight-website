@@ -83,6 +83,7 @@ namespace DTNL.LL.Website.Controllers
             }
 
             return Redirect($"/projects/{projectUuid}/add-lamp/thank-you");
+           
         }
 
 

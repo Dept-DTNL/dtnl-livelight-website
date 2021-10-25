@@ -1,17 +1,10 @@
-using System;
-using System.Net;
-using System.Security.Policy;
-using DTNL.LL.DAL;
 using DTNL.LL.Logic;
+using DTNL.LL.Logic.Analytics;
 using DTNL.LL.Logic.Helper;
 using DTNL.LL.Logic.Options;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
+using DTNL.LL.Logic.Workers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,9 +28,22 @@ namespace DTNL.LL.Website
             services.AddControllersWithViews();
             services.AddScoped<ProjectService>();
             services.AddScoped<AuthService>();
+            services.AddScoped<LiveLightService>();
+
+            services.AddSingleton<ProjectTimerService>();
+            services.AddSingleton<GaService>();
+            services.AddSingleton<GoogleCredentialProviderService>();
+            services.AddSingleton<V3Analytics>();
+            services.AddSingleton<V4Analytics>();
+
+            services.Configure<GAuthOptions>(Configuration.GetSection(GAuthOptions.GAuth));
+            services.Configure<GaApiTagsOptions>(Configuration.GetSection(GaApiTagsOptions.GaApiTags));
+            services.Configure<ServiceWorkerOptions>(Configuration.GetSection(ServiceWorkerOptions.ServiceWorker));
+
+            services.AddHostedService<LiveLightWorker>();
 
 
-            var gAuth = new GAuthOptions();
+            GAuthOptions gAuth = new GAuthOptions();
             Configuration.GetSection(GAuthOptions.GAuth).Bind(gAuth);
 
             services.AddAuthentication(options =>

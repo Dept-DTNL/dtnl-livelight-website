@@ -120,7 +120,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            var projectToUpdate = await _projectService.FindProjectByIdAsync(id.Value);
+            Project projectToUpdate = await _projectService.FindProjectByIdAsync(id.Value);
 
             if (projectToUpdate is null)
             {

@@ -1,10 +1,14 @@
-﻿using DTNL.LL.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DTNL.LL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DTNL.LL.DAL.Builders
 {
-    class ProjectConfiguration : IEntityTypeConfiguration<Project>
+    internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {
@@ -21,6 +25,12 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.CustomerName)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            builder.Property(m => m.AnalyticsVersion)
+                .IsRequired();
+
+            builder.Property(m => m.PollingTimeInMinutes)
+                .IsRequired();
 
             builder.Property(m => m.Active)
                 .IsRequired();
@@ -96,6 +106,16 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.ConversionPeriod)
                 .IsRequired()
                 .HasDefaultValue(20);
+
+            ValueComparer<List<string>> conversionValueComparer = new ValueComparer<List<string>>(
+                (c1, c2) => c1.SequenceEqual(c2),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList());
+
+            builder.Property(m => m.ConversionTags)
+                .HasConversion(v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                .Metadata.SetValueComparer(conversionValueComparer);
 
             builder.ToTable("Projects");
         }

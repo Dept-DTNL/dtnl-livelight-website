@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DTNL.LL.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211021081511_initial")]
+    [Migration("20211025092208_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<int>("AnalyticsVersion")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConversionColor")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -50,10 +53,16 @@ namespace DTNL.LL.DAL.Migrations
                         .HasColumnType("float")
                         .HasDefaultValue(20.0);
 
+                    b.Property<string>("ConversionTags")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("GaProperty")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("GuideEnabled")
                         .HasColumnType("bit");
@@ -110,6 +119,9 @@ namespace DTNL.LL.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasDefaultValue("orange");
+
+                    b.Property<int>("PollingTimeInMinutes")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProjectName")
                         .IsRequired()

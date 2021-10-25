@@ -25,12 +25,9 @@ namespace DTNL.LL.Logic
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<Project> FindProjectByIdAsync(int id)
+        public ValueTask<Project> FindProjectByIdAsync(int id)
         {
-            var project = await _unitOfWork.Projects.GetByIdAsync(id);
-            await _unitOfWork.CommitAsync();
-
-            return project;
+            return _unitOfWork.Projects.GetByIdAsync(id);
         }
 
         public async Task UpdateAsync(int oldProjectId, Project newValues)
@@ -61,20 +58,14 @@ namespace DTNL.LL.Logic
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<IEnumerable<Project>> GetAllAsync()
+        public Task<List<Project>> GetAllAsync()
         {
-            var projects = await _unitOfWork.Projects.GetAllAsync();
-            await _unitOfWork.CommitAsync();
-
-            return projects;
+            return _unitOfWork.Projects.GetAllAsync();
         }
 
         public IEnumerable<Project> GetSpecifiedProjects(Expression<Func<Project, bool>> expression)
         {
-            var projects =  _unitOfWork.Projects.Find(expression);
-            _unitOfWork.CommitAsync();
-
-            return projects;
+            return _unitOfWork.Projects.Find(expression);
         }
 
         public IEnumerable<Project> GetProjectsWithSpecificCustomerName(string customerName)
@@ -87,6 +78,10 @@ namespace DTNL.LL.Logic
             return GetSpecifiedProjects(p => p.ProjectName.Contains(projectName));
         }
 
+        public async Task<IEnumerable<Project>> GetActiveProjects()
+        {
+            return await _unitOfWork.Projects.GetActiveProjectsAsync();
+        }
         public async Task UpdateApiToken(string projectUuid, string token)
         {
             Project project = GetByUuid(projectUuid);

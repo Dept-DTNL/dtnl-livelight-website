@@ -1,5 +1,5 @@
-﻿using DTNL.LL.DAL.Repositories;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DTNL.LL.DAL.Repositories;
 
 namespace DTNL.LL.DAL
 {
