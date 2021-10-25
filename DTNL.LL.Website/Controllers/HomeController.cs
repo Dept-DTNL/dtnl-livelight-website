@@ -1,4 +1,4 @@
-﻿using DTNL.LL.DAL;
+using DTNL.LL.DAL;
 using DTNL.LL.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

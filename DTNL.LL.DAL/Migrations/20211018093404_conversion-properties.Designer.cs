@@ -4,14 +4,16 @@ using DTNL.LL.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DTNL.LL.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211018093404_conversion-properties")]
+    partial class conversionproperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,15 +85,6 @@ namespace DTNL.LL.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("TimeRangeEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<TimeSpan?>("TimeRangeEnd")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan?>("TimeRangeStart")
-                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
