@@ -13,7 +13,6 @@ namespace DTNL.LL.DAL.Builders
         public void Configure(EntityTypeBuilder<Project> builder)
         {
             builder.HasKey(m => m.Id);
-
             //Auto Increment id
             builder.Property(m => m.Id)
                 .UseIdentityColumn();
@@ -21,6 +20,10 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.ProjectName)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            builder.HasMany(m => m.LifxLights)
+                .WithOne(m => m.Project)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(m => m.CustomerName)
                 .IsRequired()
@@ -33,21 +36,6 @@ namespace DTNL.LL.DAL.Builders
                 .IsRequired();
 
             builder.Property(m => m.Active)
-                .IsRequired();
-
-            builder.Property(m => m.LifxApiKey)
-                .IsRequired(false);
-
-            builder.Property(m => m.LightGroupName)
-                .IsRequired();
-
-            builder.Property(m => m.TimeRangeEnabled)
-                .IsRequired();
-
-            builder.Property(m => m.TimeRangeStart)
-                .IsRequired();
-
-            builder.Property(m => m.TimeRangeEnd)
                 .IsRequired();
 
             ValueComparer<List<string>> conversionValueComparer = new ValueComparer<List<string>>(

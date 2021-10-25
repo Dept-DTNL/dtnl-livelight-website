@@ -34,10 +34,7 @@ namespace DTNL.LL.Logic
             IEnumerable<Project> projects = await _projectService.GetActiveProjects();
 
             List<Project> enumerable = projects.ToList();
-            List<Project> newSleepingProjects = _projectTimerService.UpdateSleepingProjectList(enumerable);
-
-            await TurnOffLights(newSleepingProjects);
-
+            
             List<Project> tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
 
             IEnumerable<Task<AnalyticsReport>> analyticsReportTasks = tickedProjects.Select(
@@ -66,54 +63,33 @@ namespace DTNL.LL.Logic
             }
         }
 
-        private async Task TurnOffLights(List<Project> projects)
-        {
-            List<Task> tasks = new List<Task>(projects.Count);
-            tasks.AddRange(projects.Select(LifxService.DisableLightsAsync));
-            await Task.WhenAll(tasks);
-        }
-
         private async Task UpdateLights(AnalyticsReport[] reports)
         {
             await UpdateLightColors(reports);
+
+            //Todo add a division property to project so when can scale down the cycles of a project.
             await FlashLightsForConversions(reports);
-        }
-
-        private LampColor GetActivityColor(AnalyticsReport report)
-        {
-            var users = report.ActiveUsers;
-            var project = report.Project;
-            if (project.HighTrafficAmount <= users)
-            {
-                return new LampColor()
-                {
-                    Color = project.HighTrafficColor,
-                    Brightness = project.HighTrafficBrightness
-                };
-            } 
-            if (project.MediumTrafficAmount <= users)
-            {
-                return new LampColor()
-                {
-                    Color = project.MediumTrafficColor,
-                    Brightness = project.MediumTrafficBrightness
-                };
-            }
-
-            return new LampColor()
-            {
-                Color = project.LowTrafficColor,
-                Brightness = project.LowTrafficBrightness
-            };
         }
 
         private async Task UpdateLightColors(AnalyticsReport[] reports)
         {
-            var tasks = new List<Task<ApiResponse>>(reports.Length);
-            foreach (var report in reports)
+            List<Task> tasks = new List<Task>(reports.Length);
+            foreach (AnalyticsReport report in reports)
             {
-                var color = GetActivityColor(report);
-                tasks.Add(LifxService.SetLightsColorAsync(report.Project, color));
+                foreach (ILight light in report.Project.GetLights())
+                {
+                    switch (light)
+                    {
+                        case LifxLight lifx:
+                            Task lifxTask = LifxLightService.UpdateLightColors(lifx, report.ActiveUsers);
+                            tasks.Add(lifxTask);
+                            break;
+                        default:
+                            Project project = report.Project;
+                            _logger.LogError("Unknown light type for project {0}:{1}.", project.Id, project.ProjectName);
+                            break;
+                    }
+                }
             }
 
             await Task.WhenAll(tasks);
@@ -121,22 +97,26 @@ namespace DTNL.LL.Logic
 
         private async Task FlashLightsForConversions(AnalyticsReport[] reports)
         {
-            var tasks = new List<Task>();
-            foreach (var report in reports)
+            List<Task> tasks = new List<Task>();
+            foreach (AnalyticsReport report in reports)
             {
-                if(report.Conversions == 0)
-                    continue;
-
-                var project = report.Project;
-
-                // Makes sure the lamp doesn't flash more than the time it takes for the next polling.
-                var maxAmountOfCycles = (project.PollingTimeInMinutes * SecondsInAMinute) / project.ConversionPeriod;
-                var maxAmountOfCyclesRounded = Convert.ToInt32(maxAmountOfCycles);
-
-                //Todo add a division property to project so when can scale down the cycles of a project.
-                var cycles = Math.Min(report.Conversions, maxAmountOfCyclesRounded);
-
-                tasks.Add(LifxService.BreatheLightsAsync(project, project.ConversionColor, cycles, project.ConversionPeriod));
+                // Todo add a division property to project so when can scale down the cycles of a project.
+                int flashes = report.Conversions;
+                foreach (ILight light in report.Project.GetLights())
+                {
+                    switch (light)
+                    {
+                        case LifxLight lifx:
+                            Task lifxTask = LifxLightService.FlashLightForConversions(lifx, flashes,
+                                report.Project.PollingTimeInMinutes);
+                            tasks.Add(lifxTask);
+                            break;
+                        default:
+                            Project project = report.Project;
+                            _logger.LogError("Unknown light type for project {0}:{1}.", project.Id, project.ProjectName);
+                            break;
+                    }
+                }
             }
 
             await Task.WhenAll(tasks);

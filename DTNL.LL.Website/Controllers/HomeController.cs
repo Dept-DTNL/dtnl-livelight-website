@@ -26,40 +26,8 @@ namespace DTNL.LL.Website.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
-            // Project p = new()
-            // {
-            //     Id = 0,
-            //     ProjectName = "p1",
-            //     CustomerName = "Gianni",
-            //     Active = true,
-            //     TimeRangeEnabled = false,
-            //     TimeRangeStart = default,
-            //     TimeRangeEnd = default,
-            //     PollingTimeInMinutes = 1,
-            //     GaProperty = "288717872",
-            //     AnalyticsVersion = AnalyticsVersion.V4,
-            //     ConversionTags = new List<string>(){"convert"},
-            //     LifxApiKey = "cfcd89c1b94fe18c1dbb15f11904182dc39e7a707b923223932ae105a5adc772",
-            //     LightGroupName = "LL",
-            //     Uuid = default,
-            //     GuideEnabled = false,
-            //     LowTrafficColor = "red",
-            //     LowTrafficBrightness = 0.5d,
-            //     MediumTrafficAmount = 1,
-            //     MediumTrafficColor = "yellow",
-            //     MediumTrafficBrightness = 0.5d,
-            //     HighTrafficColor = "green",
-            //     HighTrafficBrightness = 0.5f,
-            //     HighTrafficAmount = 3,
-            //     ConversionCycle = 0,
-            //     ConversionPeriod = 1,
-            //     ConversionColor = "white saturation:0.0 brightness:0.5"
-            // };
-            //
-            // await _unitOfWork.Projects.AddAsync(p);
-            // await _unitOfWork.CommitAsync();
             return View();
         }
 

@@ -35,9 +35,9 @@ namespace DTNL.LL.Logic
             if (newValues.CustomerName is not null) project.CustomerName = newValues.CustomerName;
             if (newValues.ProjectName is not null) project.ProjectName = newValues.ProjectName;
 
-            project.TimeRangeEnabled = newValues.TimeRangeEnabled;
-            project.TimeRangeStart = newValues.TimeRangeStart;
-            project.TimeRangeEnd = newValues.TimeRangeEnd;
+            // project.TimeRangeEnabled = newValues.TimeRangeEnabled;
+            // project.TimeRangeStart = newValues.TimeRangeStart;
+            // project.TimeRangeEnd = newValues.TimeRangeEnd;
 
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();

@@ -19,4 +19,6 @@ namespace DTNL.LL.Website
                     webBuilder.UseStartup<Startup>();
                 });
     }
+
+    //Todo: Api keys should be tested for active lights before adding them to the database.
 }

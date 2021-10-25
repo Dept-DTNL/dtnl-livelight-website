@@ -6,6 +6,7 @@ namespace DTNL.LL.DAL.Repositories
     {
         private readonly DatabaseContext _context;
         private ProjectRepository _projectRepository;
+        private LifxLightsRepository _lifxLightsRepository;
 
         public UnitOfWork(DatabaseContext context)
         {
@@ -14,6 +15,9 @@ namespace DTNL.LL.DAL.Repositories
 
         public IProjectRepository Projects =>
             _projectRepository ??= new ProjectRepository(_context);
+
+        public ILifxLightsRepository LifxLights =>
+            _lifxLightsRepository ??= new LifxLightsRepository(_context);
 
         public Task<int> CommitAsync()
         {

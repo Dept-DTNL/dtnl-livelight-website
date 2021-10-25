@@ -43,7 +43,7 @@ namespace DTNL.LL.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("projects/{projectId}/add-lamp/authorize-wiz")]
-        public async Task<ActionResult> AuthorizeLampAsync(int? projectId, [FromForm] string? key)
+        public ActionResult AuthorizeLampAsync(int? projectId, [FromForm] string? key)
         {
             if (key is null)
             {

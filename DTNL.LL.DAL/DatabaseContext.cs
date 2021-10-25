@@ -12,6 +12,7 @@ namespace DTNL.LL.DAL
         }
 
         public DbSet<Project> Projects { get; set; }
+        public DbSet<LifxLight> LifxLights { get; set; }
 
         public static void RegisterDbContext(IServiceCollection services, string connectionString)
         {
@@ -23,6 +24,7 @@ namespace DTNL.LL.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new ProjectConfiguration());
+            builder.ApplyConfiguration(new LifxLightsConfiguration());
         }
     }
 }

@@ -5,13 +5,13 @@ using LifxCloud.NET.Models;
 
 namespace DTNL.LL.Logic
 {
-    public static class LifxService
+    public static class LifxApiService
     {
         private const double PeakValue = 0.5d;
 
         private static async Task<LifxCloudClient> CreateClientAsync(string token) => await LifxCloudClient.CreateAsync(token);
 
-        private static Selector CreateLabel(Project p) => new Selector.GroupLabel(p.LightGroupName);
+        private static Selector CreateLabel(LifxLight l) => new Selector.GroupLabel(l.LightGroupName);
 
         private static SetStateRequest PowerOffState() => new() {Power = PowerState.Off};
 
@@ -33,27 +33,27 @@ namespace DTNL.LL.Logic
                 PowerOn = true
             };
 
-        public static async Task<ApiResponse> DisableLightsAsync(Project project)
+        public static async Task<ApiResponse> DisableLightsAsync(LifxLight lightGroup)
         {
-            return await SetLightStateAsync(project, PowerOffState());
+            return await SetLightStateAsync(lightGroup, PowerOffState());
         }
 
-        private static async Task<ApiResponse> SetLightStateAsync(Project project, SetStateRequest state)
+        private static async Task<ApiResponse> SetLightStateAsync(LifxLight lightGroup, SetStateRequest state)
         {
-            var client = await CreateClientAsync(project.LifxApiKey);
-            return await client.SetState(CreateLabel(project), state);
+            LifxCloudClient client = await CreateClientAsync(lightGroup.LifxApiKey);
+            return await client.SetState(CreateLabel(lightGroup), state);
         }
 
-        public static async Task<ApiResponse> SetLightsColorAsync(Project project, LampColor color)
+        public static async Task<ApiResponse> SetLightsColorAsync(LifxLight lightGroup, LampColor color)
         {
-            var colorState = ColorState(color.Color, color.Brightness);
-            return await SetLightStateAsync(project, colorState);
+            SetStateRequest colorState = ColorState(color.Color, color.Brightness);
+            return await SetLightStateAsync(lightGroup, colorState);
         }
 
-        public static async Task<ApiResponse> BreatheLightsAsync(Project project, string color, int cycles, double period)
+        public static async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, int cycles, double period)
         {
-            var client = await CreateClientAsync(project.LifxApiKey);
-            return await client.BreathEffect(CreateLabel(project), BreatheEffect(color, cycles, period));
+            LifxCloudClient client = await CreateClientAsync(lightGroup.LifxApiKey);
+            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, cycles, period));
         }
 
     }
