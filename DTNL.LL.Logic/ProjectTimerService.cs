@@ -89,9 +89,6 @@ namespace DTNL.LL.Logic
         public static bool IsTimeOfDayBetween(DateTime time,
             TimeSpan startTime, TimeSpan endTime)
         {
-            if (endTime == startTime)
-                return true;
-
             if (endTime < startTime)
                 return time.TimeOfDay <= endTime || time.TimeOfDay >= startTime;
 
