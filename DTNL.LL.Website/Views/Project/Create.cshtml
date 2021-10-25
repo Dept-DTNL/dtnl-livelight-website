@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Create new project";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Create a new project</h1>
@@ -72,6 +71,7 @@
         </div>
     </div>
 
+    <hr />
     <h5>Light settings</h5>
     <a href="https://api.developer.lifx.com/docs/colors" target="_blank">How to know which color format to use</a>
     <div class="form-group">
@@ -151,7 +151,8 @@
             @Html.ValidationMessageFor(model => model.ConversionPeriod, "", new { @class = "text-danger" })
         </div>
     </div>
-
+    
+    <hr />
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Create" class="btn btn-default" />

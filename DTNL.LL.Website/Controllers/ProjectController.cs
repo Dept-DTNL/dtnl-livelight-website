@@ -12,10 +12,12 @@ namespace DTNL.LL.Website.Controllers
     public class ProjectController : Controller
     {
         private readonly ProjectService _projectService;
+        private readonly AuthService _authService;
 
-        public ProjectController(ProjectService projectService)
+        public ProjectController(ProjectService projectService, AuthService authService)
         {
             _projectService = projectService;
+            _authService = authService;
         }
 
         // GET: Project
@@ -23,6 +25,9 @@ namespace DTNL.LL.Website.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+                
             return View(GetAllProjectDTOs());
         }
 
@@ -31,34 +36,28 @@ namespace DTNL.LL.Website.Controllers
         [HttpPost]
         public IActionResult Index(string editFilter, string searchString)
         {
-            List<Project> projects = new List<Project>();
+            List<ProjectDTO> projects = GetAllProjectDTOs();
 
-            if (!String.IsNullOrEmpty(searchString))
+            switch (editFilter)
             {
-                switch (editFilter)
-                {
-                    case "projectName":
-                        projects = _projectService.GetProjectsWithSpecificCustomerName(searchString).ToList();
-                        break;
-                    case "customerName":
-                        projects = _projectService.GetProjectsWithSpecificProjectName(searchString).ToList();
-                        break;
-                    case "id":
-                        if (int.TryParse(searchString, out var id))
-                            projects.Add(_projectService.FindProjectByIdAsync(id).Result);
-
-                        break;
-                }
+                case "projectName":
+                    if (!String.IsNullOrEmpty(searchString))
+                        projects = projects.FindAll(p => p.ProjectName.Contains(searchString));
+                    projects = projects.OrderBy(p => p.ProjectName).ToList();
+                    break;
+                case "customerName":
+                    if (!String.IsNullOrEmpty(searchString))
+                        projects = projects.FindAll(p => p.ConversionColor.Contains(searchString));
+                    projects = projects.OrderBy(p => p.CustomerName).ToList();
+                    break;
+                case "id":
+                    if (int.TryParse(searchString, out var id) && !String.IsNullOrEmpty(searchString))
+                        projects = projects.FindAll(p => p.Id == id);
+                    projects = projects.OrderBy(p => p.Id).ToList();
+                    break;
             }
 
-            if (projects.Count == 0)
-            {
-                return View(GetAllProjectDTOs());
-            }
-
-            List<ProjectDTO> projectViewModels = TurnProjectsToProjectDTOs(projects);
-
-            return View(projectViewModels);
+            return View(projects);
         }
 
         // GET: Project/Create
@@ -66,13 +65,16 @@ namespace DTNL.LL.Website.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+
             return View(new ProjectDTO()
             {
                 Active = true,
                 HasTimeRange = true,
                 TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
                 TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0),
-                MediumTrafficAmount = 5,
+                MediumTrafficAmount = 10,
                 HighTrafficAmount = 50,
                 LowTrafficColor = "red",
                 LowTrafficBrightness = 0.5,
@@ -93,20 +95,14 @@ namespace DTNL.LL.Website.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project)) ;
-
-                    return RedirectToAction(nameof(Index));
-                }
+                await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project)) ;
+                return RedirectToAction(nameof(Index));
             }
             catch(Exception e)
             {
                 ViewBag.ErrorMessage = e.Message + "Something went wrong when creating your project";
                 return View();
             }
-
-            return View();
         }
 
         // GET: Project/Edit/{id}
@@ -115,6 +111,9 @@ namespace DTNL.LL.Website.Controllers
         [Route("Project/Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+
             if (id is null)
             {
                 ViewBag.ErrorMessage = "No ids given";
@@ -129,6 +128,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
+            ViewBag.InstallUrl = $"/projects/{_projectService.FindProjectByIdAsync(id.Value).Result.Uuid}/add-lamp";
             return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
 
         }
@@ -155,7 +155,6 @@ namespace DTNL.LL.Website.Controllers
 
             await _projectService.UpdateAsync(id.Value, ProjectDTO.TurnProjectDTOToProject(newValues));
 
-            ViewBag.ShowDialog = true;
             return RedirectToAction("Index", "Project");
         }
 

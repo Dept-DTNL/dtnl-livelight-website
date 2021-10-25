@@ -3,7 +3,6 @@
 
 @{
     ViewData["Title"] = "Project";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index of project</h1>
@@ -43,22 +42,26 @@
     </div>
 }
 
-<table>
+<table class="table table-bordered">
+    <thead>
     <tr>
         <th>ID</th>
         <th>Customer name</th>
         <th>Project Name</th>
         <th>Active</th>
     </tr>
-    @foreach (ProjectDTO project in @Model)
-    {
-        <tr>
-            <td>@project.Id</td>
-            <td>@project.CustomerName</td>
-            <td>@project.ProjectName</td>
-            <td>@project.Active</td>
-            <td>@Html.ActionLink("Edit", "Edit", new { id = project.Id })</td>
-        </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (ProjectDTO project in @Model)
+        {
+            <tr>
+                <td>@project.Id</td>
+                <td>@project.CustomerName</td>
+                <td>@project.ProjectName</td>
+                <td>@project.Active</td>
+                <td>@Html.ActionLink("Edit", "Edit", new { id = project.Id })</td>
+            </tr>
+        }
+    </tbody>
 </table>
 

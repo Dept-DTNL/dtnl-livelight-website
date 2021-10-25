@@ -82,7 +82,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            return RedirectToPage($"projects/{projectUuid}/add-lamp/thank-you");
+            return Redirect($"/projects/{projectUuid}/add-lamp/thank-you");
         }
 
 

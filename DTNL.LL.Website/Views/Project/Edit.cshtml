@@ -69,8 +69,9 @@
     </div>
 
     <div id="LampSetUp" class="form-horizontal tabcontent" style="display: none">
+        <hr />
         <div class="form-group">
-            Guide is enabled?
+            Guide is enabled? (url: @ViewBag.InstallUrl)
             <div class="col-md-10">
                 @Html.EditorFor(model => model.GuideEnabled, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.GuideEnabled)
@@ -86,6 +87,7 @@
     </div>
 
     <div id="LightSettings" class="form-horizontal tabcontent" style="display: none">
+        <hr />
         <div class="form-group">
             Medium Traffic Amount 
             <div class="col-md-10">
@@ -100,6 +102,7 @@
                 @Html.ValidationMessageFor(model => model.HighTrafficAmount, "", new { @class = "text-danger" })
             </div>
         </div>
+        <hr />
         <div class="form-group">
             Low Traffic Color
             <div class="col-md-10">

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DTNL.LL.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211020115503_nullableApiKey")]
-    partial class nullableApiKey
+    [Migration("20211021081511_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,6 +55,14 @@ namespace DTNL.LL.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("GuideEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("HighTrafficAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(50);
+
                     b.Property<double>("HighTrafficBrightness")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
@@ -70,6 +78,10 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<string>("LifxApiKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LightGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("LowTrafficBrightness")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
@@ -81,6 +93,11 @@ namespace DTNL.LL.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasDefaultValue("red");
+
+                    b.Property<int>("MediumTrafficAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(5);
 
                     b.Property<double>("MediumTrafficBrightness")
                         .ValueGeneratedOnAdd()
@@ -107,6 +124,9 @@ namespace DTNL.LL.DAL.Migrations
 
                     b.Property<TimeSpan>("TimeRangeStart")
                         .HasColumnType("time");
+
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
