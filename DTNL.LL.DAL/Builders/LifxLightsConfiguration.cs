@@ -27,6 +27,9 @@ namespace DTNL.LL.DAL.Builders
 
             builder.Property(m => m.TimeRangeEnd)
                 .IsRequired();
+
+            builder.Property(m => m.GuideEnabled)
+                .IsRequired();
         }
     }
 }

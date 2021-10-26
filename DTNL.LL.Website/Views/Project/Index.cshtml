@@ -54,13 +54,13 @@
     <tbody>
         @foreach (ProjectDTO project in @Model)
         {
-            <tr>
-                <td>@project.Id</td>
-                <td>@project.CustomerName</td>
-                <td>@project.ProjectName</td>
-                <td>@project.Active</td>
-                <td>@Html.ActionLink("Edit", "EditProject", new { id = project.Id })</td>
-            </tr>
+        <tr>
+            <td>@project.Id</td>
+            <td>@project.CustomerName</td>
+            <td>@project.ProjectName</td>
+            <td>@project.Active</td>
+            <td>@Html.ActionLink("Edit", "EditProject", new { id = project.Id }) | <a href="/project/@project.Id/create-light">Add light</a></td>
+        </tr>
         }
     </tbody>
 </table>

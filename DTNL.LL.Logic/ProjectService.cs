@@ -31,37 +31,27 @@ namespace DTNL.LL.Logic
             return _unitOfWork.Projects.GetByIdAsync(id);
         }
 
+        public Project FindProjectByIdWithLights(int id)
+        {
+            Project project = _unitOfWork.Projects.GetByIdAsync(id).Result;
+            project.LifxLights = _unitOfWork.LifxLights.Find(l => l.Project.Id == id).ToList();
+
+            return project;
+        }
+
         public async Task UpdateAsync(int oldProjectId, Project newValues)
         {
-            // TODO: check all values in other method
             Project project = await FindProjectByIdAsync(oldProjectId);
 
             project.Active = newValues.Active;
             if (newValues.CustomerName is not null) project.CustomerName = newValues.CustomerName;
             if (newValues.ProjectName is not null) project.ProjectName = newValues.ProjectName;
 
-            // project.TimeRangeEnabled = newValues.TimeRangeEnabled;
-            // project.TimeRangeStart = newValues.TimeRangeStart;
-            // project.TimeRangeEnd = newValues.TimeRangeEnd;
-
-            /*
-            if (newValues.MediumTrafficAmount > 0 || newValues.MediumTrafficAmount < newValues.HighTrafficAmount) project.MediumTrafficAmount = newValues.MediumTrafficAmount;
-            if (newValues.MediumTrafficAmount > 0 || newValues.MediumTrafficAmount > newValues.HighTrafficAmount) project.HighTrafficAmount = newValues.HighTrafficAmount;
-
-            if (newValues.LowTrafficColor is not null) project.LowTrafficColor = newValues.LowTrafficColor;
-            project.LowTrafficBrightness = newValues.LowTrafficBrightness;
-            if (newValues.MediumTrafficColor is not null) project.MediumTrafficColor = newValues.MediumTrafficColor;
-            project.MediumTrafficBrightness = newValues.MediumTrafficBrightness;
-            if (newValues.HighTrafficColor is not null) project.HighTrafficColor = newValues.HighTrafficColor;
-            project.HighTrafficBrightness = newValues.HighTrafficBrightness;
-
-            project.GuideEnabled = newValues.GuideEnabled;
             project.AnalyticsVersion = newValues.AnalyticsVersion;
             if (newValues.PollingTimeInMinutes > 0) project.PollingTimeInMinutes = newValues.PollingTimeInMinutes;
-            */
-
-            //_unitOfWork.Projects.Update(project);
-            //await _unitOfWork.CommitAsync();
+            
+            _unitOfWork.Projects.Update(project);
+            await _unitOfWork.CommitAsync();
         }
 
         public Task<List<Project>> GetAllAsync()

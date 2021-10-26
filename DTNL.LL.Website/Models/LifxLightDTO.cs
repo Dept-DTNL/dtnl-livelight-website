@@ -7,8 +7,8 @@ namespace DTNL.LL.Website.Models
     public class LifxLightDTO : ILightDTO
     {
         public ProjectDTO ProjectDto { get; set; }
-
         public Guid Uuid { get; set; }
+        public bool GuideEnabled { get; set; }
 
         // Lamp connection
         public string LifxApiKey { get; set; }
@@ -46,7 +46,7 @@ namespace DTNL.LL.Website.Models
         [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
         public string ConversionColor { get; set; }
 
-        public static LifxLightDTO LifxLightToLifxLightDTO(LifxLight lifxLight)
+        public static LifxLightDTO LifxLightToLifxLightDTOWithProject(LifxLight lifxLight)
         {
             return new LifxLightDTO()
             {
@@ -67,7 +67,33 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
                 ConversionCycle = lifxLight.ConversionCycle,
                 ConversionPeriod = lifxLight.ConversionPeriod,
-                ConversionColor = lifxLight.ConversionColor
+                ConversionColor = lifxLight.ConversionColor,
+                GuideEnabled = lifxLight.GuideEnabled
+            };
+        }
+
+        public static LifxLightDTO LifxLightToLifxLightDTO(LifxLight lifxLight)
+        {
+            return new LifxLightDTO()
+            {
+                Uuid = lifxLight.Uuid,
+                LifxApiKey = lifxLight.LifxApiKey,
+                LightGroupName = lifxLight.LightGroupName,
+                TimeRangeEnabled = lifxLight.TimeRangeEnabled,
+                TimeRangeStart = new DateTime(1, 1, 1, lifxLight.TimeRangeStart.Hours, lifxLight.TimeRangeStart.Minutes, lifxLight.TimeRangeStart.Seconds),
+                TimeRangeEnd = new DateTime(1, 1, 1, lifxLight.TimeRangeEnd.Hours, lifxLight.TimeRangeEnd.Minutes, lifxLight.TimeRangeEnd.Seconds),
+                LowTrafficColor = lifxLight.LowTrafficColor,
+                LowTrafficBrightness = lifxLight.LowTrafficBrightness,
+                MediumTrafficAmount = lifxLight.MediumTrafficAmount,
+                MediumTrafficColor = lifxLight.MediumTrafficColor,
+                MediumTrafficBrightness = lifxLight.MediumTrafficBrightness,
+                HighTrafficColor = lifxLight.HighTrafficColor,
+                HighTrafficBrightness = lifxLight.HighTrafficBrightness,
+                HighTrafficAmount = lifxLight.HighTrafficAmount,
+                ConversionCycle = lifxLight.ConversionCycle,
+                ConversionPeriod = lifxLight.ConversionPeriod,
+                ConversionColor = lifxLight.ConversionColor,
+                GuideEnabled = lifxLight.GuideEnabled
             };
         }
 
@@ -75,7 +101,6 @@ namespace DTNL.LL.Website.Models
         {
             return new LifxLight()
             {
-                Project = ProjectDTO.TurnProjectDTOToProject(lifxLightDto.ProjectDto),
                 Uuid = lifxLightDto.Uuid,
                 LifxApiKey = lifxLightDto.LifxApiKey,
                 LightGroupName = lifxLightDto.LightGroupName,
@@ -92,7 +117,8 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = lifxLightDto.HighTrafficAmount,
                 ConversionCycle = lifxLightDto.ConversionCycle,
                 ConversionPeriod = lifxLightDto.ConversionPeriod,
-                ConversionColor = lifxLightDto.ConversionColor
+                ConversionColor = lifxLightDto.ConversionColor,
+                GuideEnabled = lifxLightDto.GuideEnabled
             };
         }
     }

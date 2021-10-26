@@ -9,6 +9,7 @@
 <h1>Edit a project</h1>
 <h3>@ViewBag.ErrorMessage</h3>
 
+<a href="/project/@Model.Id/create-light">Add a new light ///</a>
 <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="CreateLight">Add a new light</a>
 
 <div class="tab">
@@ -73,19 +74,15 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Customer name</th>
-                        <th>Project Name</th>
-                        <th>Active</th>
+                        <th>Uuid</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (ILightDTO light in @Model.Lights)
+                    @foreach (LifxLightDTO light in @Model.LifxLight)
                     {
                         <tr>
-                            <td>@light.GetType()</td>
-                            <td>@light</td>
-                            <td>@Html.ActionLink("Edit", "EditLight", new { id = light.Uuid })</td>
+                            <td>@light.Uuid</td>
+                            <td>@Html.ActionLink("Edit", "EditLight", new { uuid = light.Uuid })</td>
                         </tr>
                     }
                 </tbody>
