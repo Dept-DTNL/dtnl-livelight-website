@@ -21,6 +21,11 @@ namespace DTNL.LL.Models
         [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
 
+        /// <summary>
+        /// This is used to
+        /// </summary>
+        public int ConversionDivision { get; set; }
+
         public virtual ICollection<LifxLight> LifxLights { get; set; }
 
         /// <summary>

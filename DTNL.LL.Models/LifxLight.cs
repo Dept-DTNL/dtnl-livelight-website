@@ -7,7 +7,7 @@ namespace DTNL.LL.Models
     {
         public int Id { get; set; }
 
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
 
 
         public Guid Uuid { get; set; }

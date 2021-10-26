@@ -21,6 +21,10 @@ namespace DTNL.LL.DAL.Builders
                 .IsRequired()
                 .HasMaxLength(50);
 
+            builder.Property(m => m.ConversionDivision)
+                .IsRequired()
+                .HasDefaultValue(1);
+
             builder.HasMany(m => m.LifxLights)
                 .WithOne(m => m.Project)
                 .OnDelete(DeleteBehavior.Cascade);
