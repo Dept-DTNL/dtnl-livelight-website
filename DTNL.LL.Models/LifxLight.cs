@@ -8,6 +8,7 @@ namespace DTNL.LL.Models
         public int Id { get; set; }
         public Project Project { get; set; }
         public Guid Uuid { get; set; }
+        public bool GuideEnabled { get; set; }
 
         // Lamp connection
         public string LifxApiKey { get; set; }
