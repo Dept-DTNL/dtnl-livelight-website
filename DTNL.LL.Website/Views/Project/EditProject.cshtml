@@ -82,7 +82,7 @@
                     {
                         <tr>
                             <td>@light.Uuid</td>
-                            <td>@Html.ActionLink("Edit", "EditLight", new { uuid = light.Uuid })</td>
+                            <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid })</td>
                         </tr>
                     }
                 </tbody>

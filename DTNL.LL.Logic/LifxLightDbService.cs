@@ -18,6 +18,7 @@ namespace DTNL.LL.Logic
         }
         public async Task CreateLifxLight(LifxLight lifxLight)
         {
+            lifxLight.Uuid = new Guid();
             await _unitOfWork.LifxLights.AddAsync(lifxLight);
             await _unitOfWork.CommitAsync();
         }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DTNL.LL.DAL.Migrations
 {
-    public partial class newStructure : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,6 +17,7 @@ namespace DTNL.LL.DAL.Migrations
                     CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PollingTimeInMinutes = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     Active = table.Column<bool>(type: "bit", nullable: false),
+                    ConversionDivision = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     GaProperty = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AnalyticsVersion = table.Column<int>(type: "int", nullable: false),
                     ConversionTags = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -34,6 +35,7 @@ namespace DTNL.LL.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProjectId = table.Column<int>(type: "int", nullable: true),
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GuideEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LifxApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LightGroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeRangeEnabled = table.Column<bool>(type: "bit", nullable: false),

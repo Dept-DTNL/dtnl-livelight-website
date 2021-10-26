@@ -23,9 +23,9 @@ namespace DTNL.LL.Website.Controllers
             _lifxLightService = lifxLightService;
         }
 
-        // GET: Project
         // Shows view of index with search functionality and overview of all projects
         [HttpGet]
+        [Route("project")]
         public IActionResult Index()
         {
             if (!_authService.IsLoggedIn())
@@ -34,9 +34,9 @@ namespace DTNL.LL.Website.Controllers
             return View(GetAllProjectDTOs());
         }
 
-        // POST: Project
         // Filtered list of project list
         [HttpPost]
+        [Route("project")]
         public IActionResult Index(string editFilter, string searchString)
         {
             List<ProjectDTO> projects = GetAllProjectDTOs();
@@ -63,9 +63,9 @@ namespace DTNL.LL.Website.Controllers
             return View(projects);
         }
 
-        // GET: Project/Create
         // Shows view of create project
         [HttpGet]
+        [Route("project/create-project")]
         public IActionResult CreateProject()
         {
             if (!_authService.IsLoggedIn())
@@ -79,9 +79,9 @@ namespace DTNL.LL.Website.Controllers
             });
         }
 
-        // POST: Project/Create
         // Runs when create button is presses
         [HttpPost]
+        [Route("project/create-project")]
         public async Task<ActionResult> CreateProject([FromForm]ProjectDTO project)
         {
             try
@@ -96,9 +96,6 @@ namespace DTNL.LL.Website.Controllers
             }
         }
 
-        //--
-
-        // GET: Project/CreateLight
         // Shows view of create light
         [HttpGet]
         [Route("project/{projectId}/create-light")]
@@ -129,7 +126,6 @@ namespace DTNL.LL.Website.Controllers
             });
         }
 
-        // POST: Project/CreateLight
         // Runs when create button is presses
         [HttpPost]
         [Route("project/{projectId}/create-light")]
@@ -142,7 +138,7 @@ namespace DTNL.LL.Website.Controllers
 
                 await _lifxLightService.CreateLifxLight(light);
 
-                switch (@ViewBag.WhichLight)
+                switch (@ViewBag.Light)
                 {
                     case "LIFX":
                         await _lifxLightService.CreateLifxLight(LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto));
@@ -160,12 +156,10 @@ namespace DTNL.LL.Website.Controllers
             }
         }
 
-        //--
 
-        // GET: Project/Edit/{id}
         // Shows view to edit a specific project
         [HttpGet]
-        [Route("Project/EditProject/{id}")]
+        [Route("project/edit-project/{id}")]
         public async Task<IActionResult> EditProject(int? id)
         {
             if (!_authService.IsLoggedIn())
@@ -187,14 +181,12 @@ namespace DTNL.LL.Website.Controllers
             }
 
             //TODO: Change Uuid result
-            //ViewBag.InstallUrl = $"/projects/{_projectService.FindProjectByIdAsync(id.Value).Result.Uuid}/add-lamp";
             return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
         }
 
-        // POST: Project/Edit/{id}
         // Updates project
         [HttpPost]
-        [Route("Project/EditProject/{id}")]
+        [Route("project/edit-project/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProject(int? id, [FromForm] ProjectDTO newValues)
         {
@@ -216,14 +208,9 @@ namespace DTNL.LL.Website.Controllers
             return RedirectToAction("Index", "Project");
         }
 
-        /// <summary>
-        /// ////////////////////////
-        /// </summary>
-        /// <returns></returns>
-        ///
-        // GET: Project/Edit/{id}
         // Shows view to edit a specific project
         [HttpGet]
+        [Route("project/edit-project/{projectID}/edit-light/{uuid}")]
         public async Task<IActionResult> EditLight(string uuid)
         {
             if (!_authService.IsLoggedIn())
@@ -246,19 +233,13 @@ namespace DTNL.LL.Website.Controllers
             }
 
             allLights.LifxLightDto = LifxLightDTO.LifxLightToLifxLightDTO((LifxLight)iLight);
-
-
-            //TODO: Change Uuid result
-            //ViewBag.InstallUrl = $"/projects/{_projectService.FindProjectByIdAsync(id.Value).Result.Uuid}/add-lamp";
-            //return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
+            
             return View(allLights);
-
         }
 
-        // POST: Project/Edit/{id}
-        // Updates project
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("project/edit-project/{projectId}/edit-light/{uuid}")]
         public async Task<IActionResult> EditLight(string uuid, [FromForm] AllLights newValues)
         {
             if (uuid is null)
@@ -266,7 +247,6 @@ namespace DTNL.LL.Website.Controllers
                 ViewBag.ErrorMessage = "No id given";
                 return View();
             }
-
 
             if (newValues is null)
             {
@@ -278,8 +258,6 @@ namespace DTNL.LL.Website.Controllers
 
             return RedirectToAction("Index", "Project");
         }
-        ///
-        /// /////
 
         // Getting ProjectViewModel list of all projects
         private List<ProjectDTO> GetAllProjectDTOs()
