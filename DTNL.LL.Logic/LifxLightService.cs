@@ -11,7 +11,7 @@ namespace DTNL.LL.Logic
         public static Task UpdateLightColors(LifxLight lightGroup, int users)
         {
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
-            if (!awake)
+            if (lightGroup.TimeRangeEnabled && !awake)
             {
                 return LifxApiService.DisableLightsAsync(lightGroup);
             }
@@ -49,7 +49,7 @@ namespace DTNL.LL.Logic
         {
 
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
-            if (!awake || flashes == 0)
+            if ((lightGroup.TimeRangeEnabled && !awake) || flashes == 0)
                 return Task.CompletedTask;
 
             // Makes sure the lamp doesn't flash more than the time it takes for the next polling.

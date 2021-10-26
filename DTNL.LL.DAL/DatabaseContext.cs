@@ -16,7 +16,8 @@ namespace DTNL.LL.DAL
         public static void RegisterDbContext(IServiceCollection services, string connectionString)
         {
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(connectionString)
+                options.UseLazyLoadingProxies()
+                    .UseSqlServer(connectionString)
             );
         }
 

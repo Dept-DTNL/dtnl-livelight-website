@@ -66,8 +66,6 @@ namespace DTNL.LL.Logic
         private async Task UpdateLights(AnalyticsReport[] reports)
         {
             await UpdateLightColors(reports);
-
-            //Todo add a division property to project so when can scale down the cycles of a project.
             await FlashLightsForConversions(reports);
         }
 
@@ -100,8 +98,8 @@ namespace DTNL.LL.Logic
             List<Task> tasks = new List<Task>();
             foreach (AnalyticsReport report in reports)
             {
-                // Todo add a division property to project so when can scale down the cycles of a project.
-                int flashes = report.Conversions;
+                int flashes = report.Conversions / Math.Max(report.Project.ConversionDivision, 1);
+
                 foreach (ILight light in report.Project.GetLights())
                 {
                     switch (light)
