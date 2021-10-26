@@ -1,0 +1,123 @@
+﻿@model DTNL.LL.Website.Models.AllLights
+
+@{
+    ViewData["Title"] = "Edit a Light";
+}
+
+<h1>Edit a project</h1>
+<h3>@ViewBag.ErrorMessage</h3>
+
+<div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'LIFX')">LIFX</button>
+</div>
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.AntiForgeryToken()
+
+        <div id="LIFX" class="form-horizontal tabcontent">
+            <hr />
+            <div class="form-group">
+                Medium Traffic Amount
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.MediumTrafficAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.MediumTrafficAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                High Traffic Amount
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.HighTrafficAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.HighTrafficAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                Low Traffic Color
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.LowTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.LowTrafficColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                Low Traffic Brightness
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.LowTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.LowTrafficBrightness, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                Medium Traffic Color
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.MediumTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.MediumTrafficColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                Medium Traffic Brightness
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.MediumTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.MediumTrafficBrightness, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                High Traffic Color
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.HighTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.HighTrafficColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                High Traffic Brightness
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.HighTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.HighTrafficBrightness, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                Conversion Color
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.ConversionColor, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.ConversionColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                Conversion Cycle
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.ConversionCycle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.ConversionCycle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                Conversion Period
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.LifxLightDto.ConversionPeriod, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LifxLightDto.ConversionPeriod, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="EditLight" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function openTab(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>

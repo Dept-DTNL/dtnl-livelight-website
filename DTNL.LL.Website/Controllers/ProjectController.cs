@@ -12,10 +12,14 @@ namespace DTNL.LL.Website.Controllers
     public class ProjectController : Controller
     {
         private readonly ProjectService _projectService;
+        private readonly AuthService _authService;
+        private readonly LifxLightDbService _lifxLightService;
 
-        public ProjectController(ProjectService projectService)
+        public ProjectController(ProjectService projectService, AuthService authService, LifxLightDbService lifxLightService)
         {
             _projectService = projectService;
+            _authService = authService;
+            _lifxLightService = lifxLightService;
         }
 
         // GET: Project
@@ -23,6 +27,9 @@ namespace DTNL.LL.Website.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+                
             return View(GetAllProjectDTOs());
         }
 
@@ -31,134 +38,112 @@ namespace DTNL.LL.Website.Controllers
         [HttpPost]
         public IActionResult Index(string editFilter, string searchString)
         {
-            List<Project> projects = new List<Project>();
+            List<ProjectDTO> projects = GetAllProjectDTOs();
 
-            if (!String.IsNullOrEmpty(searchString))
+            switch (editFilter)
             {
-                switch (editFilter)
-                {
-                    case "projectName":
-                        projects = _projectService.GetProjectsWithSpecificCustomerName(searchString).ToList();
-                        break;
-                    case "customerName":
-                        projects = _projectService.GetProjectsWithSpecificProjectName(searchString).ToList();
-                        break;
-                    case "id":
-                        if (int.TryParse(searchString, out int id))
-                            projects.Add(_projectService.FindProjectByIdAsync(id).Result);
-
-                        break;
-                }
+                case "projectName":
+                    if (!String.IsNullOrEmpty(searchString))
+                        projects = projects.FindAll(p => p.ProjectName.Contains(searchString));
+                    projects = projects.OrderBy(p => p.ProjectName).ToList();
+                    break;
+                case "customerName":
+                    if (!String.IsNullOrEmpty(searchString))
+                        projects = projects.FindAll(p => p.CustomerName.Contains(searchString));
+                    projects = projects.OrderBy(p => p.CustomerName).ToList();
+                    break;
+                case "id":
+                    if (int.TryParse(searchString, out var id) && !String.IsNullOrEmpty(searchString))
+                        projects = projects.FindAll(p => p.Id == id);
+                    projects = projects.OrderBy(p => p.Id).ToList();
+                    break;
             }
 
-            if (projects.Count == 0)
-            {
-                return View(GetAllProjectDTOs());
-            }
-
-            List<ProjectDTO> projectViewModels = TurnProjectsToProjectDTOs(projects);
-
-            return View(projectViewModels);
+            return View(projects);
         }
 
         // GET: Project/Create
         // Shows view of create project
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult CreateProject()
         {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+
             return View(new ProjectDTO()
             {
                 Active = true,
-                HasTimeRange = true,
-                TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
-                TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0)
+                PollingTimeInMinutes = 1,
+                AnalyticsVersion = AnalyticsVersion.V4
             });
         }
 
         // POST: Project/Create
         // Runs when create button is presses
         [HttpPost]
-        public async Task<ActionResult> Create([FromForm]ProjectDTO project)
+        public async Task<ActionResult> CreateProject([FromForm]ProjectDTO project)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-
-                    await _projectService.AddProjectAsync(TurnProjectDTOToProject(project)) ;
-
-                    return RedirectToAction(nameof(Index));
-                }
+                await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project)) ;
+                return RedirectToAction(nameof(Index));
             }
             catch(Exception e)
             {
                 ViewBag.ErrorMessage = e.Message + "Something went wrong when creating your project";
                 return View();
             }
+        }
+
+        //--
+
+        // GET: Project/CreateLight
+        // Shows view of create light
+        [HttpGet]
+        public IActionResult CreateLight()
+        {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
 
             return View();
         }
 
-        // Getting ProjectViewModel list of all projects
-        private List<ProjectDTO> GetAllProjectDTOs()
+        // POST: Project/CreateLight
+        // Runs when create button is presses
+        [HttpPost]
+        public async Task<ActionResult> CreateLight([FromForm] AllLights allLights)
         {
-            List<Project> projects = _projectService.GetAllAsync().Result.ToList();
-            return TurnProjectsToProjectDTOs(projects);
-        }
-
-        // Turning Project List into ProjectViewModel List
-        private List<ProjectDTO> TurnProjectsToProjectDTOs(List<Project> projects)
-        {
-            List<ProjectDTO> projectViewModels = new List<ProjectDTO>();
-            foreach (Project project in projects)
+            try
             {
-                projectViewModels.Add(TurnProjectToProjectDTO(project));
+                switch (@ViewBag.WhichLight)
+                {
+                    case "LIFX":
+                        await _lifxLightService.CreateLifxLight(LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto));
+                        break;
+                    default:
+                        break;
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-
-            return projectViewModels;
-        }
-
-        // Turns Project to a ProjectDTO
-        private ProjectDTO TurnProjectToProjectDTO(Project project)
-        {
-
-            ProjectDTO dto =  new ProjectDTO()
+            catch (Exception e)
             {
-                ProjectName = project.ProjectName,
-                Active = project.Active,
-                CustomerName = project.CustomerName,
-                Id = project.Id,
-                // HasTimeRange = project.TimeRangeEnabled,
-                // TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Hours, project.TimeRangeStart.Minutes, project.TimeRangeStart.Seconds) : new DateTime(),
-                // TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Hours, project.TimeRangeEnd.Minutes, project.TimeRangeEnd.Seconds) : new DateTime()
-            };
-
-            return dto;
+                ViewBag.ErrorMessage = e.Message + "Something went wrong when creating your light";
+                return View();
+            }
         }
 
-        // Turns Project to a ProjectDTO
-        private Project TurnProjectDTOToProject(ProjectDTO dto)
-        {
-            Project project = new Project()
-            {
-                ProjectName = dto.ProjectName,
-                Active = dto.Active,
-                CustomerName = dto.CustomerName,
-                Id = dto.Id,
-                // TimeRangeEnabled = dto.HasTimeRange,
-                // TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
-                // TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
-            };
-
-            return project;
-        }
+        //--
 
         // GET: Project/Edit/{id}
         // Shows view to edit a specific project
         [HttpGet]
-        [Route("Project/Edit/{id}")]
-        public async Task<IActionResult> Edit(int? id)
+        [Route("Project/EditProject/{id}")]
+        public async Task<IActionResult> EditProject(int? id)
         {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+
             if (id is null)
             {
                 ViewBag.ErrorMessage = "No ids given";
@@ -173,16 +158,18 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            return View(TurnProjectToProjectDTO(projectToUpdate));
+            //TODO: Change Uuid result
+            //ViewBag.InstallUrl = $"/projects/{_projectService.FindProjectByIdAsync(id.Value).Result.Uuid}/add-lamp";
+            return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
 
         }
 
         // POST: Project/Edit/{id}
         // Updates project
         [HttpPost]
-        [Route("Project/Edit/{id}")]
+        [Route("Project/EditProject/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [FromForm] ProjectDTO newValues)
+        public async Task<IActionResult> EditProject(int? id, [FromForm] ProjectDTO newValues)
         {
             if (id is null)
             {
@@ -197,10 +184,87 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            await _projectService.UpdateAsync(id.Value, TurnProjectDTOToProject(newValues));
+            await _projectService.UpdateAsync(id.Value, ProjectDTO.TurnProjectDTOToProject(newValues));
 
-            ViewBag.ShowDialog = true;
             return RedirectToAction("Index", "Project");
+        }
+
+        /// <summary>
+        /// ////////////////////////
+        /// </summary>
+        /// <returns></returns>
+        ///
+        // GET: Project/Edit/{id}
+        // Shows view to edit a specific project
+        [HttpGet]
+        public async Task<IActionResult> EditLight(int? id)
+        {
+            if (!_authService.IsLoggedIn())
+                return RedirectToAction("Index", "Home");
+
+            if (id is null)
+            {
+                ViewBag.ErrorMessage = "No ids given";
+                return View();
+            }
+
+            Project projectToUpdate = await _projectService.FindProjectByIdAsync(id.Value);
+
+            if (projectToUpdate is null)
+            {
+                ViewBag.ErrorMessage = "Id not found";
+                return View();
+            }
+
+            //TODO: Change Uuid result
+            //ViewBag.InstallUrl = $"/projects/{_projectService.FindProjectByIdAsync(id.Value).Result.Uuid}/add-lamp";
+            return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
+
+        }
+
+        // POST: Project/Edit/{id}
+        // Updates project
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditLight(int? id, [FromForm] ProjectDTO newValues)
+        {
+            if (id is null)
+            {
+                ViewBag.ErrorMessage = "No id given";
+                return View();
+            }
+
+
+            if (newValues is null)
+            {
+                ViewBag.ErrorMessage = "No project given";
+                return View();
+            }
+
+            await _projectService.UpdateAsync(id.Value, ProjectDTO.TurnProjectDTOToProject(newValues));
+
+            return RedirectToAction("Index", "Project");
+        }
+        ///
+        /// /////
+
+        // Getting ProjectViewModel list of all projects
+        private List<ProjectDTO> GetAllProjectDTOs()
+        {
+            List<Project> projects = _projectService.GetAllAsync().Result.ToList();
+            return TurnProjectsToProjectDTOs(projects);
+        }
+
+        // Turning Project List into ProjectViewModel List
+        private List<ProjectDTO> TurnProjectsToProjectDTOs(List<Project> projects)
+        {
+            List<ProjectDTO> projectViewModels = new List<ProjectDTO>();
+            foreach (Project project in projects)
+            {
+                projectViewModels.Add(ProjectDTO.TurnProjectToProjectDTO(project));
+            }
+
+            return projectViewModels;
         }
     }
 }

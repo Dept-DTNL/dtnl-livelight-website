@@ -8,42 +8,60 @@ namespace DTNL.LL.Website.Controllers
 {
     public class InstallGuideController : Controller
     {
+        private readonly ProjectService _projectService;
+
+        public InstallGuideController(ProjectService projectService)
+        {
+            _projectService = projectService;
+        }
 
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp")]
-        // GET: InstallGuide
-        public ActionResult Index(int? projectId)
+        [Route("projects/{projectUuid}/add-lamp")]
+        public ActionResult Index(string projectUuid)
         {
-            if (projectId is null)
+            if (projectUuid is null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            ViewBag.ProjectId = projectId;
+            Project project = _projectService.GetByUuid(projectUuid);
+            if (project is null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            //TODO: Re-enable this
+            /*
+            if (!project.GuideEnabled)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            */
+
+            ViewBag.ProjectUuid = projectUuid;
             return View();
         }
 
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp/wiz-setup")]
-        // GET: InstallGuide/WizSetUp
-        public ActionResult WizSetUp(int? projectId)
+        [Route("projects/{projectUuid}/add-lamp/lamp-setup")]
+        public ActionResult SetUpLamp(string projectUuid)
         {
-            ViewBag.ProjectId = projectId;
+            ViewBag.ProjectUuid = projectUuid;
             return View();
         }
 
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp/authorize-wiz")]
-        public ActionResult AuthorizeLamp(int? projectId)
+        [Route("projects/{projectUuid}/add-lamp/authorize-account")]
+        public ActionResult AuthorizeAccount(string projectUuid)
         {
-            ViewBag.ProjectId = projectId;
+            ViewBag.ProjectUuid = projectUuid;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("projects/{projectId}/add-lamp/authorize-wiz")]
-        public ActionResult AuthorizeLampAsync(int? projectId, [FromForm] string? key)
+        [Route("projects/{projectUuid}/add-lamp/authorize-account")]
+        public async Task<ActionResult> AuthorizeAccount(string projectUuid, [FromForm] string key)
         {
             if (key is null)
             {
@@ -51,27 +69,29 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            if (projectId is null)
+            if (projectUuid is null)
             {
                 ViewBag.ErrorMessage = "No project id";
                 return View();
             }
-
-            // Check if the key is valid or not
-            if (false)
+            
+            try
             {
-                ViewBag.ErrorMessage = "Invalid key";
+                await _projectService.UpdateApiToken(projectUuid, key);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
                 return View();
             }
 
-            // Check if all values have been inserted
-            // TODO: Remove initialization of values like following. This is here now as a placeholder
-             
-            return RedirectToAction("ThankYou", "InstallGuide", new { projectId = projectId });
+            return Redirect($"/projects/{projectUuid}/add-lamp/thank-you");
+           
         }
 
+
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp/thank-you")]
+        [Route("projects/{projectUuid}/add-lamp/thank-you")]
         public ActionResult ThankYou()
         {
             return View();

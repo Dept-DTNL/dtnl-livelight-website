@@ -1,8 +1,15 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using DTNL.LL.Logic
+@inject AuthService authService
+
+@{
+    ViewData["Title"] = "Live Light";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Live Light Projects</p>
+    @if (!authService.IsLoggedIn())
+    {
+        <p>To view and edit projects, please log in!</p>
+    }
 </div>

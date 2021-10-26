@@ -3,6 +3,7 @@ using DTNL.LL.DAL;
 using DTNL.LL.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace DTNL.LL.Logic
@@ -16,10 +17,13 @@ namespace DTNL.LL.Logic
             _unitOfWork = unitOfWork;
         }
 
-        public Task AddProjectAsync(Project project)
+        public async Task AddProjectAsync(Project project)
         {
-            _unitOfWork.Projects.AddAsync(project);
-            return _unitOfWork.CommitAsync();
+            Console.Write(project);
+            //TODO: CHECK IF PROJECT IS GOOD
+
+            await _unitOfWork.Projects.AddAsync(project); 
+            await _unitOfWork.CommitAsync();
         }
 
         public ValueTask<Project> FindProjectByIdAsync(int id)
@@ -29,6 +33,7 @@ namespace DTNL.LL.Logic
 
         public async Task UpdateAsync(int oldProjectId, Project newValues)
         {
+            // TODO: check all values in other method
             Project project = await FindProjectByIdAsync(oldProjectId);
 
             project.Active = newValues.Active;
@@ -39,8 +44,24 @@ namespace DTNL.LL.Logic
             // project.TimeRangeStart = newValues.TimeRangeStart;
             // project.TimeRangeEnd = newValues.TimeRangeEnd;
 
-            _unitOfWork.Projects.Update(project);
-            await _unitOfWork.CommitAsync();
+            /*
+            if (newValues.MediumTrafficAmount > 0 || newValues.MediumTrafficAmount < newValues.HighTrafficAmount) project.MediumTrafficAmount = newValues.MediumTrafficAmount;
+            if (newValues.MediumTrafficAmount > 0 || newValues.MediumTrafficAmount > newValues.HighTrafficAmount) project.HighTrafficAmount = newValues.HighTrafficAmount;
+
+            if (newValues.LowTrafficColor is not null) project.LowTrafficColor = newValues.LowTrafficColor;
+            project.LowTrafficBrightness = newValues.LowTrafficBrightness;
+            if (newValues.MediumTrafficColor is not null) project.MediumTrafficColor = newValues.MediumTrafficColor;
+            project.MediumTrafficBrightness = newValues.MediumTrafficBrightness;
+            if (newValues.HighTrafficColor is not null) project.HighTrafficColor = newValues.HighTrafficColor;
+            project.HighTrafficBrightness = newValues.HighTrafficBrightness;
+
+            project.GuideEnabled = newValues.GuideEnabled;
+            project.AnalyticsVersion = newValues.AnalyticsVersion;
+            if (newValues.PollingTimeInMinutes > 0) project.PollingTimeInMinutes = newValues.PollingTimeInMinutes;
+            */
+
+            //_unitOfWork.Projects.Update(project);
+            //await _unitOfWork.CommitAsync();
         }
 
         public Task<List<Project>> GetAllAsync()
@@ -67,5 +88,20 @@ namespace DTNL.LL.Logic
         {
             return await _unitOfWork.Projects.GetActiveProjectsAsync();
         }
+        public async Task UpdateApiToken(string projectUuid, string token)
+        {
+            Project project = GetByUuid(projectUuid);
+            //project.LifxApiKey = token;
+            //project.GuideEnabled = false;
+
+            _unitOfWork.Projects.Update(project);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public Project GetByUuid(string uuid)
+        {
+            return GetSpecifiedProjects(p => p.LifxLights.ToList()[0].Uuid.ToString() == uuid).FirstOrDefault();
+        }
+
     }
 }

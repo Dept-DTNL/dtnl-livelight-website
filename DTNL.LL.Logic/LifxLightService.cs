@@ -69,6 +69,5 @@ namespace DTNL.LL.Logic
 
             return time.TimeOfDay >= startTime && time.TimeOfDay <= endTime;
         }
-
     }
 }

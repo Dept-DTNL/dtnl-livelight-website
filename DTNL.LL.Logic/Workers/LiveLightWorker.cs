@@ -39,7 +39,7 @@ namespace DTNL.LL.Logic.Workers
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting LiveLight Worker with a polling time of {0} seconds.", _tickDelayInSeconds);
-            _timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
+            //_timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
 
             return Task.CompletedTask;
         }

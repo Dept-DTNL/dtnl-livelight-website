@@ -6,18 +6,12 @@ namespace DTNL.LL.Models
     public class LifxLight : ILight
     {
         public int Id { get; set; }
-
         public Project Project { get; set; }
-
-
         public Guid Uuid { get; set; }
 
         // Lamp connection
         public string LifxApiKey { get; set; }
         public string LightGroupName { get; set; }
-
-        [Display(Name = "Is Active")]
-        public bool Active { get; set; } = true;
 
         // Time range
         public bool TimeRangeEnabled { get; set; } = true;

@@ -1,0 +1,23 @@
+﻿<h1>Authorize LIFX account</h1>
+<h3>@ViewBag.ErrorMessage</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            Your access token:
+            <div class="col-md-10">
+                @Html.TextBox("Key")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Authorize" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
