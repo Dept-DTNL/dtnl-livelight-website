@@ -27,12 +27,11 @@ namespace DTNL.LL.Logic.Analytics
             _gaEventName = apiTags.Ga4EventName;
             _gaConversions = apiTags.Ga4Conversions;
             GoogleCredential credentials = googleCredentialProvider.GetGoogleCredentials();
-            BetaAnalyticsDataClientBuilder builder = new BetaAnalyticsDataClientBuilder
+            BetaAnalyticsDataClientBuilder builder = new()
             {
                 ChannelCredentials = credentials.ToChannelCredentials()
             };
             _gaClient = builder.Build();
-
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace DTNL.LL.Logic.Analytics
         /// <returns></returns>
         private RunRealtimeReportRequest CreateRealtimeReportRequest(Metric[] metrics, Dimension[] dimensions, string propertyId, int pollingTimeInMinutes)
         {
-            RunRealtimeReportRequest request = new RunRealtimeReportRequest()
+            RunRealtimeReportRequest request = new()
             {
                 Property = _gaProperties + propertyId,
                 Metrics = { metrics },

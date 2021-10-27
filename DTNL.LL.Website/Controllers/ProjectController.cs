@@ -122,7 +122,7 @@ namespace DTNL.LL.Website.Controllers
         private ProjectDTO TurnProjectToProjectDTO(Project project)
         {
 
-            ProjectDTO dto =  new ProjectDTO()
+            ProjectDTO dto =  new()
             {
                 ProjectName = project.ProjectName,
                 Active = project.Active,
@@ -139,7 +139,7 @@ namespace DTNL.LL.Website.Controllers
         // Turns Project to a ProjectDTO
         private Project TurnProjectDTOToProject(ProjectDTO dto)
         {
-            Project project = new Project()
+            Project project = new()
             {
                 ProjectName = dto.ProjectName,
                 Active = dto.Active,
