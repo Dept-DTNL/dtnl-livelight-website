@@ -19,6 +19,42 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.LightGroupName)
                 .IsRequired();
 
+            builder.Property(m => m.ConversionColor)
+                .IsRequired();
+
+            builder.Property(m => m.ConversionPeriod)
+                .IsRequired();
+
+            builder.Property(m => m.HighTrafficAmount)
+                .IsRequired();
+
+            builder.Property(m => m.HighTrafficBrightness)
+                .IsRequired();
+
+            builder.Property(m => m.HighTrafficBrightness)
+                .IsRequired();
+
+            builder.Property(m => m.MediumTrafficAmount)
+                .IsRequired();
+
+            builder.Property(m => m.MediumTrafficBrightness)
+                .IsRequired();
+
+            builder.Property(m => m.MediumTrafficColor)
+                .IsRequired();
+
+            builder.Property(m => m.LowTrafficBrightness)
+                .IsRequired();
+
+            builder.Property(m => m.LowTrafficColor)
+                .IsRequired();
+
+            builder.Property(m => m.Uuid)
+                .IsRequired();
+
+            builder.HasOne(m => m.Project)
+                .WithMany(m => m.LifxLights);
+            
             builder.Property(m => m.TimeRangeEnabled)
                 .IsRequired();
 
