@@ -53,7 +53,18 @@ namespace DTNL.LL.Logic.Workers
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             _timer?.Dispose();
+        }
+
+        ~LiveLightWorker()
+        {
+            Dispose(false);
         }
     }
 }

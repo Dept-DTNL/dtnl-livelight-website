@@ -92,9 +92,9 @@ namespace DTNL.LL.Logic.Analytics
             };
         }
 
-        public int GetActiveUsers(RunRealtimeReportResponse response) => int.Parse(response.Rows.ElementAtOrDefault(0)?.MetricValues[0].Value ?? "0");
+        public static int GetActiveUsers(RunRealtimeReportResponse response) => int.Parse(response.Rows.ElementAtOrDefault(0)?.MetricValues[0].Value ?? "0");
 
-        public int GetConversions(RunRealtimeReportResponse response, List<string> conversionTags)
+        public static int GetConversions(RunRealtimeReportResponse response, List<string> conversionTags)
         {
             int conversions = 0;
             if (response.RowCount is 0)
