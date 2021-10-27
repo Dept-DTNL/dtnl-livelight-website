@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
 using Google.Analytics.Data.V1Beta;
 using Google.Apis.Auth.OAuth2;
-using Google.Protobuf.Collections;
 using Grpc.Auth;
-using Grpc.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic.Analytics

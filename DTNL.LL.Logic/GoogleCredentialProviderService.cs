@@ -1,6 +1,5 @@
 ﻿using DTNL.LL.Logic.Options;
 using Google.Apis.Auth.OAuth2;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic

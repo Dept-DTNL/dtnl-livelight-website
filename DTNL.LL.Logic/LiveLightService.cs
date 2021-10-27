@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
-using Google.Apis.Logging;
-using LifxCloud.NET.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
