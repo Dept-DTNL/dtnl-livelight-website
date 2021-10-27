@@ -20,12 +20,9 @@ namespace DTNL.LL.Logic.Analytics
 
         private readonly AnalyticsService _analyticsService;
         private readonly GaApiTagsOptions _options;
-        private readonly ILogger _logger;
-
-        public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider, ILogger<V3Analytics> logger)
+        public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider)
         {
             _options = config.Value;
-            _logger = logger;
             _analyticsService = new AnalyticsService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credentialProvider.GetGoogleCredentials()

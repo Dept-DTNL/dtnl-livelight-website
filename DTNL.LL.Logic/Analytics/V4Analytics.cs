@@ -23,16 +23,14 @@ namespace DTNL.LL.Logic.Analytics
         private readonly string _gaEventName;
         private readonly string _gaConversions;
         private readonly BetaAnalyticsDataClient _gaClient;
-        private readonly ILogger _logger;
 
-        public V4Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider, ILogger<V4Analytics> logger)
+        public V4Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider)
         {
             GaApiTagsOptions apiTags = config.Value;
             _gaProperties = apiTags.Ga4Properties;
             _gaActiveUsers = apiTags.Ga4ActiveUsers;
             _gaEventName = apiTags.Ga4EventName;
             _gaConversions = apiTags.Ga4Conversions;
-            _logger = logger;
             GoogleCredential credentials = googleCredentialProvider.GetGoogleCredentials();
             BetaAnalyticsDataClientBuilder builder = new BetaAnalyticsDataClientBuilder
             {

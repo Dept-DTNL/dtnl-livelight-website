@@ -17,8 +17,6 @@ namespace DTNL.LL.Logic
 
         private const int SecondsPerMinute = 60;
 
-        private readonly HashSet<int> _sleepingProjectIds = new();
-
         public ProjectTimerService(IOptions<ServiceWorkerOptions> options)
         {
             _tickTime = options.Value.TickTimeInSeconds;

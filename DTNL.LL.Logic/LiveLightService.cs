@@ -19,8 +19,6 @@ namespace DTNL.LL.Logic
         private readonly ProjectService _projectService;
         private readonly ProjectTimerService _projectTimerService;
 
-        private const int SecondsInAMinute = 60;
-
         public LiveLightService(ILogger<LiveLightService> logger, IOptions<ServiceWorkerOptions> options, GaService gaService, ProjectService projectService, ProjectTimerService projectTimerService)
         {
             _logger = logger;
