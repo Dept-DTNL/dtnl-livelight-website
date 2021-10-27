@@ -75,6 +75,8 @@ namespace DTNL.LL.Logic
                     switch (light)
                     {
                         case LifxLight lifx:
+                            if (!lifx.Active)
+                                break;
                             Task lifxTask = LifxLightService.UpdateLightColors(lifx, report.ActiveUsers);
                             tasks.Add(lifxTask);
                             break;
@@ -101,6 +103,8 @@ namespace DTNL.LL.Logic
                     switch (light)
                     {
                         case LifxLight lifx:
+                            if (!lifx.Active)
+                                break;
                             Task lifxTask = LifxLightService.FlashLightForConversions(lifx, flashes,
                                 report.Project.PollingTimeInMinutes);
                             tasks.Add(lifxTask);
