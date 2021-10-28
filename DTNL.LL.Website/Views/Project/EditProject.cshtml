@@ -14,7 +14,7 @@
 
 <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Basic')">Basic</button>
-    <button class="tablinks" onclick="openTab(event, 'LightSettings')">Light Settings</button>
+    <button class="tablinks" onclick="openTab(event, 'LampSetUp')">LampSetUp</button>
     <button class="tablinks" onclick="openTab(event, 'AllLamps')">All Lamps</button>
 </div>
 
@@ -80,10 +80,10 @@
                 <tbody>
                     @foreach (LifxLightDTO light in @Model.LifxLight)
                     {
-                        <tr>
-                            <td>@light.Uuid</td>
-                            <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid })</td>
-                        </tr>
+                    <tr>
+                        <td>@light.Uuid</td>
+                        <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid })</td>
+                    </tr>
                     }
                 </tbody>
             </table>

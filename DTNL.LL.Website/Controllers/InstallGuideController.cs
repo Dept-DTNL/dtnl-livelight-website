@@ -9,59 +9,56 @@ namespace DTNL.LL.Website.Controllers
     public class InstallGuideController : Controller
     {
         private readonly ProjectService _projectService;
+        private readonly LifxLightDbService _lifxLightDbService;
 
-        public InstallGuideController(ProjectService projectService)
+        public InstallGuideController(ProjectService projectService, LifxLightDbService lifxLightDbService)
         {
             _projectService = projectService;
+            _lifxLightDbService = lifxLightDbService;
         }
 
         [HttpGet]
-        [Route("projects/{projectUuid}/add-lamp")]
-        public ActionResult Index(string projectUuid)
+        [Route("livelight-setup/{lightUuid}")]
+        public ActionResult Index(string lightUuid)
         {
-            if (projectUuid is null)
+            if (lightUuid is null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            Project project = _projectService.GetByUuid(projectUuid);
-            if (project is null)
+            //TODO: Change to Ilight, not LifxLight
+            LifxLight light = _lifxLightDbService.FindByUuid(lightUuid).Result;
+
+            if (light == null || !light.GuideEnabled)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            //TODO: Re-enable this
-            /*
-            if (!project.GuideEnabled)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-            */
+            ViewBag.LightUuid = light.Uuid;
+            return View();
+        }
 
-            ViewBag.ProjectUuid = projectUuid;
+        //LIFX LAMP SET UP
+        [HttpGet]
+        [Route("livelight-setup/{lightUuid}/LIFX/setup-account")]
+        public ActionResult SetUpAccountLifx(string lightUuid)
+        {
+            ViewBag.LightUuid = lightUuid;
             return View();
         }
 
         [HttpGet]
-        [Route("projects/{projectUuid}/add-lamp/lamp-setup")]
-        public ActionResult SetUpLamp(string projectUuid)
+        [Route("livelight-setup/{lightUuid}/LIFX/add-lamp")]
+        public ActionResult AddLampLifx(string lightUuid)
         {
-            ViewBag.ProjectUuid = projectUuid;
-            return View();
-        }
-
-        [HttpGet]
-        [Route("projects/{projectUuid}/add-lamp/authorize-account")]
-        public ActionResult AuthorizeAccount(string projectUuid)
-        {
-            ViewBag.ProjectUuid = projectUuid;
+            ViewBag.LightUuid = lightUuid;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("projects/{projectUuid}/add-lamp/authorize-account")]
-        public async Task<ActionResult> AuthorizeAccount(string projectUuid, [FromForm] string key)
+        [Route("livelight-setup/{lightUuid}/LIFX/add-lamp")]
+        public async Task<ActionResult> AddLampLifx(string lightUuid, [FromForm] string key)
         {
             if (key is null)
             {
@@ -69,7 +66,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            if (projectUuid is null)
+            if (lightUuid is null)
             {
                 ViewBag.ErrorMessage = "No project id";
                 return View();
@@ -77,7 +74,7 @@ namespace DTNL.LL.Website.Controllers
             
             try
             {
-                await _projectService.UpdateApiToken(projectUuid, key);
+                await _lifxLightDbService.UpdateKey(lightUuid, key);
             }
             catch (Exception e)
             {
@@ -85,13 +82,13 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            return Redirect($"/projects/{projectUuid}/add-lamp/thank-you");
+            return Redirect($"/livelight-setup/{lightUuid}/thank-you");
            
         }
 
 
         [HttpGet]
-        [Route("projects/{projectUuid}/add-lamp/thank-you")]
+        [Route("livelight-setup/{lightUuid}/thank-you")]
         public ActionResult ThankYou()
         {
             return View();

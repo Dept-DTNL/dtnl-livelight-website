@@ -19,9 +19,6 @@ namespace DTNL.LL.Logic
 
         public async Task AddProjectAsync(Project project)
         {
-            Console.Write(project);
-            //TODO: CHECK IF PROJECT IS GOOD
-
             await _unitOfWork.Projects.AddAsync(project); 
             await _unitOfWork.CommitAsync();
         }
@@ -64,34 +61,9 @@ namespace DTNL.LL.Logic
             return _unitOfWork.Projects.Find(expression);
         }
 
-        public IEnumerable<Project> GetProjectsWithSpecificCustomerName(string customerName)
-        {
-            return GetSpecifiedProjects(p => p.ProjectName.Contains(customerName));
-        }
-
-        public IEnumerable<Project> GetProjectsWithSpecificProjectName(string projectName)
-        {
-            return GetSpecifiedProjects(p => p.ProjectName.Contains(projectName));
-        }
-
         public async Task<IEnumerable<Project>> GetActiveProjects()
         {
             return await _unitOfWork.Projects.GetActiveProjectsAsync();
         }
-        public async Task UpdateApiToken(string projectUuid, string token)
-        {
-            Project project = GetByUuid(projectUuid);
-            //project.LifxApiKey = token;
-            //project.GuideEnabled = false;
-
-            _unitOfWork.Projects.Update(project);
-            await _unitOfWork.CommitAsync();
-        }
-
-        public Project GetByUuid(string uuid)
-        {
-            return GetSpecifiedProjects(p => p.LifxLights.ToList()[0].Uuid.ToString() == uuid).FirstOrDefault();
-        }
-
     }
 }

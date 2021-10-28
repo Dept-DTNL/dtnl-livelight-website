@@ -1,6 +1,7 @@
-﻿<h1>Authorize LIFX account</h1>
-<h3>@ViewBag.ErrorMessage</h3>
+﻿<h1>Setting up your LIFX lamp</h1>
+<p>You can find your access token in lifx cloud</p>
 
+<h3>@ViewBag.ErrorMessage</h3>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -16,8 +17,10 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Authorize" class="btn btn-default" />
+                <input type="submit" value="Add token" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
+
+<a href="/livelight-setup/@ViewBag.LightUuid/LIFX/add-account">Back</a>

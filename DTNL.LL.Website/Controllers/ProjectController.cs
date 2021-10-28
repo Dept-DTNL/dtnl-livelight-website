@@ -86,10 +86,14 @@ namespace DTNL.LL.Website.Controllers
         {
             try
             {
-                await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project)) ;
+                if (project.AnalyticsVersion.Equals(AnalyticsVersion.V3) 
+                    && (project.GaProperty.Length < 3 || !project.GaProperty.StartsWith("ga:")))
+                    return View(project);
+
+                await _projectService.AddProjectAsync(ProjectDTO.TurnProjectDTOToProject(project));
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ViewBag.ErrorMessage = e.Message + "Something went wrong when creating your project";
                 return View();
