@@ -9,8 +9,7 @@
 <h1>Edit a project</h1>
 <h3>@ViewBag.ErrorMessage</h3>
 
-<a href="/project/@Model.Id/create-light">Add a new light ///</a>
-<a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="CreateLight">Add a new light</a>
+<a href="/project/@Model.Id/create-light">Add a new light</a>
 
 <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Basic')">Basic</button>
@@ -82,7 +81,7 @@
                     {
                     <tr>
                         <td>@light.Uuid</td>
-                        <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid })</td>
+                        <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid }) | @Html.ActionLink("Delete", "DeleteLight", "Project", new { confirm = true, uuid = light.Uuid, projectId = Model.Id }, new { onclick = "return confirm('Do you really want to delete this light?')" })</td>
                     </tr>
                     }
                 </tbody>

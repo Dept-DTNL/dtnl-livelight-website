@@ -63,5 +63,17 @@ namespace DTNL.LL.Logic
             _unitOfWork.LifxLights.Update(light);
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task DeleteAsync(string uuid)
+        {
+            _unitOfWork.LifxLights.Remove(FindByUuid(uuid).Result);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task DeleteAsync(LifxLight light)
+        {
+            _unitOfWork.LifxLights.Remove(light);
+            await _unitOfWork.CommitAsync();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic;
@@ -29,8 +30,10 @@ namespace DTNL.LL.Website.Controllers
         public IActionResult Index()
         {
             if (!_authService.IsLoggedIn())
+            {
                 return RedirectToAction("Index", "Home");
-                
+            }
+
             return View(GetAllProjectDTOs());
         }
 
@@ -151,7 +154,7 @@ namespace DTNL.LL.Website.Controllers
                         break;
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("EditProject", "Project", new { projectId = projectId });
             }
             catch (Exception e)
             {
@@ -163,20 +166,20 @@ namespace DTNL.LL.Website.Controllers
 
         // Shows view to edit a specific project
         [HttpGet]
-        [Route("project/edit-project/{id}")]
-        public async Task<IActionResult> EditProject(int? id)
+        [Route("project/edit-project/{projectId}")]
+        public async Task<IActionResult> EditProject(int? projectId)
         {
             if (!_authService.IsLoggedIn())
                 return RedirectToAction("Index", "Home");
 
-            if (id is null)
+            if (projectId is null)
             {
                 ViewBag.ErrorMessage = "No ids given";
                 return View();
             }
 
 
-            Project projectToUpdate =  _projectService.FindProjectByIdWithLights(id.Value);
+            Project projectToUpdate =  _projectService.FindProjectByIdWithLights(projectId.Value);
 
             if (projectToUpdate is null)
             {
@@ -190,11 +193,11 @@ namespace DTNL.LL.Website.Controllers
 
         // Updates project
         [HttpPost]
-        [Route("project/edit-project/{id}")]
+        [Route("project/edit-project/{projectId}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProject(int? id, [FromForm] ProjectDTO newValues)
+        public async Task<IActionResult> EditProject(int? projectId, [FromForm] ProjectDTO newValues)
         {
-            if (id is null)
+            if (projectId is null)
             {
                 ViewBag.ErrorMessage = "No id given";
                 return View();
@@ -207,7 +210,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            await _projectService.UpdateAsync(id.Value, ProjectDTO.TurnProjectDTOToProject(newValues));
+            await _projectService.UpdateAsync(projectId.Value, ProjectDTO.TurnProjectDTOToProject(newValues));
 
             return RedirectToAction("Index", "Project");
         }
@@ -244,7 +247,7 @@ namespace DTNL.LL.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("project/edit-project/{projectId}/edit-light/{uuid}")]
-        public async Task<IActionResult> EditLight(string uuid, [FromForm] AllLights newValues)
+        public async Task<IActionResult> EditLight(string uuid, [FromForm] AllLights newValues, int projectId)
         {
             if (uuid is null)
             {
@@ -260,6 +263,28 @@ namespace DTNL.LL.Website.Controllers
 
             await _lifxLightService.Update(uuid, LifxLightDTO.LifxLightDTOToLifxLight(newValues.LifxLightDto));
 
+            return RedirectToAction("EditProject", "Project", new { projectId = projectId });
+        }
+
+        public async Task<IActionResult> DeleteProject(bool confirm, int? id)
+        {
+            if (confirm && id is not null)
+            {
+                await _projectService.DeleteAsync(id.Value);
+            }
+            return RedirectToAction("Index", "Project");
+        }
+
+        public async Task<IActionResult> DeleteLight(bool confirm, string uuid, int? projectId)
+        {
+            if (confirm && uuid is not null)
+            {
+                await _lifxLightService.DeleteAsync(uuid);
+            }
+
+            if (projectId.HasValue)
+                return RedirectToAction("EditProject", "Project", new { projectId = projectId});
+            
             return RedirectToAction("Index", "Project");
         }
 

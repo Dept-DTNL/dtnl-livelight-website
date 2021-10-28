@@ -5,6 +5,7 @@
     ViewData["Title"] = "Project";
 }
 
+
 <h1>Index of project</h1>
 
 <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="CreateProject">Create a new project</a>
@@ -52,16 +53,15 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (ProjectDTO project in @Model)
-        {
+    @foreach (ProjectDTO project in @Model)
+    {
         <tr>
             <td>@project.Id</td>
             <td>@project.CustomerName</td>
             <td>@project.ProjectName</td>
             <td>@project.Active</td>
-            <td>@Html.ActionLink("Edit", "EditProject", new { id = project.Id }) | <a href="/project/@project.Id/create-light">Add light</a></td>
+            <td>@Html.ActionLink("Edit", "EditProject", new { projectId = project.Id }) | @Html.ActionLink("Delete", "DeleteProject", "Project", new { confirm = true, id = project.Id }, new { onclick = "return confirm('Do you really want to delete this project?')" }) | <a href="/project/@project.Id/create-light">Add light</a></td>
         </tr>
-        }
+    }
     </tbody>
 </table>
-

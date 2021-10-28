@@ -65,5 +65,17 @@ namespace DTNL.LL.Logic
         {
             return await _unitOfWork.Projects.GetActiveProjectsAsync();
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.Projects.Remove(FindProjectByIdAsync(id).Result);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task DeleteAsync(Project project)
+        {
+            _unitOfWork.Projects.Remove(project);
+            await _unitOfWork.CommitAsync();
+        }
     }
 }
