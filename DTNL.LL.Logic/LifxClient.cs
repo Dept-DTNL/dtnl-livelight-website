@@ -8,7 +8,7 @@ using LifxCloud.NET.Models;
 
 namespace DTNL.LL.Logic
 {
-    public static class LifxApiService
+    public static class LifxClient
     {
         private const double PeakValue = 0.5d;
         private const string InvalidCredentialsErrorMessage = "Invalid credentials";
