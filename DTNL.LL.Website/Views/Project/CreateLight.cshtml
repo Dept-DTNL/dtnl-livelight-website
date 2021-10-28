@@ -10,25 +10,17 @@
 <h1>Create a new light</h1>
 <h3>@ViewBag.ErrorMessage</h3>
 
+<div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'LIFX')">LIFX</button>
+    <button class="tablinks" onclick="openTab(event, 'Other')">Other</button>
+</div>
 
-@Html.DropDownList("model => model.Lights",
-    new SelectList(new[]
+<div class="form-horizontal tabcontent" id="LIFX">
+    @using (Html.BeginForm())
     {
-        new { Value = "LIFX", Text = "LIFX" },
-        new { Value = "other", Text = "other" },
-    },
-        "Value",
-        "Text",
-        Model
-        ),
-    new { htmlAttributes = new { id = "change_form_dropdown", onchange = "openCity()" } })
+        <div>
+            @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    <div>
-        @Html.AntiForgeryToken()
-
-        <div id="LIFX" class="tabcontent">
             <div class="form-group">
                 Light Group Name
                 <div class="col-md-10">
@@ -147,26 +139,31 @@
                 <input type="submit" value="Create Light" class="btn btn-default" />
             </div>
         </div>
+    }
+</div>
+
+<div class="form-horizontal tabcontent" id="Other" style="display: none">
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.AntiForgeryToken()
     </div>
 }
+</div>
+
 
 <script>
-
-    function openCity() {
-        var dropdown_element = document.getElementById("change_form_dropdown");
-        var lightName = dropdown_element.options[dropdown_element.selectedIndex].value;
-
-        // Declare all variables
-        var i, tabcontent;
-
-        // Get all elements with class="tabcontent" and hide them
+    function openTab(evt, cityName) {
+        var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
         }
-
-        // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(lightName).style.display = "block";
-        //evt.currentTarget.className += " active";
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
     }
 </script>
