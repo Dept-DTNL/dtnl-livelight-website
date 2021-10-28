@@ -13,10 +13,10 @@ namespace DTNL.LL.Logic
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
             if (lightGroup.TimeRangeEnabled && !awake)
             {
-                return LifxApiService.DisableLightsAsync(lightGroup);
+                return LifxClient.DisableLightsAsync(lightGroup);
             }
             LampColor color = GetActivityColor(lightGroup, users);
-            return LifxApiService.SetLightsColorAsync(lightGroup, color);
+            return LifxClient.SetLightsColorAsync(lightGroup, color);
         }
 
         private static LampColor GetActivityColor(LifxLight lightGroup, int users)
@@ -58,7 +58,7 @@ namespace DTNL.LL.Logic
 
             int cycles = Math.Min(flashes, maxAmountOfCyclesRounded);
 
-            return LifxApiService.BreatheLightsAsync(lightGroup, lightGroup.ConversionColor, cycles, lightGroup.ConversionPeriod);
+            return LifxClient.BreatheLightsAsync(lightGroup, lightGroup.ConversionColor, cycles, lightGroup.ConversionPeriod);
         }
 
         public static bool IsTimeOfDayBetween(DateTime time,
