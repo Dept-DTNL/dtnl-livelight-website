@@ -32,7 +32,6 @@ namespace DTNL.LL.Models
         public string HighTrafficColor { get; set; }
         public double HighTrafficBrightness { get; set; }
         public int HighTrafficAmount { get; set; }
-        public int ConversionCycle { get; set; }
 
         //Amount of time one flash takes in seconds
         public double ConversionPeriod { get; set; }

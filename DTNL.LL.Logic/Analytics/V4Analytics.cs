@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
 using Google.Analytics.Data.V1Beta;
 using Google.Apis.Auth.OAuth2;
-using Google.Protobuf.Collections;
 using Grpc.Auth;
-using Grpc.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic.Analytics
@@ -23,23 +18,20 @@ namespace DTNL.LL.Logic.Analytics
         private readonly string _gaEventName;
         private readonly string _gaConversions;
         private readonly BetaAnalyticsDataClient _gaClient;
-        private readonly ILogger _logger;
 
-        public V4Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider, ILogger<V4Analytics> logger)
+        public V4Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider)
         {
             GaApiTagsOptions apiTags = config.Value;
             _gaProperties = apiTags.Ga4Properties;
             _gaActiveUsers = apiTags.Ga4ActiveUsers;
             _gaEventName = apiTags.Ga4EventName;
             _gaConversions = apiTags.Ga4Conversions;
-            _logger = logger;
             GoogleCredential credentials = googleCredentialProvider.GetGoogleCredentials();
-            BetaAnalyticsDataClientBuilder builder = new BetaAnalyticsDataClientBuilder
+            BetaAnalyticsDataClientBuilder builder = new()
             {
                 ChannelCredentials = credentials.ToChannelCredentials()
             };
             _gaClient = builder.Build();
-
         }
 
         /// <summary>
@@ -52,7 +44,7 @@ namespace DTNL.LL.Logic.Analytics
         /// <returns></returns>
         private RunRealtimeReportRequest CreateRealtimeReportRequest(Metric[] metrics, Dimension[] dimensions, string propertyId, int pollingTimeInMinutes)
         {
-            RunRealtimeReportRequest request = new RunRealtimeReportRequest()
+            RunRealtimeReportRequest request = new()
             {
                 Property = _gaProperties + propertyId,
                 Metrics = { metrics },
@@ -94,9 +86,9 @@ namespace DTNL.LL.Logic.Analytics
             };
         }
 
-        public int GetActiveUsers(RunRealtimeReportResponse response) => int.Parse(response.Rows.ElementAtOrDefault(0)?.MetricValues[0].Value ?? "0");
+        private static int GetActiveUsers(RunRealtimeReportResponse response) => int.Parse(response.Rows.ElementAtOrDefault(0)?.MetricValues[0].Value ?? "0");
 
-        public int GetConversions(RunRealtimeReportResponse response, List<string> conversionTags)
+        private static int GetConversions(RunRealtimeReportResponse response, List<string> conversionTags)
         {
             int conversions = 0;
             if (response.RowCount is 0)

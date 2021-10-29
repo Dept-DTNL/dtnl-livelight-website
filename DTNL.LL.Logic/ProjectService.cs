@@ -1,10 +1,10 @@
 ﻿using System;
-using DTNL.LL.DAL;
-using DTNL.LL.Models;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using DTNL.LL.DAL;
+using DTNL.LL.Models;
 
 namespace DTNL.LL.Logic
 {

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DTNL.LL.Logic.Analytics;
 using DTNL.LL.Logic.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -53,7 +51,18 @@ namespace DTNL.LL.Logic.Workers
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             _timer?.Dispose();
+        }
+
+        ~LiveLightWorker()
+        {
+            Dispose(false);
         }
     }
 }

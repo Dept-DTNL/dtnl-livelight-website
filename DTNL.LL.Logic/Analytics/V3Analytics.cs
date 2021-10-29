@@ -3,12 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
-using Google;
 using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
 using Google.Apis.Services;
-using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic.Analytics
@@ -20,12 +17,9 @@ namespace DTNL.LL.Logic.Analytics
 
         private readonly AnalyticsService _analyticsService;
         private readonly GaApiTagsOptions _options;
-        private readonly ILogger _logger;
-
-        public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider, ILogger<V3Analytics> logger)
+        public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider)
         {
             _options = config.Value;
-            _logger = logger;
             _analyticsService = new AnalyticsService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credentialProvider.GetGoogleCredentials()
@@ -48,7 +42,7 @@ namespace DTNL.LL.Logic.Analytics
             return new AnalyticsReport
             {
                 Project = project,
-                ActiveUsers = GetActiveUserCount(activeUserResponseTask.Result),
+                ActiveUsers = GetActiveUserCountFromRealtimeData(activeUserResponseTask.Result),
                 Conversions = GetAmountOfConversions(conversionResponses, project.PollingTimeInMinutes)
             };
         }
@@ -70,12 +64,12 @@ namespace DTNL.LL.Logic.Analytics
             return conversionRequests;
         }
 
-        private int GetActiveUserCount(RealtimeData data)
+        private static int GetActiveUserCountFromRealtimeData(RealtimeData data)
         {
             return int.Parse(data.Rows?.ElementAtOrDefault(0)?[0] ?? "0");
         }
 
-        private int GetAmountOfConversions(RealtimeData[] responses, int pollingTimeInMinutes)
+        private static int GetAmountOfConversions(RealtimeData[] responses, int pollingTimeInMinutes)
         {
             int converts = 0;
 
@@ -88,7 +82,7 @@ namespace DTNL.LL.Logic.Analytics
             return converts;
         }
 
-        private int ParseConvertRows(IList<IList<string>> rows, int pollingTimeInMinutes)
+        private static int ParseConvertRows(IList<IList<string>> rows, int pollingTimeInMinutes)
         {
             if (rows is null)
                 return 0;

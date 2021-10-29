@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
-using Google.Apis.Logging;
-using LifxCloud.NET.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -18,8 +16,6 @@ namespace DTNL.LL.Logic
         private readonly GaService _gaService;
         private readonly ProjectService _projectService;
         private readonly ProjectTimerService _projectTimerService;
-
-        private const int SecondsInAMinute = 60;
 
         public LiveLightService(ILogger<LiveLightService> logger, IOptions<ServiceWorkerOptions> options, GaService gaService, ProjectService projectService, ProjectTimerService projectTimerService)
         {
@@ -79,6 +75,8 @@ namespace DTNL.LL.Logic
                     switch (light)
                     {
                         case LifxLight lifx:
+                            if (!lifx.Active)
+                                break;
                             Task lifxTask = LifxLightService.UpdateLightColors(lifx, report.ActiveUsers);
                             tasks.Add(lifxTask);
                             break;
@@ -105,6 +103,8 @@ namespace DTNL.LL.Logic
                     switch (light)
                     {
                         case LifxLight lifx:
+                            if (!lifx.Active)
+                                break;
                             Task lifxTask = LifxLightService.FlashLightForConversions(lifx, flashes,
                                 report.Project.PollingTimeInMinutes);
                             tasks.Add(lifxTask);
