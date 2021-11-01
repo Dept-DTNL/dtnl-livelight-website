@@ -135,7 +135,7 @@ namespace DTNL.LL.Website.Controllers
         // Runs when create button is presses
         [HttpPost]
         [Route("project/{projectId}/create-light")]
-        public async Task<ActionResult> CreateLight(int? projectId, [FromForm] AllLights allLights)
+        public async Task<ActionResult> CreateLight(int? projectId, [FromForm] AllLights allLights, string lightSubmit)
         {
             if (!projectId.HasValue)
             {
@@ -145,11 +145,17 @@ namespace DTNL.LL.Website.Controllers
 
             try
             {
-                LifxLight light = LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto);
-                light.Project = await _projectService.FindProjectByIdAsync(projectId.Value);
+                switch (lightSubmit)
+                {
+                    case "Submit Lifx Light":
+                        LifxLight light = LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto);
+                        light.Project = await _projectService.FindProjectByIdAsync(projectId.Value);
+                        await _lifxLightService.CreateLifxLight(light);
+                        break;
+                    default:
+                        break;
+                }
 
-                await _lifxLightService.CreateLifxLight(light);
-                
                 return RedirectToAction("EditProject", "Project", new { projectId = projectId });
             }
             catch (Exception e)

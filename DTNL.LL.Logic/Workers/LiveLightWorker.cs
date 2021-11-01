@@ -26,7 +26,7 @@ namespace DTNL.LL.Logic.Workers
             _tickDelayInSeconds = options.Value.TickTimeInSeconds;
         }
 
-        private async void ProcessLiveLights(object _)
+        private async Task ProcessLiveLights(object _)
         {
             using IServiceScope scope = _scopeFactory.CreateScope();
             LiveLightService liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
