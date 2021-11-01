@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DTNL.LL.Website.Models
 {
-    public interface ILightDTO
+    public interface ILightDto
     {
         public Guid Uuid { get; set; }
         public ProjectDTO ProjectDto { get; set; }

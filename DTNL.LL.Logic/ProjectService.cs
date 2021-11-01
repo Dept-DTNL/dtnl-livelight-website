@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DTNL.LL.DAL;
 using DTNL.LL.Models;
@@ -28,9 +26,9 @@ namespace DTNL.LL.Logic
             return _unitOfWork.Projects.GetByIdAsync(id);
         }
 
-        public Project FindProjectByIdWithLights(int id)
+        public async Task<Project> FindProjectByIdWithLightsAsync(int id)
         {
-            Project project = _unitOfWork.Projects.GetByIdAsync(id).Result;
+            Project project = await _unitOfWork.Projects.GetByIdAsync(id);
             project.LifxLights = _unitOfWork.LifxLights.Find(l => l.Project.Id == id).ToList();
 
             return project;
@@ -56,11 +54,6 @@ namespace DTNL.LL.Logic
             return _unitOfWork.Projects.GetAllAsync();
         }
 
-        public IEnumerable<Project> GetSpecifiedProjects(Expression<Func<Project, bool>> expression)
-        {
-            return _unitOfWork.Projects.Find(expression);
-        }
-
         public async Task<IEnumerable<Project>> GetActiveProjects()
         {
             return await _unitOfWork.Projects.GetActiveProjectsAsync();
@@ -68,13 +61,7 @@ namespace DTNL.LL.Logic
 
         public async Task DeleteAsync(int id)
         {
-            _unitOfWork.Projects.Remove(FindProjectByIdAsync(id).Result);
-            await _unitOfWork.CommitAsync();
-        }
-
-        public async Task DeleteAsync(Project project)
-        {
-            _unitOfWork.Projects.Remove(project);
+            _unitOfWork.Projects.Remove(await FindProjectByIdAsync(id));
             await _unitOfWork.CommitAsync();
         }
     }

@@ -4,7 +4,7 @@ using DTNL.LL.Models;
 
 namespace DTNL.LL.Website.Models
 {
-    public class LifxLightDTO : ILightDTO
+    public class LifxLightDTO : ILightDto
     {
         public ProjectDTO ProjectDto { get; set; }
         public Guid Uuid { get; set; }
@@ -39,7 +39,6 @@ namespace DTNL.LL.Website.Models
         [Range(0, 1)]
         public double HighTrafficBrightness { get; set; }
         public int HighTrafficAmount { get; set; }
-        public int ConversionCycle { get; set; }
 
         //Amount of time one flash takes in seconds
         public double ConversionPeriod { get; set; }

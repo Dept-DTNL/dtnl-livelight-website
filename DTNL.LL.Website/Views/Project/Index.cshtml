@@ -44,12 +44,13 @@
 }
 
 <table class="table table-bordered">
+    <caption>Projects</caption>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Customer name</th>
-        <th>Project Name</th>
-        <th>Active</th>
+        <th scope="col">ID</th>
+        <th scope="col">Customer name</th>
+        <th scope="col">Project Name</th>
+        <th scope="col">Active</th>
     </tr>
     </thead>
     <tbody>
@@ -60,7 +61,7 @@
             <td>@project.CustomerName</td>
             <td>@project.ProjectName</td>
             <td>@project.Active</td>
-            <td>@Html.ActionLink("Edit", "EditProject", new { projectId = project.Id }) | @Html.ActionLink("Delete", "DeleteProject", "Project", new { confirm = true, id = project.Id }, new { onclick = "return confirm('Do you really want to delete this project?')" }) | <a href="/project/@project.Id/create-light">Add light</a></td>
+            <td>@Html.ActionLink("Edit", "EditProject", new {projectId = project.Id}) | @Html.ActionLink("Delete", "DeleteProject", "Project", new {confirm = true, id = project.Id}, new {onclick = "return confirm('Do you really want to delete this project?')"}) | <a href="/project/@project.Id/create-light">Add light</a></td>
         </tr>
     }
     </tbody>

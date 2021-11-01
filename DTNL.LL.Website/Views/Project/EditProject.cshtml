@@ -71,19 +71,20 @@
         <div id="AllLamps" class="form-horizontal tabcontent" style="display: none">
             <hr />
             <table class="table table-bordered">
+                <caption>All Lights</caption>
                 <thead>
-                    <tr>
-                        <th>Uuid</th>
-                    </tr>
+                <tr>
+                    <th scope="col">Uuid</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (LifxLightDTO light in @Model.LifxLight)
-                    {
+                @foreach (LifxLightDTO light in @Model.LifxLight)
+                {
                     <tr>
                         <td>@light.Uuid</td>
-                        <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid }) | @Html.ActionLink("Delete", "DeleteLight", "Project", new { confirm = true, uuid = light.Uuid, projectId = Model.Id }, new { onclick = "return confirm('Do you really want to delete this light?')" })</td>
+                        <td>@Html.ActionLink("Edit", "EditLight", new {projectId = @Model.Id, uuid = light.Uuid}) | @Html.ActionLink("Delete", "DeleteLight", "Project", new {confirm = true, uuid = light.Uuid, projectId = Model.Id}, new {onclick = "return confirm('Do you really want to delete this light?')"})</td>
                     </tr>
-                    }
+                }
                 </tbody>
             </table>
         </div>

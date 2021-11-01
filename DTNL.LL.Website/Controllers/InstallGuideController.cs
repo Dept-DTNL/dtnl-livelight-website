@@ -8,12 +8,10 @@ namespace DTNL.LL.Website.Controllers
 {
     public class InstallGuideController : Controller
     {
-        private readonly ProjectService _projectService;
         private readonly LifxLightDbService _lifxLightDbService;
 
-        public InstallGuideController(ProjectService projectService, LifxLightDbService lifxLightDbService)
+        public InstallGuideController(LifxLightDbService lifxLightDbService)
         {
-            _projectService = projectService;
             _lifxLightDbService = lifxLightDbService;
         }
 
@@ -26,7 +24,6 @@ namespace DTNL.LL.Website.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            //TODO: Change to Ilight, not LifxLight
             LifxLight light = _lifxLightDbService.FindByUuid(lightUuid);
 
             if (light == null || !light.GuideEnabled)

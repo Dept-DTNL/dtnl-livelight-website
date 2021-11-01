@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic;
 using DTNL.LL.Models;
 using Microsoft.AspNetCore.Mvc;
 using DTNL.LL.Website.Models;
-using Google.Apis.Util;
 
 namespace DTNL.LL.Website.Controllers
 {
@@ -124,7 +122,6 @@ namespace DTNL.LL.Website.Controllers
                     MediumTrafficAmount = 5,
                     HighTrafficAmount = 10,
                     ConversionColor = "blue",
-                    ConversionCycle = 1,
                     ConversionPeriod = 20,
                     TimeRangeEnabled = true,
                     TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
@@ -167,7 +164,7 @@ namespace DTNL.LL.Website.Controllers
         // Shows view to edit a specific project
         [HttpGet]
         [Route("project/edit-project/{projectId}")]
-        public IActionResult EditProject(int? projectId)
+        public async Task<IActionResult> EditProjectAsync(int? projectId)
         {
             if (!_authService.IsLoggedIn())
                 return RedirectToAction("Index", "Home");
@@ -178,7 +175,7 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            Project projectToUpdate =  _projectService.FindProjectByIdWithLights(projectId.Value);
+            Project projectToUpdate =  await _projectService.FindProjectByIdWithLightsAsync(projectId.Value);
 
             if (projectToUpdate is null)
             {
@@ -293,7 +290,7 @@ namespace DTNL.LL.Website.Controllers
         }
 
         // Turning Project List into ProjectViewModel List
-        private List<ProjectDTO> TurnProjectsToProjectDTOs(List<Project> projects)
+        private static List<ProjectDTO> TurnProjectsToProjectDTOs(List<Project> projects)
         {
             List<ProjectDTO> projectViewModels = new List<ProjectDTO>();
             foreach (Project project in projects)
