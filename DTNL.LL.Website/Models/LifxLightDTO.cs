@@ -65,7 +65,6 @@ namespace DTNL.LL.Website.Models
                 HighTrafficColor = lifxLight.HighTrafficColor,
                 HighTrafficBrightness = lifxLight.HighTrafficBrightness,
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
-                ConversionCycle = lifxLight.ConversionCycle,
                 ConversionPeriod = lifxLight.ConversionPeriod,
                 ConversionColor = lifxLight.ConversionColor,
                 GuideEnabled = lifxLight.GuideEnabled
@@ -90,7 +89,6 @@ namespace DTNL.LL.Website.Models
                 HighTrafficColor = lifxLight.HighTrafficColor,
                 HighTrafficBrightness = lifxLight.HighTrafficBrightness,
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
-                ConversionCycle = lifxLight.ConversionCycle,
                 ConversionPeriod = lifxLight.ConversionPeriod,
                 ConversionColor = lifxLight.ConversionColor,
                 GuideEnabled = lifxLight.GuideEnabled
@@ -115,7 +113,6 @@ namespace DTNL.LL.Website.Models
                 HighTrafficColor = lifxLightDto.HighTrafficColor,
                 HighTrafficBrightness = lifxLightDto.HighTrafficBrightness,
                 HighTrafficAmount = lifxLightDto.HighTrafficAmount,
-                ConversionCycle = lifxLightDto.ConversionCycle,
                 ConversionPeriod = lifxLightDto.ConversionPeriod,
                 ConversionColor = lifxLightDto.ConversionColor,
                 GuideEnabled = lifxLightDto.GuideEnabled
