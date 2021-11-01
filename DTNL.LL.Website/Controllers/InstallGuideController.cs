@@ -17,14 +17,14 @@ namespace DTNL.LL.Website.Controllers
 
         [HttpGet]
         [Route("livelight-setup/{lightUuid}")]
-        public ActionResult Index(string lightUuid)
+        public async Task<ActionResult> IndexAsync(string lightUuid)
         {
             if (lightUuid is null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            LifxLight light = _lifxLightDbService.FindByUuid(lightUuid);
+            LifxLight light = _lifxLightDbService.FindByUuidAsync(lightUuid);
 
             if (light == null || !light.GuideEnabled)
             {

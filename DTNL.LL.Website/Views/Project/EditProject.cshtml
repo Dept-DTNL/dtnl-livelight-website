@@ -12,8 +12,7 @@
 <a href="/project/@Model.Id/create-light">Add a new light</a>
 
 <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'Basic')">Basic</button>
-    <button class="tablinks" onclick="openTab(event, 'LampSetUp')">LampSetUp</button>
+    <button class="tablinks" onclick="openTab(event, 'EditLamp')">Edit Lamp</button>
     <button class="tablinks" onclick="openTab(event, 'AllLamps')">All Lamps</button>
 </div>
 
@@ -21,49 +20,14 @@
 {
     @Html.AntiForgeryToken()
     <div>
-        <div class="form-horizontal tabcontent" id="Basic">
+        <div class="form-horizontal tabcontent" id="EditLamp">
+            <hr />
+            <partial name="_ProjectInputs"/>
+
             <hr />
             <div class="form-group">
-                Project name
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                Customer name
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                Is it active?
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div id="LampSetUp" class="form-horizontal tabcontent" style="display: none">
-            <hr />
-            <div class="form-group">
-                Polling time in minutes
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.PollingTimeInMinutes, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.PollingTimeInMinutes)
-                </div>
-            </div>
-
-            <div class="form-group">
-                Google Analytics Version
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.AnalyticsVersion,
-                        new SelectList(Enum.GetValues(typeof(AnalyticsVersion))))
-                    @Html.ValidationMessageFor(model => model.AnalyticsVersion)
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Edit" class="btn btn-default" />
                 </div>
             </div>
         </div>
@@ -88,28 +52,23 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Edit" class="btn btn-default" />
-            </div>
-        </div>
-
-        <script>
-            function openTab(evt, cityName) {
-                var i, tabcontent, tablinks;
-                tabcontent = document.getElementsByClassName("tabcontent");
-                for (i = 0; i < tabcontent.length; i++) {
-                    tabcontent[i].style.display = "none";
-                }
-                tablinks = document.getElementsByClassName("tablinks");
-                for (i = 0; i < tablinks.length; i++) {
-                    tablinks[i].className = tablinks[i].className.replace(" active", "");
-                }
-                document.getElementById(cityName).style.display = "block";
-                evt.currentTarget.className += " active";
-            }
-        </script>
-
     </div>
 }
+
+<script>
+function openTab(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+</script>
+
+

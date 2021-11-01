@@ -113,6 +113,8 @@ namespace DTNL.LL.Website.Controllers
             {
                 LifxLightDto = new LifxLightDTO()
                 {
+                    Active = true,
+                    GuideEnabled = true,
                     LowTrafficColor = "red",
                     LowTrafficBrightness = 0.5,
                     MediumTrafficColor = "orange",
@@ -135,22 +137,19 @@ namespace DTNL.LL.Website.Controllers
         [Route("project/{projectId}/create-light")]
         public async Task<ActionResult> CreateLight(int? projectId, [FromForm] AllLights allLights)
         {
+            if (!projectId.HasValue)
+            {
+                ViewBag.ErrorMessage = "No ids given";
+                return View();
+            }
+
             try
             {
                 LifxLight light = LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto);
                 light.Project = await _projectService.FindProjectByIdAsync(projectId.Value);
 
                 await _lifxLightService.CreateLifxLight(light);
-
-                switch (@ViewBag.Light)
-                {
-                    case "LIFX":
-                        await _lifxLightService.CreateLifxLight(LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto));
-                        break;
-                    default:
-                        break;
-                }
-
+                
                 return RedirectToAction("EditProject", "Project", new { projectId = projectId });
             }
             catch (Exception e)
@@ -213,7 +212,7 @@ namespace DTNL.LL.Website.Controllers
         // Shows view to edit a specific project
         [HttpGet]
         [Route("project/edit-project/{projectID}/edit-light/{uuid}")]
-        public IActionResult EditLight(string uuid)
+        public IActionResult EditLightAsync(string uuid)
         {
             if (!_authService.IsLoggedIn())
                 return RedirectToAction("Index", "Home");
@@ -225,15 +224,15 @@ namespace DTNL.LL.Website.Controllers
             }
 
             AllLights allLights = new AllLights();
-            ILight iLight = _lifxLightService.FindByUuid(uuid);
+            LifxLight light = _lifxLightService.FindByUuidAsync(uuid);
 
-            if (iLight is null)
+            if (light is null)
             {
                 ViewBag.ErrorMessage = "Uuid not found";
                 return View();
             }
 
-            allLights.LifxLightDto = LifxLightDTO.LifxLightToLifxLightDTO((LifxLight)iLight);
+            allLights.LifxLightDto = LifxLightDTO.LifxLightToLifxLightDTO(light);
             
             return View(allLights);
         }
@@ -255,7 +254,15 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            await _lifxLightService.Update(uuid, LifxLightDTO.LifxLightDTOToLifxLight(newValues.LifxLightDto));
+            try
+            {
+                await _lifxLightService.Update(uuid, LifxLightDTO.LifxLightDTOToLifxLight(newValues.LifxLightDto));
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                return View();
+            }
 
             return RedirectToAction("EditProject", "Project", new { projectId = projectId });
         }

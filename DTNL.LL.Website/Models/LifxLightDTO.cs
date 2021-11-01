@@ -9,6 +9,7 @@ namespace DTNL.LL.Website.Models
         public ProjectDTO ProjectDto { get; set; }
         public Guid Uuid { get; set; }
         public bool GuideEnabled { get; set; }
+        public bool Active { get; set; }
 
         // Lamp connection
         public string LifxApiKey { get; set; }
@@ -50,6 +51,7 @@ namespace DTNL.LL.Website.Models
             return new LifxLightDTO()
             {
                 ProjectDto = ProjectDTO.TurnProjectToProjectDTO(lifxLight.Project),
+                Active = lifxLight.Active,
                 Uuid = lifxLight.Uuid,
                 LifxApiKey = lifxLight.LifxApiKey,
                 LightGroupName = lifxLight.LightGroupName,
@@ -75,6 +77,7 @@ namespace DTNL.LL.Website.Models
             return new LifxLightDTO()
             {
                 Uuid = lifxLight.Uuid,
+                Active = lifxLight.Active,
                 LifxApiKey = lifxLight.LifxApiKey,
                 LightGroupName = lifxLight.LightGroupName,
                 TimeRangeEnabled = lifxLight.TimeRangeEnabled,
@@ -99,6 +102,7 @@ namespace DTNL.LL.Website.Models
             return new LifxLight()
             {
                 Uuid = lifxLightDto.Uuid,
+                Active = lifxLightDto.Active,
                 LifxApiKey = lifxLightDto.LifxApiKey,
                 LightGroupName = lifxLightDto.LightGroupName,
                 TimeRangeEnabled = lifxLightDto.TimeRangeEnabled,

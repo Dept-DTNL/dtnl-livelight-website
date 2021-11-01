@@ -43,6 +43,7 @@ namespace DTNL.LL.Logic
             if (newValues.ProjectName is not null) project.ProjectName = newValues.ProjectName;
 
             project.AnalyticsVersion = newValues.AnalyticsVersion;
+            if (newValues.GaProperty is not null) project.GaProperty = newValues.GaProperty;
             if (newValues.PollingTimeInMinutes > 0) project.PollingTimeInMinutes = newValues.PollingTimeInMinutes;
             
             _unitOfWork.Projects.Update(project);

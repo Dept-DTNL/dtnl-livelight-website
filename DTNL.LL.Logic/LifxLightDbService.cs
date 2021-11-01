@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.DAL;
@@ -20,17 +21,22 @@ namespace DTNL.LL.Logic
             lifxLight.GuideEnabled = true;
 
             await _unitOfWork.LifxLights.AddAsync(lifxLight);
+            Task.WaitAll();
             await _unitOfWork.CommitAsync();
         }
 
-        public LifxLight FindByUuid(string uuid)
+        public LifxLight FindByUuidAsync(string uuid)
         {
-            return  _unitOfWork.LifxLights.Find(p => p.Uuid.ToString() == uuid).FirstOrDefault();
+            return _unitOfWork.LifxLights.Find(p => p.Uuid.ToString() == uuid).FirstOrDefault(); ;
         }
 
         public async Task Update(string uuid, LifxLight newValues)
         {
-            LifxLight oldValues = FindByUuid(uuid);
+            LifxLight oldValues = FindByUuidAsync(uuid);
+
+            //TODO: make specific exception
+            if (oldValues is null) throw new Exception("Uuid not found");
+
             oldValues.TimeRangeEnabled = newValues.TimeRangeEnabled;
             oldValues.TimeRangeStart = newValues.TimeRangeStart;
             oldValues.TimeRangeEnd = newValues.TimeRangeEnd;
@@ -47,6 +53,9 @@ namespace DTNL.LL.Logic
             oldValues.HighTrafficBrightness = newValues.HighTrafficBrightness;
 
             oldValues.GuideEnabled = newValues.GuideEnabled;
+            oldValues.Active = newValues.Active;
+
+            if (oldValues.LightGroupName is not null) oldValues.LightGroupName = newValues.LightGroupName;
 
             _unitOfWork.LifxLights.Update(oldValues);
             await _unitOfWork.CommitAsync();
@@ -54,7 +63,7 @@ namespace DTNL.LL.Logic
 
         public async Task UpdateKey(string uuid, string key)
         {
-            LifxLight light = FindByUuid(uuid);
+            LifxLight light = FindByUuidAsync(uuid);
             light.LifxApiKey = key;
             light.GuideEnabled = false;
 
@@ -64,7 +73,7 @@ namespace DTNL.LL.Logic
 
         public async Task DeleteAsync(string uuid)
         {
-            _unitOfWork.LifxLights.Remove(FindByUuid(uuid));
+            _unitOfWork.LifxLights.Remove(FindByUuidAsync(uuid));
             await _unitOfWork.CommitAsync();
         }
     }
