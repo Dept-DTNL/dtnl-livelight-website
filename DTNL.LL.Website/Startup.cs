@@ -29,6 +29,8 @@ namespace DTNL.LL.Website
             services.AddScoped<ProjectService>();
             services.AddScoped<AuthService>();
             services.AddScoped<LiveLightService>();
+            services.AddScoped<LifxLightService>();
+            services.AddScoped<LifxClient>();
 
             services.AddSingleton<ProjectTimerService>();
             services.AddSingleton<GaService>();

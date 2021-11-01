@@ -1,5 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
+using LifxCloud.NET;
 
 namespace DTNL.LL.Models
 {
@@ -38,5 +41,9 @@ namespace DTNL.LL.Models
         //Amount of time one flash takes in seconds
         public double ConversionPeriod { get; set; }
         public string ConversionColor { get; set; }
+
+        [NotMapped] private LifxCloudClient _lifxClient;
+
+        public async Task<LifxCloudClient> GetClient() => _lifxClient ??= await LifxCloudClient.CreateAsync(LifxApiKey);
     }
 }

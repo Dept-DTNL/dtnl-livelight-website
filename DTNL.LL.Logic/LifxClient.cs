@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Exceptions;
@@ -8,19 +8,19 @@ using LifxCloud.NET.Models;
 
 namespace DTNL.LL.Logic
 {
-    public static class LifxClient
+    public class LifxClient
     {
         private const double PeakValue = 0.5d;
         private const string InvalidCredentialsErrorMessage = "Invalid credentials";
         private const string InvalidGroupNameErrorMessage = "Could not find group";
-
+        
         private static Task<LifxCloudClient> CreateClientAsync(string token) => LifxCloudClient.CreateAsync(token);
 
-        private static Selector CreateLabel(LifxLight l) => new Selector.GroupLabel(l.LightGroupName);
+        private Selector CreateLabel(LifxLight l) => new Selector.GroupLabel(l.LightGroupName);
 
-        private static SetStateRequest PowerOffState() => new() {Power = PowerState.Off};
+        private SetStateRequest PowerOffState() => new() {Power = PowerState.Off};
 
-        private static SetStateRequest ColorState(string color, double brightness) => new() {Power = PowerState.On, Color = color, Brightness = brightness, Fast = true};
+        private SetStateRequest ColorState(string color, double brightness) => new() {Power = PowerState.On, Color = color, Brightness = brightness, Fast = true};
 
         /// <summary>
         /// 
@@ -29,7 +29,7 @@ namespace DTNL.LL.Logic
         /// <param name="cycles">The amount of cycles that the lamp will show</param>
         /// <param name="period">Time in seconds for one cycle.</param>
         /// <returns></returns>
-        private static BreatheEffectRequest BreatheEffect(string color, double cycles, double period) => new()
+        private BreatheEffectRequest BreatheEffect(string color, double cycles, double period) => new()
             {
                 Color = color,
                 Cycles = cycles,
@@ -38,23 +38,23 @@ namespace DTNL.LL.Logic
                 PowerOn = true
             };
 
-        public static Task<ApiResponse> DisableLightsAsync(LifxLight lightGroup) => SetLightStateAsync(lightGroup, PowerOffState());
+        public Task<ApiResponse> DisableLightsAsync(LifxLight lightGroup) => SetLightStateAsync(lightGroup, PowerOffState());
 
-        private static async Task<ApiResponse> SetLightStateAsync(LifxLight lightGroup, SetStateRequest state)
+        private async Task<ApiResponse> SetLightStateAsync(LifxLight lightGroup, SetStateRequest state)
         {
-            LifxCloudClient client = await CreateClientAsync(lightGroup.LifxApiKey);
+            LifxCloudClient client = await lightGroup.GetClient();
             return await client.SetState(CreateLabel(lightGroup), state);
         }
 
-        public static Task<ApiResponse> SetLightsColorAsync(LifxLight lightGroup, LampColor color)
+        public Task<ApiResponse> SetLightsColorAsync(LifxLight lightGroup, LampColor color)
         {
             SetStateRequest colorState = ColorState(color.Color, color.Brightness);
             return SetLightStateAsync(lightGroup, colorState);
         }
 
-        public static async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, int cycles, double period)
+        public async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, int cycles, double period)
         {
-            LifxCloudClient client = await CreateClientAsync(lightGroup.LifxApiKey);
+            LifxCloudClient client = await lightGroup.GetClient();
             return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, cycles, period));
         }
 
@@ -67,7 +67,7 @@ namespace DTNL.LL.Logic
         /// <exception cref="GroupNotFoundException">A group with the specified name does not exist.</exception>
         /// <exception cref="NoLightsOnlineException">The key and group name are valid but there is no light connected to the internet.</exception>
         /// <returns></returns>
-        public static async Task HasValidLightAsync(string apiKey, string groupName)
+        public async Task HasValidLightAsync(string apiKey, string groupName)
         {
             try
             {
