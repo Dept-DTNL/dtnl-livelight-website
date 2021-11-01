@@ -167,7 +167,7 @@ namespace DTNL.LL.Website.Controllers
         // Shows view to edit a specific project
         [HttpGet]
         [Route("project/edit-project/{projectId}")]
-        public async Task<IActionResult> EditProject(int? projectId)
+        public IActionResult EditProject(int? projectId)
         {
             if (!_authService.IsLoggedIn())
                 return RedirectToAction("Index", "Home");
@@ -178,7 +178,6 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-
             Project projectToUpdate =  _projectService.FindProjectByIdWithLights(projectId.Value);
 
             if (projectToUpdate is null)
@@ -187,7 +186,6 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            //TODO: Change Uuid result
             return View(ProjectDTO.TurnProjectToProjectDTO(projectToUpdate));
         }
 
@@ -218,7 +216,7 @@ namespace DTNL.LL.Website.Controllers
         // Shows view to edit a specific project
         [HttpGet]
         [Route("project/edit-project/{projectID}/edit-light/{uuid}")]
-        public async Task<IActionResult> EditLight(string uuid)
+        public IActionResult EditLight(string uuid)
         {
             if (!_authService.IsLoggedIn())
                 return RedirectToAction("Index", "Home");
@@ -229,9 +227,8 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-
             AllLights allLights = new AllLights();
-            ILight iLight = _lifxLightService.FindByUuid(uuid).Result;
+            ILight iLight = _lifxLightService.FindByUuid(uuid);
 
             if (iLight is null)
             {

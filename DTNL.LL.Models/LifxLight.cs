@@ -6,12 +6,11 @@ namespace DTNL.LL.Models
     public class LifxLight : ILight
     {
         public int Id { get; set; }
+        public Guid Uuid { get; set; }
 
         public virtual Project Project { get; set; }
-
-
-        public Guid Uuid { get; set; }
         public bool GuideEnabled { get; set; }
+        public bool Active { get; set; }
 
         // Lamp connection
         public string LifxApiKey { get; set; }

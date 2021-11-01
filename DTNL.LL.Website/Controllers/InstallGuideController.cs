@@ -27,7 +27,7 @@ namespace DTNL.LL.Website.Controllers
             }
 
             //TODO: Change to Ilight, not LifxLight
-            LifxLight light = _lifxLightDbService.FindByUuid(lightUuid).Result;
+            LifxLight light = _lifxLightDbService.FindByUuid(lightUuid);
 
             if (light == null || !light.GuideEnabled)
             {

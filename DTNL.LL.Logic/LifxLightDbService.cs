@@ -25,14 +25,14 @@ namespace DTNL.LL.Logic
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<LifxLight> FindByUuid(string uuid)
+        public LifxLight FindByUuid(string uuid)
         {
-            return _unitOfWork.LifxLights.Find(p => p.Uuid.ToString() == uuid).FirstOrDefault();
+            return  _unitOfWork.LifxLights.Find(p => p.Uuid.ToString() == uuid).FirstOrDefault();
         }
 
         public async Task Update(string uuid, LifxLight newValues)
         {
-            LifxLight oldValues = FindByUuid(uuid).Result;
+            LifxLight oldValues = FindByUuid(uuid);
             oldValues.TimeRangeEnabled = newValues.TimeRangeEnabled;
             oldValues.TimeRangeStart = newValues.TimeRangeStart;
             oldValues.TimeRangeEnd = newValues.TimeRangeEnd;
@@ -56,7 +56,7 @@ namespace DTNL.LL.Logic
 
         public async Task UpdateKey(string uuid, string key)
         {
-            LifxLight light = FindByUuid(uuid).Result;
+            LifxLight light = FindByUuid(uuid);
             light.LifxApiKey = key;
             light.GuideEnabled = false;
 
@@ -66,13 +66,7 @@ namespace DTNL.LL.Logic
 
         public async Task DeleteAsync(string uuid)
         {
-            _unitOfWork.LifxLights.Remove(FindByUuid(uuid).Result);
-            await _unitOfWork.CommitAsync();
-        }
-
-        public async Task DeleteAsync(LifxLight light)
-        {
-            _unitOfWork.LifxLights.Remove(light);
+            _unitOfWork.LifxLights.Remove(FindByUuid(uuid));
             await _unitOfWork.CommitAsync();
         }
     }
