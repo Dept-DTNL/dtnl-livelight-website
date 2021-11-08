@@ -26,6 +26,7 @@ namespace DTNL.LL.Logic
         /// 
         /// </summary>
         /// <param name="color">A color string: https://api.developer.lifx.com/v1/docs/colors </param>
+        /// <param name="baseColor">The color to start the effect from. If this parameter is omitted then the color the bulb is currently set to is used instead.</param>
         /// <param name="cycles">The amount of cycles that the lamp will show</param>
         /// <param name="period">Time in seconds for one cycle.</param>
         /// <returns></returns>
@@ -56,7 +57,7 @@ namespace DTNL.LL.Logic
         public async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, LampColor baseColor, int cycles, double period)
         {
             LifxCloudClient client = await lightGroup.GetClient();
-            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, baseColor.Color, cycles, period));
+            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, $"{baseColor.Color} brightness: {baseColor.Brightness}", cycles, period));
         }
 
         /// <summary>
