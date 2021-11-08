@@ -105,7 +105,7 @@ namespace DTNL.LL.Logic
                         case LifxLight lifx:
                             if (!lifx.Active)
                                 break;
-                            Task lifxTask = _lifxLightService.FlashLightForConversions(lifx, flashes,
+                            Task lifxTask = _lifxLightService.FlashLightForConversions(lifx, flashes, report.ActiveUsers,
                                 report.Project.PollingTimeInMinutes);
                             tasks.Add(lifxTask);
                             break;

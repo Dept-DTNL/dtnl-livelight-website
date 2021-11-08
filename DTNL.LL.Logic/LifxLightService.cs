@@ -52,7 +52,7 @@ namespace DTNL.LL.Logic
             };
         }
 
-        public Task FlashLightForConversions(LifxLight lightGroup, int flashes, int pollingTimeInMinutes)
+        public Task FlashLightForConversions(LifxLight lightGroup, int flashes, int activeUsers, int pollingTimeInMinutes)
         {
 
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
@@ -64,8 +64,8 @@ namespace DTNL.LL.Logic
             int maxAmountOfCyclesRounded = Convert.ToInt32(maxAmountOfCycles);
 
             int cycles = Math.Min(flashes, maxAmountOfCyclesRounded);
-
-            return _lifxClient.BreatheLightsAsync(lightGroup, lightGroup.ConversionColor, cycles, lightGroup.ConversionPeriod);
+            LampColor baseColor = GetActivityColor(lightGroup, activeUsers);
+            return _lifxClient.BreatheLightsAsync(lightGroup, lightGroup.ConversionColor, baseColor, cycles, lightGroup.ConversionPeriod);
         }
 
         public bool IsTimeOfDayBetween(DateTime time,

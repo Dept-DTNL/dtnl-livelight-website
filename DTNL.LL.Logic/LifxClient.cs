@@ -29,9 +29,10 @@ namespace DTNL.LL.Logic
         /// <param name="cycles">The amount of cycles that the lamp will show</param>
         /// <param name="period">Time in seconds for one cycle.</param>
         /// <returns></returns>
-        private BreatheEffectRequest BreatheEffect(string color, double cycles, double period) => new()
+        private BreatheEffectRequest BreatheEffect(string color, string baseColor, double cycles, double period) => new()
             {
                 Color = color,
+                FromColor = baseColor,
                 Cycles = cycles,
                 Period = period,
                 Peak = PeakValue,
@@ -52,10 +53,10 @@ namespace DTNL.LL.Logic
             return SetLightStateAsync(lightGroup, colorState);
         }
 
-        public async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, int cycles, double period)
+        public async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, LampColor baseColor, int cycles, double period)
         {
             LifxCloudClient client = await lightGroup.GetClient();
-            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, cycles, period));
+            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, baseColor.Color, cycles, period));
         }
 
         /// <summary>
