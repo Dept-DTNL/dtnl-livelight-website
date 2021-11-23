@@ -10,15 +10,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DTNL.LL.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211026090903_light-detach")]
-    partial class lightdetach
+    [Migration("20211026135435_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DTNL.LL.Models.LifxLight", b =>
@@ -30,9 +30,6 @@ namespace DTNL.LL.DAL.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ConversionColor")
                         .HasColumnType("nvarchar(max)");
 
@@ -41,6 +38,9 @@ namespace DTNL.LL.DAL.Migrations
 
                     b.Property<double>("ConversionPeriod")
                         .HasColumnType("float");
+
+                    b.Property<bool>("GuideEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<int>("HighTrafficAmount")
                         .HasColumnType("int");
@@ -110,6 +110,11 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<int>("AnalyticsVersion")
                         .HasColumnType("int");
 
+                    b.Property<int>("ConversionDivision")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<string>("ConversionTags")
                         .HasColumnType("nvarchar(max)");
 
@@ -122,7 +127,9 @@ namespace DTNL.LL.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PollingTimeInMinutes")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("ProjectName")
                         .IsRequired()

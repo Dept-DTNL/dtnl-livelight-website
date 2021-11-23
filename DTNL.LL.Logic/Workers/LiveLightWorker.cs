@@ -26,7 +26,7 @@ namespace DTNL.LL.Logic.Workers
             _tickDelayInSeconds = options.Value.TickTimeInSeconds;
         }
 
-        private async void ProcessLiveLights(object _)
+        private async Task ProcessLiveLights(object _)
         {
             using IServiceScope scope = _scopeFactory.CreateScope();
             LiveLightService liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
@@ -37,7 +37,7 @@ namespace DTNL.LL.Logic.Workers
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Starting LiveLight Worker with a polling time of {0} seconds.", _tickDelayInSeconds);
-            _timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
+            //_timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
 
             return Task.CompletedTask;
         }

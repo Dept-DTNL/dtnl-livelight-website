@@ -15,18 +15,32 @@ namespace DTNL.LL.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProjectName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PollingTimeInMinutes = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     Active = table.Column<bool>(type: "bit", nullable: false),
+                    ConversionDivision = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    GaProperty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AnalyticsVersion = table.Column<int>(type: "int", nullable: false),
+                    ConversionTags = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LifxLights",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
+                    Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GuideEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LifxApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LightGroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeRangeEnabled = table.Column<bool>(type: "bit", nullable: false),
                     TimeRangeStart = table.Column<TimeSpan>(type: "time", nullable: false),
                     TimeRangeEnd = table.Column<TimeSpan>(type: "time", nullable: false),
-                    PollingTimeInMinutes = table.Column<int>(type: "int", nullable: false),
-                    GaProperty = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AnalyticsVersion = table.Column<int>(type: "int", nullable: false),
-                    ConversionTags = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LifxApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LightGroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GuideEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LowTrafficColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LowTrafficBrightness = table.Column<double>(type: "float", nullable: false),
                     MediumTrafficAmount = table.Column<int>(type: "int", nullable: false),
@@ -41,12 +55,26 @@ namespace DTNL.LL.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_LifxLights", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LifxLights_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LifxLights_ProjectId",
+                table: "LifxLights",
+                column: "ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "LifxLights");
+
             migrationBuilder.DropTable(
                 name: "Projects");
         }

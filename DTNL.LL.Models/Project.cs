@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace DTNL.LL.Models
 {
     public class Project
     {
         public int Id { get; set; }
-        [Required]
-        [DataType(DataType.Text)]
         public string ProjectName { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
         public string CustomerName { get; set; }
 
         // Worker
         public int PollingTimeInMinutes { get; set; }
 
-        [Display(Name = "Is Active")]
         public bool Active { get; set; } = true;
 
         /// <summary>

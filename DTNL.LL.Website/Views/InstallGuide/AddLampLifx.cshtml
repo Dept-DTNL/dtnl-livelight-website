@@ -1,7 +1,7 @@
-﻿<h1>Authorize GA</h1>
-<p>This is to connect google analytics to your lamp! By using the key, access will be given to provide all the necessary information to the lamp</p>
-<h3>@ViewBag.ErrorMessage</h3>
+﻿<h1>Setting up your LIFX lamp</h1>
+<p>You can find your access token in lifx cloud</p>
 
+<h3>@ViewBag.ErrorMessage</h3>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -17,11 +17,10 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Authorize" class="btn btn-default" />
+                <input type="submit" value="Add token" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
-<a href="/projects/@ViewBag.ProjectId/add-lamp/authorize-wiz">Previous </a>
-
+<a href="/livelight-setup/@ViewBag.LightUuid/LIFX/add-account">Back</a>

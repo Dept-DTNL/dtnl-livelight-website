@@ -1,0 +1,52 @@
+﻿@using DTNL.LL.Models
+@model DTNL.LL.Website.Models.ProjectDTO
+
+<div class="form-group">
+    Project name
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    Customer name
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    Is it active?
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    Polling time in minutes
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.PollingTimeInMinutes, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PollingTimeInMinutes)
+    </div>
+</div>
+
+<div class="form-group">
+    Google Analytics Version
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.AnalyticsVersion,
+            new SelectList(Enum.GetValues(typeof(AnalyticsVersion))))
+        @Html.ValidationMessageFor(model => model.AnalyticsVersion)
+    </div>
+</div>
+
+<div class="form-group">
+    Google Analytics Property
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.GaProperty, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.GaProperty)
+    </div>
+</div>
+        

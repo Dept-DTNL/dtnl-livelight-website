@@ -13,7 +13,6 @@ namespace DTNL.LL.DAL
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<LifxLight> LifxLights { get; set; }
-
         public static void RegisterDbContext(IServiceCollection services, string connectionString)
         {
             services.AddDbContext<DatabaseContext>(options =>

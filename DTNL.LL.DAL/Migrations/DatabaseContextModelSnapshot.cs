@@ -38,6 +38,9 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<double>("ConversionPeriod")
                         .HasColumnType("float");
 
+                    b.Property<bool>("GuideEnabled")
+                        .HasColumnType("bit");
+
                     b.Property<int>("HighTrafficAmount")
                         .HasColumnType("int");
 
@@ -125,7 +128,9 @@ namespace DTNL.LL.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PollingTimeInMinutes")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("ProjectName")
                         .IsRequired()

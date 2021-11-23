@@ -8,42 +8,54 @@ namespace DTNL.LL.Website.Controllers
 {
     public class InstallGuideController : Controller
     {
+        private readonly LifxLightDbService _lifxLightDbService;
+
+        public InstallGuideController(LifxLightDbService lifxLightDbService)
+        {
+            _lifxLightDbService = lifxLightDbService;
+        }
 
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp")]
-        // GET: InstallGuide
-        public ActionResult Index(int? projectId)
+        [Route("livelight-setup/{lightUuid}")]
+        public async Task<ActionResult> IndexAsync(string lightUuid)
         {
-            if (projectId is null)
+            if (lightUuid is null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            ViewBag.ProjectId = projectId;
+            LifxLight light = _lifxLightDbService.FindByUuidAsync(lightUuid);
+
+            if (light == null || !light.GuideEnabled)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            ViewBag.LightUuid = light.Uuid;
+            return View();
+        }
+
+        //LIFX LAMP SET UP
+        [HttpGet]
+        [Route("livelight-setup/{lightUuid}/LIFX/setup-account")]
+        public ActionResult SetUpAccountLifx(string lightUuid)
+        {
+            ViewBag.LightUuid = lightUuid;
             return View();
         }
 
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp/wiz-setup")]
-        // GET: InstallGuide/WizSetUp
-        public ActionResult WizSetUp(int? projectId)
+        [Route("livelight-setup/{lightUuid}/LIFX/add-lamp")]
+        public ActionResult AddLampLifx(string lightUuid)
         {
-            ViewBag.ProjectId = projectId;
-            return View();
-        }
-
-        [HttpGet]
-        [Route("projects/{projectId}/add-lamp/authorize-wiz")]
-        public ActionResult AuthorizeLamp(int? projectId)
-        {
-            ViewBag.ProjectId = projectId;
+            ViewBag.LightUuid = lightUuid;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("projects/{projectId}/add-lamp/authorize-wiz")]
-        public ActionResult AuthorizeLampAsync(int? projectId, [FromForm] string? key)
+        [Route("livelight-setup/{lightUuid}/LIFX/add-lamp")]
+        public async Task<ActionResult> AddLampLifx(string lightUuid, [FromForm] string key)
         {
             if (key is null)
             {
@@ -51,27 +63,29 @@ namespace DTNL.LL.Website.Controllers
                 return View();
             }
 
-            if (projectId is null)
+            if (lightUuid is null)
             {
                 ViewBag.ErrorMessage = "No project id";
                 return View();
             }
-
-            // Check if the key is valid or not
-            if (false)
+            
+            try
             {
-                ViewBag.ErrorMessage = "Invalid key";
+                await _lifxLightDbService.UpdateKey(lightUuid, key);
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
                 return View();
             }
 
-            // Check if all values have been inserted
-            // TODO: Remove initialization of values like following. This is here now as a placeholder
-             
-            return RedirectToAction("ThankYou", "InstallGuide", new { projectId = projectId });
+            return Redirect($"/livelight-setup/{lightUuid}/thank-you");
+           
         }
 
+
         [HttpGet]
-        [Route("projects/{projectId}/add-lamp/thank-you")]
+        [Route("livelight-setup/{lightUuid}/thank-you")]
         public ActionResult ThankYou()
         {
             return View();

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.DAL;
 using DTNL.LL.Models;
@@ -16,15 +15,23 @@ namespace DTNL.LL.Logic
             _unitOfWork = unitOfWork;
         }
 
-        public Task AddProjectAsync(Project project)
+        public async Task AddProjectAsync(Project project)
         {
-            _unitOfWork.Projects.AddAsync(project);
-            return _unitOfWork.CommitAsync();
+            await _unitOfWork.Projects.AddAsync(project); 
+            await _unitOfWork.CommitAsync();
         }
 
         public ValueTask<Project> FindProjectByIdAsync(int id)
         {
             return _unitOfWork.Projects.GetByIdAsync(id);
+        }
+
+        public async Task<Project> FindProjectByIdWithLightsAsync(int id)
+        {
+            Project project = await _unitOfWork.Projects.GetByIdAsync(id);
+            project.LifxLights = _unitOfWork.LifxLights.Find(l => l.Project.Id == id).ToList();
+
+            return project;
         }
 
         public async Task UpdateAsync(int oldProjectId, Project newValues)
@@ -34,6 +41,10 @@ namespace DTNL.LL.Logic
             project.Active = newValues.Active;
             if (newValues.CustomerName is not null) project.CustomerName = newValues.CustomerName;
             if (newValues.ProjectName is not null) project.ProjectName = newValues.ProjectName;
+
+            project.AnalyticsVersion = newValues.AnalyticsVersion;
+            if (newValues.GaProperty is not null) project.GaProperty = newValues.GaProperty;
+            if (newValues.PollingTimeInMinutes > 0) project.PollingTimeInMinutes = newValues.PollingTimeInMinutes;
             
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();
@@ -44,24 +55,15 @@ namespace DTNL.LL.Logic
             return _unitOfWork.Projects.GetAllAsync();
         }
 
-        public IEnumerable<Project> GetSpecifiedProjects(Expression<Func<Project, bool>> expression)
-        {
-            return _unitOfWork.Projects.Find(expression);
-        }
-
-        public IEnumerable<Project> GetProjectsWithSpecificCustomerName(string customerName)
-        {
-            return GetSpecifiedProjects(p => p.ProjectName.Contains(customerName));
-        }
-
-        public IEnumerable<Project> GetProjectsWithSpecificProjectName(string projectName)
-        {
-            return GetSpecifiedProjects(p => p.ProjectName.Contains(projectName));
-        }
-
         public async Task<IEnumerable<Project>> GetActiveProjects()
         {
             return await _unitOfWork.Projects.GetActiveProjectsAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.Projects.Remove(await FindProjectByIdAsync(id));
+            await _unitOfWork.CommitAsync();
         }
     }
 }

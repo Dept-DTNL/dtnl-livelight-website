@@ -2,23 +2,23 @@
 
 namespace DTNL.LL.DAL.Migrations
 {
-    public partial class conversiondivision : Migration
+    public partial class removedCycle : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ConversionDivision",
-                table: "Projects",
-                type: "int",
+            migrationBuilder.AddColumn<bool>(
+                name: "Active",
+                table: "LifxLights",
+                type: "bit",
                 nullable: false,
-                defaultValue: 1);
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ConversionDivision",
-                table: "Projects");
+                name: "Active",
+                table: "LifxLights");
         }
     }
 }
