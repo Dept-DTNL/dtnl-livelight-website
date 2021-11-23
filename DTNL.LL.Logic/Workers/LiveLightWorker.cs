@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DTNL.LL.Logic.Analytics;
 using DTNL.LL.Logic.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +15,7 @@ namespace DTNL.LL.Logic.Workers
 
 
         private Timer _timer;
-
+        
         private readonly ILogger<LiveLightWorker> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
         
@@ -38,6 +36,7 @@ namespace DTNL.LL.Logic.Workers
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Starting LiveLight Worker with a polling time of {0} seconds.", _tickDelayInSeconds);
             _timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
 
             return Task.CompletedTask;
@@ -52,7 +51,18 @@ namespace DTNL.LL.Logic.Workers
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             _timer?.Dispose();
+        }
+
+        ~LiveLightWorker()
+        {
+            Dispose(false);
         }
     }
 }

@@ -12,17 +12,20 @@ namespace DTNL.LL.DAL
         }
 
         public DbSet<Project> Projects { get; set; }
+        public DbSet<LifxLight> LifxLights { get; set; }
 
         public static void RegisterDbContext(IServiceCollection services, string connectionString)
         {
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(connectionString)
+                options.UseLazyLoadingProxies()
+                    .UseSqlServer(connectionString)
             );
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new ProjectConfiguration());
+            builder.ApplyConfiguration(new LifxLightsConfiguration());
         }
     }
 }

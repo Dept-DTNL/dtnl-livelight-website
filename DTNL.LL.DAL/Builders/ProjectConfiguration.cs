@@ -13,7 +13,6 @@ namespace DTNL.LL.DAL.Builders
         public void Configure(EntityTypeBuilder<Project> builder)
         {
             builder.HasKey(m => m.Id);
-
             //Auto Increment id
             builder.Property(m => m.Id)
                 .UseIdentityColumn();
@@ -21,6 +20,14 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.ProjectName)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            builder.Property(m => m.ConversionDivision)
+                .IsRequired()
+                .HasDefaultValue(1);
+
+            builder.HasMany(m => m.LifxLights)
+                .WithOne(m => m.Project)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(m => m.CustomerName)
                 .IsRequired()
@@ -35,20 +42,7 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.Active)
                 .IsRequired();
 
-            builder.HasMany(m => m.Lamps)
-                .WithOne()
-                .IsRequired();
-
-            builder.Property(m => m.TimeRangeEnabled)
-                .IsRequired();
-
-            builder.Property(m => m.TimeRangeStart)
-                .IsRequired(false);
-
-            builder.Property(m => m.TimeRangeEnd)
-                .IsRequired(false);
-
-            ValueComparer<List<string>> conversionValueComparer = new ValueComparer<List<string>>(
+            ValueComparer<List<string>> conversionValueComparer = new (
                 (c1, c2) => c1.SequenceEqual(c2),
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                 c => c.ToList());

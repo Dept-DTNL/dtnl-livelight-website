@@ -16,9 +16,7 @@ namespace DTNL.LL.Logic.Analytics
         private const int ConvertsArrayPos = 1;
 
         private readonly AnalyticsService _analyticsService;
-
         private readonly GaApiTagsOptions _options;
-
         public V3Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService credentialProvider)
         {
             _options = config.Value;
@@ -43,8 +41,8 @@ namespace DTNL.LL.Logic.Analytics
 
             return new AnalyticsReport
             {
-                ProjectId = project.Id,
-                ActiveUsers = GetActiveUserCount(activeUserResponseTask.Result),
+                Project = project,
+                ActiveUsers = GetActiveUserCountFromRealtimeData(activeUserResponseTask.Result),
                 Conversions = GetAmountOfConversions(conversionResponses, project.PollingTimeInMinutes)
             };
         }
@@ -66,12 +64,12 @@ namespace DTNL.LL.Logic.Analytics
             return conversionRequests;
         }
 
-        private int GetActiveUserCount(RealtimeData data)
+        private static int GetActiveUserCountFromRealtimeData(RealtimeData data)
         {
             return int.Parse(data.Rows?.ElementAtOrDefault(0)?[0] ?? "0");
         }
 
-        private int GetAmountOfConversions(RealtimeData[] responses, int pollingTimeInMinutes)
+        private static int GetAmountOfConversions(RealtimeData[] responses, int pollingTimeInMinutes)
         {
             int converts = 0;
 
@@ -84,7 +82,7 @@ namespace DTNL.LL.Logic.Analytics
             return converts;
         }
 
-        private int ParseConvertRows(IList<IList<string>> rows, int pollingTimeInMinutes)
+        private static int ParseConvertRows(IList<IList<string>> rows, int pollingTimeInMinutes)
         {
             if (rows is null)
                 return 0;

@@ -122,15 +122,15 @@ namespace DTNL.LL.Website.Controllers
         private ProjectDTO TurnProjectToProjectDTO(Project project)
         {
 
-            ProjectDTO dto =  new ProjectDTO()
+            ProjectDTO dto =  new()
             {
                 ProjectName = project.ProjectName,
                 Active = project.Active,
                 CustomerName = project.CustomerName,
                 Id = project.Id,
-                HasTimeRange = project.TimeRangeEnabled,
-                TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Hours, project.TimeRangeStart.Minutes, project.TimeRangeStart.Seconds) : new DateTime(),
-                TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Hours, project.TimeRangeEnd.Minutes, project.TimeRangeEnd.Seconds) : new DateTime()
+                // HasTimeRange = project.TimeRangeEnabled,
+                // TimeRangeStart = project.TimeRangeStart != null ? new DateTime(1, 1, 1, project.TimeRangeStart.Hours, project.TimeRangeStart.Minutes, project.TimeRangeStart.Seconds) : new DateTime(),
+                // TimeRangeEnd = project.TimeRangeEnd != null ? new DateTime(1, 1, 1, project.TimeRangeEnd.Hours, project.TimeRangeEnd.Minutes, project.TimeRangeEnd.Seconds) : new DateTime()
             };
 
             return dto;
@@ -139,15 +139,15 @@ namespace DTNL.LL.Website.Controllers
         // Turns Project to a ProjectDTO
         private Project TurnProjectDTOToProject(ProjectDTO dto)
         {
-            Project project = new Project()
+            Project project = new()
             {
                 ProjectName = dto.ProjectName,
                 Active = dto.Active,
                 CustomerName = dto.CustomerName,
                 Id = dto.Id,
-                TimeRangeEnabled = dto.HasTimeRange,
-                TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
-                TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
+                // TimeRangeEnabled = dto.HasTimeRange,
+                // TimeRangeStart = new TimeSpan(dto.TimeRangeStart.Hour, dto.TimeRangeStart.Minute, dto.TimeRangeStart.Second),
+                // TimeRangeEnd = new TimeSpan(dto.TimeRangeEnd.Hour, dto.TimeRangeEnd.Minute, dto.TimeRangeEnd.Second)
             };
 
             return project;

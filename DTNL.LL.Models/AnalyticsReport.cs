@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTNL.LL.Models
+﻿namespace DTNL.LL.Models
 {
     public class AnalyticsReport
     {
@@ -12,6 +6,6 @@ namespace DTNL.LL.Models
 
         public int Conversions { get; set; } = 0;
 
-        public int ProjectId { get; set; }
+        public Project Project { get; set; }
     }
 }
