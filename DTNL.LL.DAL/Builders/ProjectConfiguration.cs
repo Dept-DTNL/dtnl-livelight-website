@@ -43,7 +43,7 @@ namespace DTNL.LL.DAL.Builders
             builder.Property(m => m.Active)
                 .IsRequired();
 
-            ValueComparer<List<string>> conversionValueComparer = new ValueComparer<List<string>>(
+            ValueComparer<List<string>> conversionValueComparer = new (
                 (c1, c2) => c1.SequenceEqual(c2),
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                 c => c.ToList());

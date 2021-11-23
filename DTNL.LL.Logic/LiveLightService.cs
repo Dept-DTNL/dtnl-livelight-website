@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DTNL.LL.Logic.Options;
 using DTNL.LL.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic
 {
@@ -16,13 +14,15 @@ namespace DTNL.LL.Logic
         private readonly GaService _gaService;
         private readonly ProjectService _projectService;
         private readonly ProjectTimerService _projectTimerService;
+        private readonly LifxLightService _lifxLightService;
 
-        public LiveLightService(ILogger<LiveLightService> logger, IOptions<ServiceWorkerOptions> options, GaService gaService, ProjectService projectService, ProjectTimerService projectTimerService)
+        public LiveLightService(ILogger<LiveLightService> logger, GaService gaService, ProjectService projectService, ProjectTimerService projectTimerService, LifxLightService lifxLightService)
         {
             _logger = logger;
             _gaService = gaService;
             _projectService = projectService;
             _projectTimerService = projectTimerService;
+            _lifxLightService = lifxLightService;
         }
 
         public async Task ProcessLiveLights()
@@ -67,7 +67,7 @@ namespace DTNL.LL.Logic
 
         private async Task UpdateLightColors(AnalyticsReport[] reports)
         {
-            List<Task> tasks = new List<Task>(reports.Length);
+            List<Task> tasks = new (reports.Length);
             foreach (AnalyticsReport report in reports)
             {
                 foreach (ILight light in report.Project.GetLights())
@@ -77,7 +77,7 @@ namespace DTNL.LL.Logic
                         case LifxLight lifx:
                             if (!lifx.Active)
                                 break;
-                            Task lifxTask = LifxLightService.UpdateLightColors(lifx, report.ActiveUsers);
+                            Task lifxTask = _lifxLightService.UpdateLightColors(lifx, report.ActiveUsers);
                             tasks.Add(lifxTask);
                             break;
                         default:
@@ -93,7 +93,7 @@ namespace DTNL.LL.Logic
 
         private async Task FlashLightsForConversions(AnalyticsReport[] reports)
         {
-            List<Task> tasks = new List<Task>();
+            List<Task> tasks = new ();
             foreach (AnalyticsReport report in reports)
             {
                 int flashes = report.Conversions / Math.Max(report.Project.ConversionDivision, 1);
@@ -105,7 +105,7 @@ namespace DTNL.LL.Logic
                         case LifxLight lifx:
                             if (!lifx.Active)
                                 break;
-                            Task lifxTask = LifxLightService.FlashLightForConversions(lifx, flashes,
+                            Task lifxTask = _lifxLightService.FlashLightForConversions(lifx, flashes, report.ActiveUsers,
                                 report.Project.PollingTimeInMinutes);
                             tasks.Add(lifxTask);
                             break;

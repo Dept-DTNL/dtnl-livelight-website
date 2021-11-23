@@ -4,22 +4,29 @@ using DTNL.LL.Models;
 
 namespace DTNL.LL.Logic
 {
-    public static  class LifxLightService
+    public class LifxLightService
     {
         private const int SecondsInAMinute = 60;
 
-        public static Task UpdateLightColors(LifxLight lightGroup, int users)
+        private readonly LifxClient _lifxClient;
+
+        public LifxLightService(LifxClient lifxClient)
+        {
+            _lifxClient = lifxClient;
+        }
+
+        public Task UpdateLightColors(LifxLight lightGroup, int users)
         {
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
             if (lightGroup.TimeRangeEnabled && !awake)
             {
-                return LifxClient.DisableLightsAsync(lightGroup);
+                return _lifxClient.DisableLightsAsync(lightGroup);
             }
             LampColor color = GetActivityColor(lightGroup, users);
-            return LifxClient.SetLightsColorAsync(lightGroup, color);
+            return _lifxClient.SetLightsColorAsync(lightGroup, color);
         }
 
-        private static LampColor GetActivityColor(LifxLight lightGroup, int users)
+        private LampColor GetActivityColor(LifxLight lightGroup, int users)
         {
             if (lightGroup.HighTrafficAmount <= users)
             {
@@ -45,7 +52,7 @@ namespace DTNL.LL.Logic
             };
         }
 
-        public static Task FlashLightForConversions(LifxLight lightGroup, int flashes, int pollingTimeInMinutes)
+        public Task FlashLightForConversions(LifxLight lightGroup, int flashes, int activeUsers, int pollingTimeInMinutes)
         {
 
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
@@ -57,11 +64,11 @@ namespace DTNL.LL.Logic
             int maxAmountOfCyclesRounded = Convert.ToInt32(maxAmountOfCycles);
 
             int cycles = Math.Min(flashes, maxAmountOfCyclesRounded);
-
-            return LifxClient.BreatheLightsAsync(lightGroup, lightGroup.ConversionColor, cycles, lightGroup.ConversionPeriod);
+            LampColor baseColor = GetActivityColor(lightGroup, activeUsers);
+            return _lifxClient.BreatheLightsAsync(lightGroup, lightGroup.ConversionColor, baseColor, cycles, lightGroup.ConversionPeriod);
         }
 
-        public static bool IsTimeOfDayBetween(DateTime time,
+        public bool IsTimeOfDayBetween(DateTime time,
             TimeSpan startTime, TimeSpan endTime)
         {
             if (endTime < startTime)
