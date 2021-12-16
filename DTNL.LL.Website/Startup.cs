@@ -23,6 +23,8 @@ namespace DTNL.LL.Website
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry();
+
             services.AddHttpContextAccessor();
             services.RegisterDatabase(Configuration.GetConnectionString("DbDSN"));
             services.AddControllersWithViews();
