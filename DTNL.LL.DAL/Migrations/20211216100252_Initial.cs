@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DTNL.LL.DAL.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,25 +33,25 @@ namespace DTNL.LL.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<int>(type: "int", nullable: true),
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
                     GuideEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
                     LifxApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LightGroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeRangeEnabled = table.Column<bool>(type: "bit", nullable: false),
                     TimeRangeStart = table.Column<TimeSpan>(type: "time", nullable: false),
                     TimeRangeEnd = table.Column<TimeSpan>(type: "time", nullable: false),
-                    LowTrafficColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LowTrafficColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LowTrafficBrightness = table.Column<double>(type: "float", nullable: false),
                     MediumTrafficAmount = table.Column<int>(type: "int", nullable: false),
-                    MediumTrafficColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MediumTrafficColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MediumTrafficBrightness = table.Column<double>(type: "float", nullable: false),
                     HighTrafficColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HighTrafficBrightness = table.Column<double>(type: "float", nullable: false),
                     HighTrafficAmount = table.Column<int>(type: "int", nullable: false),
-                    ConversionCycle = table.Column<int>(type: "int", nullable: false),
                     ConversionPeriod = table.Column<double>(type: "float", nullable: false),
-                    ConversionColor = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ConversionColor = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -30,7 +30,7 @@ namespace DTNL.LL.Logic
             IEnumerable<Project> projects = await _projectService.GetActiveProjects();
 
             List<Project> enumerable = projects.ToList();
-            
+
             List<Project> tickedProjects = _projectTimerService.GetTickedProjects(enumerable);
 
             IEnumerable<Task<AnalyticsReport>> analyticsReportTasks = tickedProjects.Select(
@@ -67,7 +67,7 @@ namespace DTNL.LL.Logic
 
         private async Task UpdateLightColors(AnalyticsReport[] reports)
         {
-            List<Task> tasks = new (reports.Length);
+            List<Task> tasks = new(reports.Length);
             foreach (AnalyticsReport report in reports)
             {
                 foreach (ILight light in report.Project.GetLights())
@@ -93,7 +93,7 @@ namespace DTNL.LL.Logic
 
         private async Task FlashLightsForConversions(AnalyticsReport[] reports)
         {
-            List<Task> tasks = new ();
+            List<Task> tasks = new();
             foreach (AnalyticsReport report in reports)
             {
                 int flashes = report.Conversions / Math.Max(report.Project.ConversionDivision, 1);
@@ -119,6 +119,6 @@ namespace DTNL.LL.Logic
 
             await Task.WhenAll(tasks);
         }
-        
+
     }
 }

@@ -24,13 +24,14 @@ namespace DTNL.LL.Website
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-            //services.RegisterDatabase(Configuration.GetConnectionString("DbDSN"));
-            services.RegisterDatabase(Configuration["database"]);
+            services.RegisterDatabase(Configuration.GetConnectionString("DbDSN"));
             services.AddControllersWithViews();
             services.AddScoped<ProjectService>();
             services.AddScoped<AuthService>();
             services.AddScoped<LiveLightService>();
             services.AddScoped<LifxLightDbService>();
+            services.AddScoped<LifxLightService>();
+            services.AddScoped<LifxClient>();
 
             services.AddSingleton<ProjectTimerService>();
             services.AddSingleton<GaService>();

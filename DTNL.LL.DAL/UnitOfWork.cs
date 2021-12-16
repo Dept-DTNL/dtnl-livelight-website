@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DTNL.LL.DAL.Repositories
 {
@@ -11,6 +12,11 @@ namespace DTNL.LL.DAL.Repositories
         public UnitOfWork(DatabaseContext context)
         {
             _context = context;
+        }
+
+        public async Task MigrateDatabaseAsync()
+        {
+            await _context.Database.MigrateAsync();
         }
 
         public IProjectRepository Projects =>
