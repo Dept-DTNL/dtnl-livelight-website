@@ -8,5 +8,7 @@ namespace DTNL.LL.DAL
         IProjectRepository Projects { get; }
         ILifxLightsRepository LifxLights { get; }
         Task<int> CommitAsync();
+
+        Task MigrateDatabaseAsync();
     }
 }
