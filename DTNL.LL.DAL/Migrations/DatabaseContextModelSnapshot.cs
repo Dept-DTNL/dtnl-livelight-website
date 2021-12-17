@@ -38,9 +38,6 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<double>("ConversionPeriod")
                         .HasColumnType("float");
 
-                    b.Property<bool>("GuideEnabled")
-                        .HasColumnType("bit");
-
                     b.Property<int>("HighTrafficAmount")
                         .HasColumnType("int");
 

@@ -18,7 +18,6 @@ namespace DTNL.LL.Logic
         public async Task CreateLifxLight(LifxLight lifxLight)
         {
             lifxLight.Uuid = Guid.NewGuid();
-            lifxLight.GuideEnabled = true;
 
             await _unitOfWork.LifxLights.AddAsync(lifxLight);
             Task.WaitAll();
@@ -52,22 +51,11 @@ namespace DTNL.LL.Logic
             if (newValues.HighTrafficColor is not null) oldValues.HighTrafficColor = newValues.HighTrafficColor;
             oldValues.HighTrafficBrightness = newValues.HighTrafficBrightness;
 
-            oldValues.GuideEnabled = newValues.GuideEnabled;
             oldValues.Active = newValues.Active;
 
             if (oldValues.LightGroupName is not null) oldValues.LightGroupName = newValues.LightGroupName;
 
             _unitOfWork.LifxLights.Update(oldValues);
-            await _unitOfWork.CommitAsync();
-        }
-
-        public async Task UpdateKey(string uuid, string key)
-        {
-            LifxLight light = FindByUuidAsync(uuid);
-            light.LifxApiKey = key;
-            light.GuideEnabled = false;
-
-            _unitOfWork.LifxLights.Update(light);
             await _unitOfWork.CommitAsync();
         }
 

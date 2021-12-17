@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DTNL.LL.DAL.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,7 +35,6 @@ namespace DTNL.LL.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Uuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: true),
-                    GuideEnabled = table.Column<bool>(type: "bit", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     LifxApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LightGroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),

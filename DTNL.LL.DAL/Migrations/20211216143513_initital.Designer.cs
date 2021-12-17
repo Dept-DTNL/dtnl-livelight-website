@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DTNL.LL.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211216100252_Initial")]
-    partial class Initial
+    [Migration("20211216143513_initital")]
+    partial class initital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,9 +39,6 @@ namespace DTNL.LL.DAL.Migrations
 
                     b.Property<double>("ConversionPeriod")
                         .HasColumnType("float");
-
-                    b.Property<bool>("GuideEnabled")
-                        .HasColumnType("bit");
 
                     b.Property<int>("HighTrafficAmount")
                         .HasColumnType("int");

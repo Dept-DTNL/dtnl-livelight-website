@@ -6,7 +6,6 @@ namespace DTNL.LL.Website.Models
     {
         public Guid Uuid { get; set; }
         public ProjectDTO ProjectDto { get; set; }
-        public bool GuideEnabled { get; set; }
         public bool Active { get; set; }
 
         // Time range
