@@ -57,7 +57,7 @@ namespace DTNL.LL.Logic
         public async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, LampColor baseColor, int cycles, double period)
         {
             LifxCloudClient client = await lightGroup.GetClient();
-            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, $"{baseColor.Color} brightness: {baseColor.Brightness}", cycles, period));
+            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, $"{baseColor.Color} brightness:{baseColor.Brightness}", cycles, period));
         }
 
         /// <summary>
