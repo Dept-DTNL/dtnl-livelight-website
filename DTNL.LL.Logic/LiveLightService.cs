@@ -62,6 +62,8 @@ namespace DTNL.LL.Logic
         private async Task UpdateLights(AnalyticsReport[] reports)
         {
             await UpdateLightColors(reports);
+            //1 Second delay because it looks nice in the lamps.
+            await Task.Delay(1000);
             await FlashLightsForConversions(reports);
         }
 

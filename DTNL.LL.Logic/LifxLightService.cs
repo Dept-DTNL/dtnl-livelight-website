@@ -23,6 +23,9 @@ namespace DTNL.LL.Logic
                 return _lifxClient.DisableLightsAsync(lightGroup);
             }
             LampColor color = GetActivityColor(lightGroup, users);
+
+            // This would be smoother with a breathe effect with persist set to true.
+            // However this is not yet in the lifxclient yet so that could be contributed in the future.
             return _lifxClient.SetLightsColorAsync(lightGroup, color);
         }
 
