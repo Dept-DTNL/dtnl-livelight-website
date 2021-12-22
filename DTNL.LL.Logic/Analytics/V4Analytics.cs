@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTNL.LL.Logic.Options;
@@ -6,21 +7,23 @@ using DTNL.LL.Models;
 using Google.Analytics.Data.V1Beta;
 using Google.Apis.Auth.OAuth2;
 using Grpc.Auth;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace DTNL.LL.Logic.Analytics
 {
     public class V4Analytics : IAnalyticsProvider
     {
-
+        private readonly ILogger<V4Analytics> _logger;
         private readonly string _gaProperties;
         private readonly string _gaActiveUsers;
         private readonly string _gaEventName;
         private readonly string _gaConversions;
         private readonly BetaAnalyticsDataClient _gaClient;
 
-        public V4Analytics(IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider)
+        public V4Analytics(ILogger<V4Analytics> logger, IOptions<GaApiTagsOptions> config, GoogleCredentialProviderService googleCredentialProvider)
         {
+            _logger = logger;
             GaApiTagsOptions apiTags = config.Value;
             _gaProperties = apiTags.Ga4Properties;
             _gaActiveUsers = apiTags.Ga4ActiveUsers;
@@ -75,14 +78,26 @@ namespace DTNL.LL.Logic.Analytics
             Task<RunRealtimeReportResponse> conversionsResponse =
                 _gaClient.RunRealtimeReportAsync(CreateConversionsRequest(project.GaProperty,
                     project.PollingTimeInMinutes));
-            await Task.WhenAll(activeUsersResponse, conversionsResponse);
-
+            try
+            {
+                await Task.WhenAll(activeUsersResponse, conversionsResponse);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Not authorized to access the GA property");
+                return new AnalyticsReport()
+                {
+                    Project = project,
+                    ActiveUsers = GetActiveUsers(new RunRealtimeReportResponse()),
+                    Conversions = GetConversions(new RunRealtimeReportResponse(), project.ConversionTags)
+                };
+            }
 
             return new AnalyticsReport()
             {
                 Project = project,
-                ActiveUsers = GetActiveUsers(activeUsersResponse.Result),
-                Conversions = GetConversions(conversionsResponse.Result, project.ConversionTags)
+                ActiveUsers = GetActiveUsers(activeUsersResponse.Result ?? new RunRealtimeReportResponse()),
+                Conversions = GetConversions(conversionsResponse.Result ?? new RunRealtimeReportResponse(), project.ConversionTags)
             };
         }
 

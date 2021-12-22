@@ -114,7 +114,6 @@ namespace DTNL.LL.Website.Controllers
                 LifxLightDto = new LifxLightDTO()
                 {
                     Active = true,
-                    GuideEnabled = true,
                     LowTrafficColor = "red",
                     LowTrafficBrightness = 0.5,
                     MediumTrafficColor = "orange",

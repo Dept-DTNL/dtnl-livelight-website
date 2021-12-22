@@ -14,15 +14,17 @@
         @Html.ValidationMessageFor(model => model.LifxLightDto.Active, "", new { @class = "text-danger" })
     </div>
 </div>
+
+<hr />
 <div class="form-group">
-    Is guide enabled?
+    Lifx Light access token
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.GuideEnabled, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.LifxLightDto.GuideEnabled, "", new { @class = "text-danger" })
+        @Html.EditorFor(model => model.LifxLightDto.LifxApiKey, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.LifxApiKey, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<hr/>
+<hr />
 <div class="form-group">
     Time Range Enabled?
     <div class="col-md-10">

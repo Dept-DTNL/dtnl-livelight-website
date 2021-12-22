@@ -8,7 +8,6 @@ namespace DTNL.LL.Website.Models
     {
         public ProjectDTO ProjectDto { get; set; }
         public Guid Uuid { get; set; }
-        public bool GuideEnabled { get; set; }
         public bool Active { get; set; }
 
         // Lamp connection
@@ -68,7 +67,6 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
                 ConversionPeriod = lifxLight.ConversionPeriod,
                 ConversionColor = lifxLight.ConversionColor,
-                GuideEnabled = lifxLight.GuideEnabled
             };
         }
 
@@ -92,8 +90,7 @@ namespace DTNL.LL.Website.Models
                 HighTrafficBrightness = lifxLight.HighTrafficBrightness,
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
                 ConversionPeriod = lifxLight.ConversionPeriod,
-                ConversionColor = lifxLight.ConversionColor,
-                GuideEnabled = lifxLight.GuideEnabled
+                ConversionColor = lifxLight.ConversionColor
             };
         }
 
@@ -118,7 +115,6 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = lifxLightDto.HighTrafficAmount,
                 ConversionPeriod = lifxLightDto.ConversionPeriod,
                 ConversionColor = lifxLightDto.ConversionColor,
-                GuideEnabled = lifxLightDto.GuideEnabled
             };
         }
     }
