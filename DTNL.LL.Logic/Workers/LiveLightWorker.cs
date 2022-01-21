@@ -42,6 +42,7 @@ namespace DTNL.LL.Logic.Workers
         {
             if (!_migrated)
             {
+                _migrated = true;
                 _logger.LogInformation("Migrating Database...");
                 using (IServiceScope migrationScope = _scopeFactory.CreateScope())
                 {
@@ -49,7 +50,6 @@ namespace DTNL.LL.Logic.Workers
                     await unitOfWork.MigrateDatabaseAsync();
                 }
 
-                _migrated = true;
             }
         }
 
