@@ -5,11 +5,11 @@
     ViewData["Title"] = "Project";
 }
 
-<h1>Index of project</h1>
+<h1>Live Light Projects</h1>
 
-<a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="CreateProject">Create a new project</a>
+<a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="CreateProject"><input style="background-color: blue; color: white;" type="button" value="Create a new project"/></a>
 
-<h2>Choose which project to edit</h2>
+<h3>Choose which project to edit</h3>
 <h3>@ViewBag.ErrorMessage</h3>
 
 @using (Html.BeginForm())
@@ -36,14 +36,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Search" class="btn btn-default" />
+                <input style="background-color: blue; color: white;" type="button" type="submit" value="Search" class="btn btn-default"/>
             </div>
         </div>
     </div>
 }
 
+<h3>Projects</h3>
 <table class="table table-bordered">
-    <caption>Projects</caption>
     <thead>
     <tr>
         <th scope="col">ID</th>
