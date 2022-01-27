@@ -23,16 +23,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">Project</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="InstallGuide" asp-action="Index">Set up the lamp</a>
-                        </li>
-                        <li class="nav-item">
+                        @if (authService.IsLoggedIn())
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">Project</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item ">
                             @if (authService.IsLoggedIn())
                             {
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>

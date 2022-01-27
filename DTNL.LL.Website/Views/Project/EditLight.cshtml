@@ -1,0 +1,25 @@
+﻿@model DTNL.LL.Website.Models.AllLights
+
+@{
+    ViewData["Title"] = "Edit a Light";
+}
+
+<h1>Edit a light</h1>
+<h3>@ViewBag.ErrorMessage</h3>
+
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.AntiForgeryToken()
+
+        <hr />
+        <partial name="_LightInputs"/>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input style="background-color: blue; color: white;" type="submit" value="Submit" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

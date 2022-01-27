@@ -1,0 +1,87 @@
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using DTNL.LL.DAL;
+using DTNL.LL.Logic.Options;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace DTNL.LL.Logic.Workers
+{
+    public class LiveLightWorker : IHostedService, IDisposable
+    {
+        private readonly int _tickDelayInSeconds;
+
+
+        private Timer _timer;
+
+        private readonly ILogger<LiveLightWorker> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
+
+        public LiveLightWorker(ILogger<LiveLightWorker> logger, IServiceScopeFactory scopeFactory, IOptions<ServiceWorkerOptions> options)
+        {
+            _logger = logger;
+            _scopeFactory = scopeFactory;
+            _tickDelayInSeconds = options.Value.TickTimeInSeconds;
+        }
+
+
+        private async void ProcessLiveLights(object _)
+        {
+            await MigrateDatabase();
+            using IServiceScope scope = _scopeFactory.CreateScope();
+            LiveLightService liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
+
+            await liveLightService.ProcessLiveLights();
+        }
+
+        private bool _migrated = false;
+        private async Task MigrateDatabase()
+        {
+            if (!_migrated)
+            {
+                _migrated = true;
+                _logger.LogInformation("Migrating Database...");
+                using (IServiceScope migrationScope = _scopeFactory.CreateScope())
+                {
+                    IUnitOfWork unitOfWork = migrationScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                    await unitOfWork.MigrateDatabaseAsync();
+                }
+
+            }
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Starting LiveLight Worker with a polling time of {0} seconds.", _tickDelayInSeconds);
+            _timer = new Timer(ProcessLiveLights, null, TimeSpan.Zero, TimeSpan.FromSeconds(_tickDelayInSeconds));
+
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _timer.Change(Timeout.Infinite, 0);
+
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _timer?.Dispose();
+        }
+
+        ~LiveLightWorker()
+        {
+            Dispose(false);
+        }
+    }
+}

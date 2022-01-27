@@ -16,10 +16,10 @@ namespace DTNL.LL.DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DTNL.LL.Models.Lamp", b =>
+            modelBuilder.Entity("DTNL.LL.Models.LifxLight", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -28,32 +28,69 @@ namespace DTNL.LL.DAL.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccessToken")
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ConversionColor")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
+                    b.Property<double>("ConversionPeriod")
+                        .HasColumnType("float");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("HighTrafficAmount")
                         .HasColumnType("int");
 
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                    b.Property<double>("HighTrafficBrightness")
+                        .HasColumnType("float");
 
-                    b.Property<string>("TokenType")
+                    b.Property<string>("HighTrafficColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LifxApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LightGroupName")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("LowTrafficBrightness")
+                        .HasColumnType("float");
+
+                    b.Property<string>("LowTrafficColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MediumTrafficAmount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MediumTrafficBrightness")
+                        .HasColumnType("float");
+
+                    b.Property<string>("MediumTrafficColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("TimeRangeEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<TimeSpan>("TimeRangeEnd")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("TimeRangeStart")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Lamps");
+                    b.ToTable("LifxLights");
                 });
 
             modelBuilder.Entity("DTNL.LL.Models.Project", b =>
@@ -68,10 +105,29 @@ namespace DTNL.LL.DAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<int>("AnalyticsVersion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConversionDivision")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("ConversionTags")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("GaProperty")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PollingTimeInMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("ProjectName")
                         .IsRequired()
@@ -83,18 +139,19 @@ namespace DTNL.LL.DAL.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("DTNL.LL.Models.Lamp", b =>
+            modelBuilder.Entity("DTNL.LL.Models.LifxLight", b =>
                 {
-                    b.HasOne("DTNL.LL.Models.Project", null)
-                        .WithMany("Lamps")
+                    b.HasOne("DTNL.LL.Models.Project", "Project")
+                        .WithMany("LifxLights")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("DTNL.LL.Models.Project", b =>
                 {
-                    b.Navigation("Lamps");
+                    b.Navigation("LifxLights");
                 });
 #pragma warning restore 612, 618
         }

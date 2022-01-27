@@ -1,0 +1,42 @@
+﻿@model DTNL.LL.Website.Models.AllLights
+
+@{
+    ViewData["Title"] = "Create a Light";
+}
+
+<h1>Create a new light</h1>
+<h3>@ViewBag.ErrorMessage</h3>
+
+<div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'LIFX')">LIFX</button>
+    <button class="tablinks" onclick="openTab(event, 'Other')">Other</button>
+</div>
+
+<div class="form-horizontal tabcontent" id="LIFX">
+    @using (Html.BeginForm())
+    {
+        <div>
+            @Html.AntiForgeryToken()
+            
+            <hr />
+            <partial name="_LightInputs"/>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input style="background-color: blue; color: white;" name="lightSubmit" type="submit" value="Submit Lifx Light" class="btn btn-default" />
+            </div>
+        </div>
+    }
+</div>
+
+<div class="form-horizontal tabcontent" id="Other" style="display: none">
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.AntiForgeryToken()
+    </div>
+}
+</div>
+
+

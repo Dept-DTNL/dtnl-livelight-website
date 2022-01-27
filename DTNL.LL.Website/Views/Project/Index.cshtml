@@ -1,8 +1,67 @@
-﻿@{
+﻿@using DTNL.LL.Website.Models
+@model List<DTNL.LL.Website.Models.ProjectDTO>
+
+@{
     ViewData["Title"] = "Project";
 }
 
-<h1>Index of project</h1>
+<h1>Live Light Projects</h1>
 
-<a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Create">Create a new project</a>
-<a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Search">Search and edit a project</a>
+<a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="CreateProject"><input style="background-color: blue; color: white;" type="button" value="Create a new project"/></a>
+
+<h3>Choose which project to edit</h3>
+<h3>@ViewBag.ErrorMessage</h3>
+
+@using (Html.BeginForm())
+{
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            Filter projects
+            <div class="col-md-10">
+                @Html.DropDownList(
+                    "EditFilter",
+                    new SelectListItem[]
+                    {
+                        new SelectListItem("Id", "id"),
+                        new SelectListItem("Project Name", "projectName"),
+                        new SelectListItem("Customer Name", "customerName")
+                    },
+                    "Select filter",
+                    new { @class = "form-control" })
+            </div>
+        </div>
+
+        <p>Find by filter: @Html.TextBox("SearchString")</p>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input style="background-color: blue; color: white;" type="button" type="submit" value="Search" class="btn btn-default"/>
+            </div>
+        </div>
+    </div>
+}
+
+<h3>Projects</h3>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Customer name</th>
+        <th scope="col">Project Name</th>
+        <th scope="col">Active</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (ProjectDTO project in @Model)
+    {
+        <tr>
+            <td>@project.Id</td>
+            <td>@project.CustomerName</td>
+            <td>@project.ProjectName</td>
+            <td>@project.Active</td>
+            <td>@Html.ActionLink("Edit", "EditProject", new {projectId = project.Id}) | @Html.ActionLink("Delete", "DeleteProject", "Project", new {confirm = true, id = project.Id}, new {onclick = "return confirm('Do you really want to delete this project?')"}) | <a href="/project/@project.Id/create-light">Add light</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
