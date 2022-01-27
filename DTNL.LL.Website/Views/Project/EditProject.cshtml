@@ -7,51 +7,47 @@
 
 <h1>Edit a project</h1>
 <h3>@ViewBag.ErrorMessage</h3>
+<hr/>
 
-<a href="/project/@Model.Id/create-light">Add a new light</a>
-
-<div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'EditLamp')">Edit Lamp</button>
-    <button class="tablinks" onclick="openTab(event, 'AllLamps')">All Lamps</button>
-</div>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div>
-        <div class="form-horizontal tabcontent" id="EditLamp">
-            <hr />
-            <partial name="_ProjectInputs"/>
+<div>
+    <h4>Project information</h4>
+    <div class="form-horizontal tabcontent" id="EditLamp">
+        <partial name="_ProjectInputs" />
 
-            <hr />
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Edit" class="btn btn-default" />
-                </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input style="background-color: blue; color: white;" type="submit" value="Edit" class="btn btn-default" />
             </div>
         </div>
+    </div>
 
-        <div id="AllLamps" class="form-horizontal tabcontent" style="display: none">
-            <hr />
-            <table class="table table-bordered">
-                <caption>All Lights</caption>
-                <thead>
+    <hr />
+
+    <h4>All Lights</h4>
+    <a href="/project/@Model.Id/create-light"><input style="background-color: blue; color: white;" type="button" value="Add a new light" /></a>
+    <div id="AllLamps" class="form-horizontal tabcontent">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
                     <th scope="col">Uuid</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 @foreach (LifxLightDTO light in @Model.LifxLight)
                 {
                     <tr>
                         <td>@light.Uuid</td>
-                        <td>@Html.ActionLink("Edit", "EditLight", new {projectId = @Model.Id, uuid = light.Uuid}) | @Html.ActionLink("Delete", "DeleteLight", "Project", new {confirm = true, uuid = light.Uuid, projectId = Model.Id}, new {onclick = "return confirm('Do you really want to delete this light?')"})</td>
+                        <td>@Html.ActionLink("Edit", "EditLight", new { projectId = @Model.Id, uuid = light.Uuid }) | @Html.ActionLink("Delete", "DeleteLight", "Project", new { confirm = true, uuid = light.Uuid, projectId = Model.Id }, new { onclick = "return confirm('Do you really want to delete this light?')" })</td>
                     </tr>
                 }
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
+</div>
 }
 
 

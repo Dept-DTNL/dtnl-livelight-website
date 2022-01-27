@@ -123,7 +123,7 @@ namespace DTNL.LL.Website.Controllers
                     MediumTrafficAmount = 5,
                     HighTrafficAmount = 10,
                     ConversionColor = "blue",
-                    ConversionPeriod = 20,
+                    ConversionPeriod = 1,
                     TimeRangeEnabled = true,
                     TimeRangeStart = new DateTime(1, 1, 1, 9, 0, 0),
                     TimeRangeEnd = new DateTime(1, 1, 1, 17, 0, 0)

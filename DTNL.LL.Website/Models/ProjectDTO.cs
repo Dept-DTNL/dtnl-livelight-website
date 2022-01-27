@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DTNL.LL.Models;
@@ -17,12 +18,10 @@ namespace DTNL.LL.Website.Models
         public AnalyticsVersion AnalyticsVersion { get; set; }
         public virtual ICollection<LifxLightDTO> LifxLight { get; set; }
         public string GaProperty { get; set; }
-        public List<string> ConversionTags { get; set; }
-
+        public string ConversionTags { get; set; }
         public ProjectDTO()
         {
             LifxLight = new List<LifxLightDTO>();
-            ConversionTags = new List<string>();
         }
 
 
@@ -38,8 +37,8 @@ namespace DTNL.LL.Website.Models
                 PollingTimeInMinutes = project.PollingTimeInMinutes,
                 AnalyticsVersion = project.AnalyticsVersion,
                 GaProperty = project.GaProperty,
-                ConversionTags = project.ConversionTags,
-                LifxLight = project.LifxLights.Select(p => LifxLightDTO.LifxLightToLifxLightDTO(p)).ToList()
+                ConversionTags = String.Join(',', project.ConversionTags),
+                LifxLight = project.LifxLights.Select(LifxLightDTO.LifxLightToLifxLightDTO).ToList()
         };
 
             return dto;
@@ -57,10 +56,8 @@ namespace DTNL.LL.Website.Models
                 PollingTimeInMinutes = dto.PollingTimeInMinutes,
                 AnalyticsVersion = dto.AnalyticsVersion,
                 GaProperty = dto.GaProperty,
-                ConversionTags = dto.ConversionTags,
-                LifxLights = dto.LifxLight.Select(p => LifxLightDTO.LifxLightDTOToLifxLight(p)).ToList()
-
-
+                ConversionTags = dto.ConversionTags.Split(',').ToList(),
+                LifxLights = dto.LifxLight.Select(LifxLightDTO.LifxLightDTOToLifxLight).ToList()
             };
 
             return project;
