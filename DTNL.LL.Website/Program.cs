@@ -1,4 +1,6 @@
+using DTNL.LL.Logic.Workers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace DTNL.LL.Website
@@ -15,6 +17,10 @@ namespace DTNL.LL.Website
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<LiveLightWorker>();
                 });
     }
 }

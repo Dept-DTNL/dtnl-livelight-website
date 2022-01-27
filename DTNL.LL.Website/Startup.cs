@@ -1,3 +1,4 @@
+using DTNL.LL.DAL;
 using DTNL.LL.Logic;
 using DTNL.LL.Logic.Analytics;
 using DTNL.LL.Logic.Helper;
@@ -5,6 +6,7 @@ using DTNL.LL.Logic.Options;
 using DTNL.LL.Logic.Workers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,8 +47,6 @@ namespace DTNL.LL.Website
             services.Configure<GaApiTagsOptions>(Configuration.GetSection(GaApiTagsOptions.GaApiTags));
             services.Configure<ServiceWorkerOptions>(Configuration.GetSection(ServiceWorkerOptions.ServiceWorker));
 
-            services.AddHostedService<LiveLightWorker>();
-
 
             GAuthOptions gAuth = new();
             Configuration.GetSection(GAuthOptions.GAuth).Bind(gAuth);
@@ -69,8 +69,10 @@ namespace DTNL.LL.Website
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext ctx)
         {
+            ctx.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
