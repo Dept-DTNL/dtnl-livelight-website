@@ -1,9 +1,12 @@
 ﻿@model DTNL.LL.Website.Models.AllLights
+@{
+    var colorRegex = "(hue:[0-360])|(#[a-z0-9]{6,})|(saturation:[0-1])|(brightness:[0-1])|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)";
+}
 
 <div class="form-group">
     Light Group Name
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.LightGroupName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.LightGroupName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.LightGroupName, "", new { @class = "text-danger" })
     </div>
 </div>
@@ -19,7 +22,7 @@
 <div class="form-group">
     Lifx Light access token
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.LifxApiKey, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.LifxApiKey, new { htmlAttributes = new { @class = "form-control", required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.LifxApiKey, "", new { @class = "text-danger" })
     </div>
 </div>
@@ -35,14 +38,14 @@
 <div class="form-group">
     Time Range Start
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.TimeRangeStart, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.TimeRangeStart, new { htmlAttributes = new { @class = "form-control", required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.TimeRangeStart, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     Time Range End
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.TimeRangeEnd, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.TimeRangeEnd, new { htmlAttributes = new { @class = "form-control", required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.TimeRangeEnd, "", new { @class = "text-danger" })
     </div>
 </div>
@@ -51,14 +54,14 @@
 <div class="form-group">
     Medium Traffic Amount
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.MediumTrafficAmount, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.MediumTrafficAmount, new { htmlAttributes = new { @class = "form-control", @min = '1', required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.MediumTrafficAmount, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     High Traffic Amount
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.HighTrafficAmount, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.HighTrafficAmount, new { htmlAttributes = new { @class = "form-control", @min = '2', required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.HighTrafficAmount, "", new { @class = "text-danger" })
     </div>
 </div>
@@ -66,56 +69,56 @@
 <div class="form-group">
     Low Traffic Color
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.LowTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.LowTrafficColor, new { htmlAttributes = new { @class = "form-control", required = "required", pattern = @colorRegex } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.LowTrafficColor, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     Low Traffic Brightness
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.LowTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.LowTrafficBrightness, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.LowTrafficBrightness, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     Medium Traffic Color
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.MediumTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.MediumTrafficColor, new { htmlAttributes = new { @class = "form-control", required = "required", pattern = @colorRegex } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.MediumTrafficColor, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     Medium Traffic Brightness
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.MediumTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.MediumTrafficBrightness, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.MediumTrafficBrightness, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     High Traffic Color
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.HighTrafficColor, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.HighTrafficColor, new { htmlAttributes = new { @class = "form-control", required = "required", pattern = @colorRegex } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.HighTrafficColor, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     High Traffic Brightness
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.HighTrafficBrightness, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.HighTrafficBrightness, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.HighTrafficBrightness, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     Conversion Color
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.ConversionColor, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.ConversionColor, new { htmlAttributes = new { @class = "form-control", required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.ConversionColor, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
     Conversion Period
     <div class="col-md-10">
-        @Html.EditorFor(model => model.LifxLightDto.ConversionPeriod, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.LifxLightDto.ConversionPeriod, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
         @Html.ValidationMessageFor(model => model.LifxLightDto.ConversionPeriod, "", new { @class = "text-danger" })
     </div>
 </div>
