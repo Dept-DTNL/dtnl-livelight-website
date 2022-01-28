@@ -13,12 +13,14 @@ namespace DTNL.LL.Website.Controllers
     {
         private readonly ProjectService _projectService;
         private readonly AuthService _authService;
-        private readonly LifxLightDbService _lifxLightService;
+        private readonly LifxLightDbService _lifxLightDbService;
+        private readonly LifxLightService _lifxLightService;
 
-        public ProjectController(ProjectService projectService, AuthService authService, LifxLightDbService lifxLightService)
+        public ProjectController(ProjectService projectService, AuthService authService, LifxLightDbService lifxLightDbService, LifxLightService lifxLightService)
         {
             _projectService = projectService;
             _authService = authService;
+            _lifxLightDbService = lifxLightDbService;
             _lifxLightService = lifxLightService;
         }
 
@@ -149,8 +151,15 @@ namespace DTNL.LL.Website.Controllers
                 {
                     case "Submit Lifx Light":
                         LifxLight light = LifxLightDTO.LifxLightDTOToLifxLight(allLights.LifxLightDto);
+
+                        if (!_lifxLightService.IsConversionValidColor(light))
+                        {
+                            ViewBag.ErrorMessage = "Invalid conversion tag color";
+                            return View();
+                        }
+
                         light.Project = await _projectService.FindProjectByIdAsync(projectId.Value);
-                        await _lifxLightService.CreateLifxLight(light);
+                        await _lifxLightDbService.CreateLifxLight(light);
                         break;
                     default:
                         break;
@@ -230,7 +239,7 @@ namespace DTNL.LL.Website.Controllers
             }
 
             AllLights allLights = new AllLights();
-            LifxLight light = _lifxLightService.FindByUuidAsync(uuid);
+            LifxLight light = _lifxLightDbService.FindByUuidAsync(uuid);
 
             if (light is null)
             {
@@ -262,7 +271,7 @@ namespace DTNL.LL.Website.Controllers
 
             try
             {
-                await _lifxLightService.Update(uuid, LifxLightDTO.LifxLightDTOToLifxLight(newValues.LifxLightDto));
+                await _lifxLightDbService.Update(uuid, LifxLightDTO.LifxLightDTOToLifxLight(newValues.LifxLightDto));
             }
             catch (Exception e)
             {
@@ -286,7 +295,7 @@ namespace DTNL.LL.Website.Controllers
         {
             if (confirm && uuid is not null)
             {
-                await _lifxLightService.DeleteAsync(uuid);
+                await _lifxLightDbService.DeleteAsync(uuid);
             }
 
             if (projectId.HasValue)

@@ -33,8 +33,8 @@ namespace DTNL.LL.Website.Models
         public string MediumTrafficColor { get; set; }
         [Range(0, 1)]
         public double MediumTrafficBrightness { get; set; }
-        [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
         public int MediumTrafficAmount { get; set; }
+        [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
         public string HighTrafficColor { get; set; }
         [Range(0, 1)]
         public double HighTrafficBrightness { get; set; }

@@ -79,5 +79,10 @@ namespace DTNL.LL.Logic
 
             return time.TimeOfDay >= startTime && time.TimeOfDay <= endTime;
         }
+
+        public bool IsConversionValidColor(LifxLight lightGroup)
+        {
+            return  _lifxClient.IsConversionValidColor(lightGroup).Result;
+        }
     }
 }

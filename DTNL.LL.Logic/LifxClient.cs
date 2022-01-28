@@ -100,5 +100,22 @@ namespace DTNL.LL.Logic
                 throw;
             }
         }
+
+        public async Task<bool> IsConversionValidColor(LifxLight lightGroup)
+        {
+            LifxCloudClient client = await lightGroup.GetClient();
+
+            try
+            {
+                await client.ValidateColor(lightGroup.ConversionColor);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+
+        }
     }
 }
