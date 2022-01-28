@@ -19,6 +19,10 @@ namespace DTNL.LL.Website.Models
         public virtual ICollection<LifxLightDTO> LifxLight { get; set; }
         public string GaProperty { get; set; }
         public string ConversionTags { get; set; }
+
+        [Range(1, int.MaxValue)]
+        public int ConversionDivision { get; set; }
+
         public ProjectDTO()
         {
             LifxLight = new List<LifxLightDTO>();
@@ -38,6 +42,7 @@ namespace DTNL.LL.Website.Models
                 AnalyticsVersion = project.AnalyticsVersion,
                 GaProperty = project.GaProperty,
                 ConversionTags = !project.ConversionTags.Any() ? string.Empty : string.Join(',', project.ConversionTags),
+                ConversionDivision = project.ConversionDivision,
                 LifxLight = project.LifxLights.Select(LifxLightDTO.LifxLightToLifxLightDTO).ToList()
         };
 
@@ -57,6 +62,7 @@ namespace DTNL.LL.Website.Models
                 AnalyticsVersion = dto.AnalyticsVersion,
                 GaProperty = dto.GaProperty,
                 ConversionTags = string.IsNullOrWhiteSpace(dto.ConversionTags) ? new List<string>() : dto.ConversionTags.Split(',').ToList(),
+                ConversionDivision = dto.ConversionDivision,
                 LifxLights = dto.LifxLight.Select(LifxLightDTO.LifxLightDTOToLifxLight).ToList()
             };
 

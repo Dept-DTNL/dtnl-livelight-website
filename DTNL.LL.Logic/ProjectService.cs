@@ -47,6 +47,8 @@ namespace DTNL.LL.Logic
             if (newValues.PollingTimeInMinutes > 0) project.PollingTimeInMinutes = newValues.PollingTimeInMinutes;
             project.ConversionTags = newValues.ConversionTags;
 
+            project.ConversionDivision = newValues.ConversionDivision > 0 ? newValues.ConversionDivision : 1;
+
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.CommitAsync();
         }

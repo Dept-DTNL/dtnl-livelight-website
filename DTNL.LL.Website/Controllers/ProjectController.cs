@@ -76,7 +76,8 @@ namespace DTNL.LL.Website.Controllers
             {
                 Active = true,
                 PollingTimeInMinutes = 1,
-                AnalyticsVersion = AnalyticsVersion.V4
+                AnalyticsVersion = AnalyticsVersion.V4,
+                ConversionDivision = 1
             });
         }
 
