@@ -20,7 +20,7 @@
 <div class="form-group">
     Is it active?
     <div class="col-md-10">
-        @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+        @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
     </div>
 </div>
