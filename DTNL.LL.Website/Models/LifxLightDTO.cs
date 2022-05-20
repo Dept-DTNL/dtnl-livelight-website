@@ -6,6 +6,8 @@ namespace DTNL.LL.Website.Models
 {
     public class LifxLightDTO : ILightDto
     {
+        public const string COLORREGEX = @"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)";
+
         public ProjectDTO ProjectDto { get; set; }
         public Guid Uuid { get; set; }
         public bool Active { get; set; }
@@ -25,16 +27,16 @@ namespace DTNL.LL.Website.Models
         public DateTime TimeRangeEnd { get; set; }
 
         // Color Settings
-        [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
+        [RegularExpression(COLORREGEX, ErrorMessage = "Please enter correct color.")]
         public string LowTrafficColor { get; set; }
         [Range(0, 1)]
         public double LowTrafficBrightness { get; set; }
-        [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
+        [RegularExpression(COLORREGEX, ErrorMessage = "Please enter correct color.")]
         public string MediumTrafficColor { get; set; }
         [Range(0, 1)]
         public double MediumTrafficBrightness { get; set; }
         public int MediumTrafficAmount { get; set; }
-        [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
+        [RegularExpression(COLORREGEX, ErrorMessage = "Please enter correct color.")]
         public string HighTrafficColor { get; set; }
         [Range(0, 1)]
         public double HighTrafficBrightness { get; set; }
@@ -42,8 +44,18 @@ namespace DTNL.LL.Website.Models
 
         //Amount of time one flash takes in seconds
         public double ConversionPeriod { get; set; }
-        [RegularExpression(@"(hue:[0-360])|(#[a-z0-9]{6,})|(rgb:[0-255],[0-255],[0-255])|(white)|(red)|(orange)|(yellow)|(cyan)|(green)|(blue)|(purple)|(pink)", ErrorMessage = "Please enter correct color.")]
+        [RegularExpression(COLORREGEX, ErrorMessage = "Please enter correct color.")]
         public string ConversionColor { get; set; }
+
+        public int VeryHighTrafficAmount { get; set; }
+        [RegularExpression(COLORREGEX, ErrorMessage = "Please enter correct color.")]
+        public string VeryHighTrafficFirstColor { get; set; }
+        [RegularExpression(COLORREGEX, ErrorMessage = "Please enter correct color.")]
+        public string VeryHighTrafficSecondColor { get; set; }
+        public double VeryHighTrafficCycleTime { get; set; }
+        public int EffectCooldownInMinutes { get; set; }
+        public int PulseAmount { get; set; }
+
 
         public static LifxLightDTO LifxLightToLifxLightDTOWithProject(LifxLight lifxLight)
         {
@@ -67,6 +79,12 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
                 ConversionPeriod = lifxLight.ConversionPeriod,
                 ConversionColor = lifxLight.ConversionColor,
+                VeryHighTrafficAmount = lifxLight.VeryHighTrafficAmount,
+                VeryHighTrafficCycleTime = lifxLight.VeryHighTrafficCycleTime,
+                VeryHighTrafficFirstColor = lifxLight.VeryHighTrafficFirstColor,
+                VeryHighTrafficSecondColor = lifxLight.VeryHighTrafficSecondColor,
+                EffectCooldownInMinutes = lifxLight.EffectCooldownInMinutes,
+                PulseAmount = lifxLight.PulseAmount,
             };
         }
 
@@ -90,7 +108,13 @@ namespace DTNL.LL.Website.Models
                 HighTrafficBrightness = lifxLight.HighTrafficBrightness,
                 HighTrafficAmount = lifxLight.HighTrafficAmount,
                 ConversionPeriod = lifxLight.ConversionPeriod,
-                ConversionColor = lifxLight.ConversionColor
+                ConversionColor = lifxLight.ConversionColor,
+                VeryHighTrafficAmount = lifxLight.VeryHighTrafficAmount,
+                VeryHighTrafficCycleTime = lifxLight.VeryHighTrafficCycleTime,
+                VeryHighTrafficFirstColor = lifxLight.VeryHighTrafficFirstColor,
+                VeryHighTrafficSecondColor = lifxLight.VeryHighTrafficSecondColor,
+                EffectCooldownInMinutes = lifxLight.EffectCooldownInMinutes,
+                PulseAmount = lifxLight.PulseAmount,
             };
         }
 
@@ -115,6 +139,12 @@ namespace DTNL.LL.Website.Models
                 HighTrafficAmount = lifxLightDto.HighTrafficAmount,
                 ConversionPeriod = lifxLightDto.ConversionPeriod,
                 ConversionColor = lifxLightDto.ConversionColor,
+                VeryHighTrafficAmount = lifxLightDto.VeryHighTrafficAmount,
+                VeryHighTrafficCycleTime = lifxLightDto.VeryHighTrafficCycleTime,
+                VeryHighTrafficFirstColor = lifxLightDto.VeryHighTrafficFirstColor,
+                VeryHighTrafficSecondColor = lifxLightDto.VeryHighTrafficSecondColor,
+                EffectCooldownInMinutes = lifxLightDto.EffectCooldownInMinutes,
+                PulseAmount = lifxLightDto.PulseAmount,
             };
         }
     }

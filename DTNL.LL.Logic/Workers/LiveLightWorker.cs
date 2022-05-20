@@ -14,7 +14,6 @@ namespace DTNL.LL.Logic.Workers
     {
         private readonly int _tickDelayInSeconds;
 
-
         private Timer _timer;
 
         private readonly ILogger<LiveLightWorker> _logger;
@@ -33,22 +32,6 @@ namespace DTNL.LL.Logic.Workers
             using IServiceScope scope = _scopeFactory.CreateScope();
             LiveLightService liveLightService = scope.ServiceProvider.GetRequiredService<LiveLightService>();
             await liveLightService.ProcessLiveLights();
-        }
-
-        private bool _migrated = false;
-        private async Task MigrateDatabase()
-        {
-            if (!_migrated)
-            {
-                _migrated = true;
-                _logger.LogInformation("Migrating Database...");
-                using (IServiceScope migrationScope = _scopeFactory.CreateScope())
-                {
-                    IUnitOfWork unitOfWork = migrationScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                    await unitOfWork.MigrateDatabaseAsync();
-                }
-
-            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

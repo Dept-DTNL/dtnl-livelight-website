@@ -6,6 +6,9 @@ using LifxCloud.NET;
 
 namespace DTNL.LL.Models
 {
+    /// <summary>
+    /// This class represents a group in the Lifx app. API requests will change all lights contained in the group. 
+    /// </summary>
     public class LifxLight : ILight
     {
         public int Id { get; set; }
@@ -33,6 +36,17 @@ namespace DTNL.LL.Models
         public string HighTrafficColor { get; set; }
         public double HighTrafficBrightness { get; set; }
         public int HighTrafficAmount { get; set; }
+
+
+        public int VeryHighTrafficAmount { get; set; }
+        public string VeryHighTrafficFirstColor { get; set; }
+        public string VeryHighTrafficSecondColor { get; set; }
+        public double VeryHighTrafficCycleTime { get; set; }
+
+        [Range(1, int.MaxValue)]
+        public int PulseAmount { get; set; }
+        [Range(1,10080)]
+        public int EffectCooldownInMinutes { get; set; }
 
         //Amount of time one flash takes in seconds
         public double ConversionPeriod { get; set; }

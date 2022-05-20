@@ -43,6 +43,11 @@ namespace DTNL.LL.Website
             services.AddSingleton<V3Analytics>();
             services.AddSingleton<V4Analytics>();
 
+            services.AddMemoryCache(o =>
+            {
+                o.ExpirationScanFrequency = new System.TimeSpan(0, 0, 10);
+            });
+
             services.Configure<GAuthOptions>(Configuration.GetSection(GAuthOptions.GAuth));
             services.Configure<GaApiTagsOptions>(Configuration.GetSection(GaApiTagsOptions.GaApiTags));
             services.Configure<ServiceWorkerOptions>(Configuration.GetSection(ServiceWorkerOptions.ServiceWorker));

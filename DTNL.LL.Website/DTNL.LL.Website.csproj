@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <UserSecretsId>63ecdeb7-3210-4e90-8386-59eca79bbfd2</UserSecretsId>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

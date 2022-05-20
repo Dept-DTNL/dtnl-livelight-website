@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DTNL.LL.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DTNL.LL.Logic
 {
@@ -9,24 +10,80 @@ namespace DTNL.LL.Logic
         private const int SecondsInAMinute = 60;
 
         private readonly LifxClient _lifxClient;
+        private readonly IMemoryCache _cache;
 
-        public LifxLightService(LifxClient lifxClient)
+        public LifxLightService(LifxClient lifxClient, IMemoryCache memoryCache)
         {
             _lifxClient = lifxClient;
+            _cache = memoryCache;
         }
 
-        public Task UpdateLightColors(LifxLight lightGroup, int users)
+        public async Task UpdateLightColors(LifxLight lightGroup, int users, int pollingTimeInMinutes)
         {
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
             if (lightGroup.TimeRangeEnabled && !awake)
             {
-                return _lifxClient.DisableLightsAsync(lightGroup);
+                await _lifxClient.DisableLightsAsync(lightGroup);
             }
+
+            // High volume animation check
+            if (await ProcessedHighVolumeAnimation(lightGroup, users))
+                return;
+            
             LampColor color = GetActivityColor(lightGroup, users);
 
             // This would be smoother with a breathe effect with persist set to true.
             // However this is not yet in the lifxclient yet so that could be contributed in the future.
-            return _lifxClient.SetLightsColorAsync(lightGroup, color);
+            await _lifxClient.SetLightsColorAsync(lightGroup, color);
+        }
+
+
+        //Todo: Clean this method up
+        /// <summary>
+        /// Method activates the special animation if the website has extremely high traffic and is not on cooldown.
+        /// </summary>
+        /// <param name="lightGroup"></param>
+        /// <param name="users"></param>
+        /// <returns>True if the light should not be processed further.</returns>
+        private async Task<bool> ProcessedHighVolumeAnimation(LifxLight lightGroup, int users)
+        {
+            if (lightGroup.VeryHighTrafficAmount <= 0 || lightGroup.VeryHighTrafficAmount >= users)
+                // Animation Disabled
+                return false;
+
+            // Append lg to Lightgroup as identifier.
+            //LG Cooldown ID
+            string cacheCDId = "lg:" + lightGroup.Id;
+            if (_cache.TryGetValue(cacheCDId, out DateTime animationActiveTime))
+                // Animation still on cooldown
+                return false;
+
+            
+            if (animationActiveTime > DateTime.UtcNow)
+                // Animation still active, return true to prevent change to normal color.
+                return true;
+
+            MemoryCacheEntryOptions cdCacheOptions = new()
+            {
+                Priority = CacheItemPriority.NeverRemove,
+                AbsoluteExpirationRelativeToNow = new TimeSpan(0, lightGroup.EffectCooldownInMinutes, 0)
+            };
+
+            //Light should be pulsing until this timespan
+            int pulsingTimeInSeconds = (int)(lightGroup.PulseAmount * lightGroup.VeryHighTrafficCycleTime);
+            //The amount of pulses the light makes
+            int pulseAmount = pulsingTimeInSeconds < 60 ? lightGroup.PulseAmount : int.MaxValue;
+            // The datetime until which the pulsing animation lasts
+            DateTime pulsingDateTime = DateTime.UtcNow.Add(new TimeSpan(0, 0, pulsingTimeInSeconds));
+            _cache.Set(cacheCDId, pulsingDateTime, cdCacheOptions);
+
+            //Todo: Move this out so there is no await in this method
+            await _lifxClient.BreatheLightsAsync(lightGroup, lightGroup.VeryHighTrafficFirstColor, new LampColor()
+            {
+                Color = lightGroup.VeryHighTrafficSecondColor
+            }, int.MaxValue, pulseAmount);
+
+            return true;
         }
 
         private LampColor GetActivityColor(LifxLight lightGroup, int users)
