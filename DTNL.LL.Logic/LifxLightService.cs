@@ -54,14 +54,14 @@ namespace DTNL.LL.Logic
             // Append lg to Lightgroup as identifier.
             //LG Cooldown ID
             string cacheCDId = "lg:" + lightGroup.Id;
-            if (_cache.TryGetValue(cacheCDId, out DateTime animationActiveTime))
-                // Animation still on cooldown
-                return false;
 
-            
+            bool animationOnCooldown = _cache.TryGetValue(cacheCDId, out DateTime animationActiveTime);
             if (animationActiveTime > DateTime.UtcNow)
                 // Animation still active, return true to prevent change to normal color.
                 return true;
+
+            if (animationOnCooldown)
+                return false;
 
             MemoryCacheEntryOptions cdCacheOptions = new()
             {
@@ -77,7 +77,6 @@ namespace DTNL.LL.Logic
             DateTime pulsingDateTime = DateTime.UtcNow.Add(new TimeSpan(0, 0, pulsingTimeInSeconds));
             _cache.Set(cacheCDId, pulsingDateTime, cdCacheOptions);
 
-            //Todo: Move this out so there is no await in this method
             await _lifxClient.BreatheLightsAsync(lightGroup, lightGroup.VeryHighTrafficFirstColor, new LampColor()
             {
                 Color = lightGroup.VeryHighTrafficSecondColor
@@ -114,7 +113,6 @@ namespace DTNL.LL.Logic
 
         public Task FlashLightForConversions(LifxLight lightGroup, int flashes, int activeUsers, int pollingTimeInMinutes)
         {
-
             bool awake = IsTimeOfDayBetween(DateTime.Now, lightGroup.TimeRangeStart, lightGroup.TimeRangeEnd);
             if ((lightGroup.TimeRangeEnabled && !awake) || flashes == 0)
                 return Task.CompletedTask;
