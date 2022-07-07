@@ -60,6 +60,7 @@ namespace DTNL.LL.Logic
                 // Animation still active, return true to prevent change to normal color.
                 return true;
 
+            // Animationcooldown is found in the cache so the effect is still on the cooldown.
             if (animationOnCooldown)
                 return false;
 
@@ -77,10 +78,12 @@ namespace DTNL.LL.Logic
             DateTime pulsingDateTime = DateTime.UtcNow.Add(new TimeSpan(0, 0, pulsingTimeInSeconds));
             _cache.Set(cacheCDId, pulsingDateTime, cdCacheOptions);
 
+
             await _lifxClient.BreatheLightsAsync(lightGroup, lightGroup.VeryHighTrafficFirstColor, new LampColor()
             {
-                Color = lightGroup.VeryHighTrafficSecondColor
-            }, int.MaxValue, pulseAmount);
+                Color = lightGroup.VeryHighTrafficSecondColor,
+                Brightness = 0.5f
+            }, pulseAmount, lightGroup.VeryHighTrafficCycleTime);
 
             return true;
         }
