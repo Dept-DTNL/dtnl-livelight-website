@@ -53,6 +53,15 @@ namespace DTNL.LL.Logic
 
             oldValues.Active = newValues.Active;
 
+            oldValues.VeryHighTrafficAmount = newValues.VeryHighTrafficAmount;
+            oldValues.VeryHighTrafficCycleTime = newValues.VeryHighTrafficCycleTime;
+            oldValues.VeryHighTrafficFirstColor = newValues.VeryHighTrafficFirstColor;
+            oldValues.VeryHighTrafficSecondColor = newValues.VeryHighTrafficSecondColor;
+            oldValues.EffectCooldownInMinutes = newValues.EffectCooldownInMinutes;
+            oldValues.PulseAmount = newValues.PulseAmount;
+
+            oldValues.LifxApiKey = newValues.LifxApiKey;
+
             if (oldValues.LightGroupName is not null) oldValues.LightGroupName = newValues.LightGroupName;
 
             _unitOfWork.LifxLights.Update(oldValues);

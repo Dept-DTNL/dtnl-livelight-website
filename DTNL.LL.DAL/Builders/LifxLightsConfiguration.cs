@@ -63,6 +63,18 @@ namespace DTNL.LL.DAL.Builders
 
             builder.Property(m => m.TimeRangeEnd)
                 .IsRequired();
+
+            builder.Property(m => m.VeryHighTrafficAmount)
+                .IsRequired().HasDefaultValue(0);
+
+            builder.Property(m => m.VeryHighTrafficCycleTime)
+                .IsRequired().HasDefaultValue(1);
+
+            builder.Property(m => m.EffectCooldownInMinutes)
+                .IsRequired().HasDefaultValue(5);
+
+            builder.Property(m => m.PulseAmount)
+                .IsRequired().HasDefaultValue(1);
         }
     }
 }

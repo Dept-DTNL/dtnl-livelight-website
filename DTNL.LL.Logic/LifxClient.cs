@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Globalization;
 using DTNL.LL.Logic.Exceptions;
 using DTNL.LL.Models;
 using LifxCloud.NET;
@@ -57,7 +58,7 @@ namespace DTNL.LL.Logic
         public async Task<ApiResponse> BreatheLightsAsync(LifxLight lightGroup, string color, LampColor baseColor, int cycles, double period)
         {
             LifxCloudClient client = await lightGroup.GetClient();
-            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, $"{baseColor.Color} brightness:{baseColor.Brightness}", cycles, period));
+            return await client.BreathEffect(CreateLabel(lightGroup), BreatheEffect(color, $"{baseColor.Color} brightness:{baseColor.Brightness.ToString("0.0", CultureInfo.InvariantCulture)}", cycles, period));
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +48,7 @@ namespace DTNL.LL.Logic
             }
             catch (Exception exception)
             {
-                //Make sure the worker keeps running thee other projects.
+                //Make sure the worker keeps running the other projects.
                 _logger.LogError(exception, "Could not retrieve Analytics for project {0}:{1}.", project.Id, project.ProjectName);
                 return Task.FromResult(new AnalyticsReport()
                 {
@@ -79,7 +79,7 @@ namespace DTNL.LL.Logic
                         case LifxLight lifx:
                             if (!lifx.Active)
                                 break;
-                            Task lifxTask = _lifxLightService.UpdateLightColors(lifx, report.ActiveUsers);
+                            Task lifxTask = _lifxLightService.UpdateLightColors(lifx, report.ActiveUsers, report.Project.PollingTimeInMinutes);
                             tasks.Add(lifxTask);
                             break;
                         default:
