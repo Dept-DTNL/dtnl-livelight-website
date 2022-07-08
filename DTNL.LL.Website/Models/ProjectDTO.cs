@@ -41,6 +41,7 @@ namespace DTNL.LL.Website.Models
                 PollingTimeInMinutes = project.PollingTimeInMinutes,
                 AnalyticsVersion = project.AnalyticsVersion,
                 GaProperty = project.GaProperty,
+                // Crashes if conversion tags is null
                 ConversionTags = !project.ConversionTags.Any() ? string.Empty : string.Join(',', project.ConversionTags),
                 ConversionDivision = project.ConversionDivision,
                 LifxLight = project.LifxLights.Select(LifxLightDTO.LifxLightToLifxLightDTO).ToList()

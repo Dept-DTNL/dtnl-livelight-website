@@ -122,3 +122,47 @@
         @Html.ValidationMessageFor(model => model.LifxLightDto.ConversionPeriod, "", new { @class = "text-danger" })
     </div>
 </div>
+
+<!-- Very High traffic effect settings -->
+<div class="form-group">
+    Very High Traffic Amount
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.LifxLightDto.VeryHighTrafficAmount, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.VeryHighTrafficAmount, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    Very High Traffic First Color
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.LifxLightDto.VeryHighTrafficFirstColor, new { htmlAttributes = new { @class = "form-control", } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.VeryHighTrafficFirstColor, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    Very High Traffic Second Color
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.LifxLightDto.VeryHighTrafficSecondColor, new { htmlAttributes = new { @class = "form-control", } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.VeryHighTrafficSecondColor, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    Very High Traffic Cycle Time
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.LifxLightDto.VeryHighTrafficCycleTime, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.VeryHighTrafficCycleTime, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    Very High Traffic Effect Cooldown Minutes
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.LifxLightDto.EffectCooldownInMinutes, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.EffectCooldownInMinutes, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    Very High Traffic Pulse Amount
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.LifxLightDto.PulseAmount, new { htmlAttributes = new { @class = "form-control", @min = '0', required = "required" } })
+        @Html.ValidationMessageFor(model => model.LifxLightDto.PulseAmount, "", new { @class = "text-danger" })
+    </div>
+</div>
